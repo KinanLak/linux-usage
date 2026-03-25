@@ -217,6 +217,16 @@ class LinuxUsageIndicator extends PanelMenu.Button {
 
     _openPreferences() {
         try {
+            const prefsScript = Me.dir.get_child('preferences-app.js').get_path();
+            Gio.Subprocess.new(
+                ['gjs', prefsScript],
+                Gio.SubprocessFlags.NONE
+            );
+            return;
+        } catch (_error) {
+        }
+
+        try {
             Gio.Subprocess.new(
                 ['gnome-extensions', 'prefs', Me.metadata.uuid],
                 Gio.SubprocessFlags.NONE

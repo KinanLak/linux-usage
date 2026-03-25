@@ -1,0 +1,99 @@
+.linux-usage-prefs-shell,
+.linux-usage-prefs-root,
+.linux-usage-prefs-page {
+    background: rgba(46, 49, 58, 1);
+    color: rgba(244, 246, 250, 0.98);
+}
+
+.linux-usage-prefs-page {
+    min-width: 680px;
+}
+
+.linux-usage-prefs-topbar {
+    padding: 18px 24px 14px 24px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+    background: rgba(40, 43, 52, 0.98);
+}
+
+.linux-usage-prefs-topbar-title {
+    color: rgba(255, 255, 255, 0.98);
+    font-size: 1.15rem;
+    font-weight: 800;
+}
+
+.linux-usage-prefs-topbar-subtitle {
+    color: rgba(230, 234, 241, 0.72);
+    font-size: 0.98rem;
+}
+
+.linux-usage-prefs-close-button {
+    border-radius: 999px;
+    background: rgba(72, 77, 92, 0.96);
+    color: rgba(255, 255, 255, 0.98);
+}
+
+.linux-usage-prefs-close-button:hover {
+    background: rgba(90, 96, 112, 1);
+}
+
+.linux-usage-prefs-section-title {
+    color: rgba(255, 255, 255, 0.98);
+}
+
+.linux-usage-prefs-section-description {
+    color: rgba(230, 234, 241, 0.72);
+    font-size: 1rem;
+}
+
+.linux-usage-prefs-section-title {
+    font-size: 1.25rem;
+    font-weight: 700;
+}
+
+.linux-usage-prefs-row-title {
+    color: rgba(255, 255, 255, 0.98);
+}
+
+.linux-usage-prefs-row-description {
+    color: rgba(235, 238, 244, 0.78);
+    font-size: 1rem;
+}
+
+.linux-usage-prefs-card {
+    background: rgba(40, 43, 52, 0.94);
+    border-radius: 20px;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    padding: 6px 0;
+}
+
+.linux-usage-prefs-row {
+    padding: 18px 22px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.linux-usage-prefs-row:last-child {
+    border-bottom: none;
+}
+
+.linux-usage-prefs-row-title {
+    font-size: 1.08rem;
+    font-weight: 700;
+}
+
+.linux-usage-prefs-input,
+.linux-usage-prefs-input text,
+.linux-usage-prefs-input image,
+.linux-usage-prefs-input label,
+entry.linux-usage-prefs-input,
+entry.linux-usage-prefs-input text,
+spinbutton.linux-usage-prefs-input,
+spinbutton.linux-usage-prefs-input text {
+    color: rgba(255, 255, 255, 0.98);
+    caret-color: rgba(255, 255, 255, 0.98);
+}
+
+entry.linux-usage-prefs-input,
+spinbutton.linux-usage-prefs-input {
+    background: rgba(29, 31, 38, 0.98);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+}

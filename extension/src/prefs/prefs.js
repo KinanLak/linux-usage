@@ -2,87 +2,281 @@ imports.gi.versions.Gtk = '4.0';
 imports.gi.versions.Adw = '1';
 
 const Adw = imports.gi.Adw;
+const Gdk = imports.gi.Gdk;
+const Gio = imports.gi.Gio;
 const Gtk = imports.gi.Gtk;
-const ExtensionUtils = imports.misc.extensionUtils;
+const GLib = imports.gi.GLib;
+
+let ExtensionUtils = null;
+try {
+    ExtensionUtils = imports.misc.extensionUtils;
+} catch (_error) {
+    ExtensionUtils = null;
+}
+
+const SCHEMA_ID = 'org.kinanl.linux-usage';
 
 function buildPrefsWidget() {
-    const settings = ExtensionUtils.getSettings('org.kinanl.linux-usage');
+    loadCss(ExtensionUtils.getCurrentExtension().path);
+    const settings = ExtensionUtils.getSettings(SCHEMA_ID);
+    const widget = buildPreferencesContent(settings, { standalone: false });
+    widget.connect('realize', () => {
+        const root = widget.get_root();
+        if (root && root.set_default_size)
+            root.set_default_size(820, 680);
+    });
+    return widget;
+}
 
-    const page = new Adw.PreferencesPage({
-        title: 'Linux Usage',
+function buildStandaloneWindow(application, extensionDir) {
+    const settings = createSettingsForExtension(extensionDir);
+    const window = new Adw.ApplicationWindow({
+        application,
+        title: 'Linux Usage Preferences',
+        default_width: 860,
+        default_height: 700,
+    });
+    window.set_resizable(false);
+
+    const shell = new Gtk.Box({
+        orientation: Gtk.Orientation.VERTICAL,
+        css_classes: ['linux-usage-prefs-shell'],
+    });
+    shell.append(buildStandaloneTopbar(window));
+    shell.append(buildPreferencesContent(settings, { standalone: true }));
+
+    window.set_content(shell);
+    return window;
+}
+
+function createSettingsForExtension(extensionDir) {
+    const schemaDir = GLib.build_filenamev([extensionDir, 'schemas']);
+    const source = Gio.SettingsSchemaSource.new_from_directory(
+        schemaDir,
+        Gio.SettingsSchemaSource.get_default(),
+        false
+    );
+    const schema = source.lookup(SCHEMA_ID, false);
+    return new Gio.Settings({ settings_schema: schema });
+}
+
+function loadCss(extensionDir) {
+    const provider = new Gtk.CssProvider();
+    provider.load_from_path(GLib.build_filenamev([extensionDir, 'prefs.css']));
+    Gtk.StyleContext.add_provider_for_display(
+        Gdk.Display.get_default(),
+        provider,
+        Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION
+    );
+}
+
+function buildPreferencesContent(settings, options) {
+    const root = new Gtk.ScrolledWindow({
+        hscrollbar_policy: Gtk.PolicyType.NEVER,
+        propagate_natural_height: true,
+        vexpand: true,
+        css_classes: ['linux-usage-prefs-root'],
     });
 
-    const generalGroup = new Adw.PreferencesGroup({
-        title: 'General',
-        description: 'Configure how the extension talks to the local helper.',
+    const clamp = new Adw.Clamp({
+        maximum_size: 860,
+        tightening_threshold: 640,
+        margin_top: 28,
+        margin_bottom: 28,
+        margin_start: 24,
+        margin_end: 24,
     });
+    root.set_child(clamp);
 
-    const helperRow = new Adw.ActionRow({
-        title: 'Helper path',
-        subtitle: 'Command or absolute path used to fetch snapshots',
+    const page = new Gtk.Box({
+        orientation: Gtk.Orientation.VERTICAL,
+        spacing: 26,
+        css_classes: ['linux-usage-prefs-page'],
     });
+    clamp.set_child(page);
+
+    page.append(buildGeneralSection(settings));
+    page.append(buildProvidersSection(settings));
+
+    return root;
+}
+
+function buildGeneralSection(settings) {
+    const section = createSection(
+        'General',
+        'Core behavior for the helper, refresh cadence, and popup metadata.'
+    );
+
     const helperEntry = new Gtk.Entry({
         hexpand: true,
         text: settings.get_string('helper-path'),
+        placeholder_text: 'linux-usage-helper',
+        css_classes: ['linux-usage-prefs-input'],
     });
     helperEntry.connect('changed', widget => {
         settings.set_string('helper-path', widget.get_text());
     });
-    helperRow.add_suffix(helperEntry);
-    generalGroup.add(helperRow);
+    section.card.append(createRow(
+        'Helper path',
+        'Command or absolute path used to fetch snapshots.',
+        helperEntry
+    ));
 
-    const refreshRow = new Adw.ActionRow({
-        title: 'Refresh interval',
-        subtitle: 'Automatic refresh cadence in seconds',
-    });
     const refreshSpin = Gtk.SpinButton.new_with_range(60, 3600, 30);
     refreshSpin.set_value(settings.get_uint('refresh-interval-seconds'));
+    refreshSpin.set_width_chars(6);
+    refreshSpin.add_css_class('linux-usage-prefs-input');
     refreshSpin.connect('value-changed', widget => {
         settings.set_uint('refresh-interval-seconds', widget.get_value_as_int());
     });
-    refreshRow.add_suffix(refreshSpin);
-    generalGroup.add(refreshRow);
+    section.card.append(createRow(
+        'Refresh interval',
+        'Automatic refresh cadence in seconds.',
+        refreshSpin
+    ));
 
-    const sourceRow = new Adw.SwitchRow({
-        title: 'Show provider source',
-        subtitle: 'Display labels like local session or GitHub token in the popup',
+    const sourceSwitch = new Gtk.Switch({
         active: settings.get_boolean('show-source-label'),
+        valign: Gtk.Align.CENTER,
     });
-    sourceRow.connect('notify::active', widget => {
+    sourceSwitch.connect('notify::active', widget => {
         settings.set_boolean('show-source-label', widget.active);
     });
-    generalGroup.add(sourceRow);
+    section.card.append(createRow(
+        'Show provider source',
+        'Display labels like local session or GitHub token in the popup.',
+        sourceSwitch
+    ));
 
-    const providersGroup = new Adw.PreferencesGroup({
-        title: 'Providers',
-        description: 'Enable or disable individual provider cards in the popup.',
-    });
+    return section.box;
+}
 
-    ['codex', 'claude', 'copilot'].forEach(provider => {
-        const row = new Adw.SwitchRow({
-            title: provider.charAt(0).toUpperCase() + provider.slice(1),
-            active: settings.get_strv('enabled-providers').includes(provider),
+function buildProvidersSection(settings) {
+    const section = createSection(
+        'Providers',
+        'Choose which providers appear in the overview and detail tabs.'
+    );
+
+    [
+        ['codex', 'Codex', 'OpenAI Codex session and weekly quota'],
+        ['claude', 'Claude', 'Anthropic Claude quota and local auth state'],
+        ['copilot', 'Copilot', 'GitHub Copilot premium interactions and included chat'],
+    ].forEach(([providerId, title, description]) => {
+        const toggle = new Gtk.Switch({
+            active: settings.get_strv('enabled-providers').includes(providerId),
+            valign: Gtk.Align.CENTER,
         });
-        row.connect('notify::active', widget => {
+        toggle.connect('notify::active', widget => {
             const current = new Set(settings.get_strv('enabled-providers'));
             if (widget.active)
-                current.add(provider);
+                current.add(providerId);
             else
-                current.delete(provider);
+                current.delete(providerId);
             settings.set_strv('enabled-providers', Array.from(current));
         });
-        providersGroup.add(row);
+        section.card.append(createRow(title, description, toggle));
     });
 
-    const groupBox = new Gtk.Box({
-        orientation: Gtk.Orientation.VERTICAL,
-        margin_top: 24,
-        margin_bottom: 24,
-        margin_start: 24,
-        margin_end: 24,
+    return section.box;
+}
+
+function buildStandaloneTopbar(window) {
+    const handle = new Gtk.WindowHandle();
+    const bar = new Gtk.Box({
+        orientation: Gtk.Orientation.HORIZONTAL,
+        halign: Gtk.Align.FILL,
+        css_classes: ['linux-usage-prefs-topbar'],
     });
-    page.add(generalGroup);
-    page.add(providersGroup);
-    groupBox.append(page);
-    return groupBox;
+
+    const titleBox = new Gtk.Box({
+        orientation: Gtk.Orientation.VERTICAL,
+        hexpand: true,
+        spacing: 2,
+    });
+    titleBox.append(new Gtk.Label({
+        label: 'Linux Usage Preferences',
+        xalign: 0,
+        css_classes: ['linux-usage-prefs-topbar-title'],
+    }));
+    titleBox.append(new Gtk.Label({
+        label: 'Popup behavior, providers, and helper settings',
+        xalign: 0,
+        css_classes: ['linux-usage-prefs-topbar-subtitle'],
+    }));
+
+    const closeButton = new Gtk.Button({
+        icon_name: 'window-close-symbolic',
+        valign: Gtk.Align.CENTER,
+        css_classes: ['linux-usage-prefs-close-button'],
+    });
+    closeButton.connect('clicked', () => window.close());
+
+    bar.append(titleBox);
+    bar.append(closeButton);
+    handle.set_child(bar);
+    return handle;
+}
+
+function createSection(title, description) {
+    const box = new Gtk.Box({
+        orientation: Gtk.Orientation.VERTICAL,
+        spacing: 12,
+    });
+
+    box.append(new Gtk.Label({
+        label: title,
+        xalign: 0,
+        css_classes: ['linux-usage-prefs-section-title'],
+    }));
+    box.append(new Gtk.Label({
+        label: description,
+        xalign: 0,
+        wrap: true,
+        css_classes: ['linux-usage-prefs-section-description'],
+    }));
+
+    const card = new Gtk.Box({
+        orientation: Gtk.Orientation.VERTICAL,
+        spacing: 0,
+        css_classes: ['linux-usage-prefs-card'],
+    });
+    box.append(card);
+
+    return { box, card };
+}
+
+function createRow(title, description, suffixWidget) {
+    const row = new Gtk.Box({
+        orientation: Gtk.Orientation.HORIZONTAL,
+        spacing: 18,
+        hexpand: true,
+        css_classes: ['linux-usage-prefs-row'],
+    });
+
+    const textBox = new Gtk.Box({
+        orientation: Gtk.Orientation.VERTICAL,
+        spacing: 4,
+        hexpand: true,
+    });
+    textBox.append(new Gtk.Label({
+        label: title,
+        xalign: 0,
+        css_classes: ['linux-usage-prefs-row-title'],
+    }));
+    textBox.append(new Gtk.Label({
+        label: description,
+        xalign: 0,
+        wrap: true,
+        css_classes: ['linux-usage-prefs-row-description'],
+    }));
+    row.append(textBox);
+
+    const suffixBox = new Gtk.Box({
+        orientation: Gtk.Orientation.HORIZONTAL,
+        valign: Gtk.Align.CENTER,
+    });
+    suffixBox.append(suffixWidget);
+    row.append(suffixBox);
+
+    return row;
 }
