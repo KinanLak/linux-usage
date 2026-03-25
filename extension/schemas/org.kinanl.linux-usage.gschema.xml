@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schemalist>
+  <schema id="org.kinanl.linux-usage" path="/org/kinanl/linux-usage/">
+    <key name="helper-path" type="s">
+      <default>'linux-usage-helper'</default>
+      <summary>Helper executable path</summary>
+      <description>Path to the Rust helper used to fetch provider snapshots.</description>
+    </key>
+    <key name="refresh-interval-seconds" type="u">
+      <default>300</default>
+      <summary>Refresh interval</summary>
+      <description>How often the extension refreshes provider data.</description>
+    </key>
+    <key name="enabled-providers" type="as">
+      <default>[ 'codex', 'claude', 'copilot' ]</default>
+      <summary>Enabled providers</summary>
+      <description>The providers visible in the extension overview.</description>
+    </key>
+    <key name="last-selected-tab" type="s">
+      <default>'overview'</default>
+      <summary>Last selected tab</summary>
+      <description>The last provider tab selected in the popup.</description>
+    </key>
+    <key name="show-source-label" type="b">
+      <default>false</default>
+      <summary>Show provider source label</summary>
+      <description>Whether to show the provider source string in the popup detail view.</description>
+    </key>
+  </schema>
+</schemalist>

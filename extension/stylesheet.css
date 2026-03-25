@@ -1,0 +1,174 @@
+.linux-usage-popup {
+    min-width: 430px;
+}
+
+.linux-usage-section {
+    background-color: rgba(28, 30, 36, 0.96);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 18px;
+    padding: 18px;
+    spacing: 14px;
+}
+
+.linux-usage-content-card {
+    padding: 14px;
+    spacing: 12px;
+}
+
+.linux-usage-space-between {
+    spacing: 12px;
+}
+
+.linux-usage-header-title {
+    color: rgba(255, 255, 255, 0.98);
+    font-size: 1.15em;
+    font-weight: 800;
+}
+
+.linux-usage-subtle,
+.linux-usage-footer-status,
+.linux-usage-provider-status-line,
+.linux-usage-quota-meta {
+    color: rgba(224, 227, 234, 0.82);
+    font-size: 0.98em;
+}
+
+.linux-usage-detail-meta,
+.linux-usage-overview-summary,
+.linux-usage-detail-line,
+.linux-usage-detail-remediation {
+    color: rgba(244, 246, 250, 0.96);
+    font-size: 1em;
+}
+
+.linux-usage-chip-row {
+    spacing: 10px;
+}
+
+.linux-usage-chip,
+.linux-usage-action-button,
+.linux-usage-primary-button {
+    border-radius: 999px;
+    padding: 10px 16px;
+    color: rgba(248, 250, 252, 0.96);
+    background-color: rgba(56, 60, 72, 0.95);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.linux-usage-chip-active,
+.linux-usage-primary-button {
+    background-color: rgba(53, 120, 214, 0.98);
+    color: white;
+    border-color: rgba(115, 170, 255, 0.55);
+}
+
+.linux-usage-clickable:hover {
+    background-color: rgba(70, 75, 90, 0.98);
+}
+
+.linux-usage-primary-button:hover,
+.linux-usage-chip-active:hover {
+    background-color: rgba(68, 133, 226, 1);
+}
+
+.linux-usage-clickable:active {
+    background-color: rgba(80, 86, 101, 1);
+}
+
+.linux-usage-primary-button:active {
+    background-color: rgba(39, 102, 194, 1);
+}
+
+.linux-usage-card-title {
+    color: rgba(255, 255, 255, 0.98);
+    font-size: 1.25em;
+    font-weight: 800;
+}
+
+.linux-usage-status-pill {
+    border-radius: 999px;
+    padding: 5px 10px;
+    font-size: 0.88em;
+    font-weight: 700;
+}
+
+.linux-usage-pill-ok {
+    background-color: rgba(35, 110, 70, 0.95);
+    color: rgba(239, 255, 245, 0.98);
+}
+
+.linux-usage-pill-info {
+    background-color: rgba(43, 88, 150, 0.95);
+    color: rgba(239, 246, 255, 0.98);
+}
+
+.linux-usage-pill-warning {
+    background-color: rgba(145, 105, 27, 0.98);
+    color: rgba(255, 247, 229, 0.98);
+}
+
+.linux-usage-pill-danger {
+    background-color: rgba(143, 47, 47, 0.98);
+    color: rgba(255, 236, 236, 0.98);
+}
+
+.linux-usage-pill-muted {
+    background-color: rgba(66, 69, 78, 0.96);
+    color: rgba(234, 237, 243, 0.96);
+}
+
+.linux-usage-provider-row,
+.linux-usage-detail-card {
+    border-radius: 16px;
+    padding: 16px;
+    background-color: rgba(38, 40, 48, 0.98);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.linux-usage-overview-row,
+.linux-usage-detail-card,
+.linux-usage-footer {
+    spacing: 10px;
+}
+
+.linux-usage-quota-block {
+    spacing: 8px;
+    padding-top: 8px;
+}
+
+.linux-usage-quota-title,
+.linux-usage-quota-value {
+    color: rgba(255, 255, 255, 0.98);
+    font-size: 1.02em;
+    font-weight: 700;
+}
+
+.linux-usage-progress-track {
+    width: 320px;
+    height: 12px;
+    border-radius: 999px;
+    background-color: rgba(17, 19, 24, 1);
+}
+
+.linux-usage-progress-fill {
+    height: 12px;
+    border-radius: 999px;
+    background-color: rgba(48, 181, 122, 1);
+}
+
+.linux-usage-progress-fill-warning {
+    background-color: rgba(227, 165, 54, 1);
+}
+
+.linux-usage-progress-fill-info {
+    background-color: rgba(82, 144, 235, 1);
+}
+
+.linux-usage-progress-fill-danger {
+    background-color: rgba(220, 88, 88, 1);
+}
+
+.linux-usage-detail-error,
+.linux-usage-error {
+    color: rgba(255, 184, 184, 1);
+}

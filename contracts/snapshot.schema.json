@@ -1,0 +1,72 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://kinanl.org/linux-usage/snapshot.schema.json",
+  "title": "Linux Usage Snapshot",
+  "type": "object",
+  "required": ["generatedAt", "overallStatus", "providers"],
+  "properties": {
+    "generatedAt": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "overallStatus": {
+      "type": "string"
+    },
+    "providers": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/provider"
+      }
+    }
+  },
+  "$defs": {
+    "quotaWindow": {
+      "type": "object",
+      "required": ["label"],
+      "properties": {
+        "label": { "type": "string" },
+        "usedPercent": { "type": ["number", "null"] },
+        "remainingPercent": { "type": ["number", "null"] },
+        "usedDisplay": { "type": ["string", "null"] },
+        "remainingDisplay": { "type": ["string", "null"] },
+        "resetAt": { "type": ["string", "null"], "format": "date-time" },
+        "resetText": { "type": ["string", "null"] }
+      }
+    },
+    "provider": {
+      "type": "object",
+      "required": ["providerId", "title", "iconName", "status", "detailLines", "stale"],
+      "properties": {
+        "providerId": { "enum": ["codex", "claude", "copilot"] },
+        "title": { "type": "string" },
+        "iconName": { "type": "string" },
+        "status": {
+          "enum": ["ok", "refreshing", "stale", "unconfigured", "auth_required", "unavailable", "error"]
+        },
+        "sourceLabel": { "type": ["string", "null"] },
+        "accountLabel": { "type": ["string", "null"] },
+        "planLabel": { "type": ["string", "null"] },
+        "primaryQuota": {
+          "anyOf": [
+            { "$ref": "#/$defs/quotaWindow" },
+            { "type": "null" }
+          ]
+        },
+        "secondaryQuota": {
+          "anyOf": [
+            { "$ref": "#/$defs/quotaWindow" },
+            { "type": "null" }
+          ]
+        },
+        "detailLines": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "errorMessage": { "type": ["string", "null"] },
+        "remediation": { "type": ["string", "null"] },
+        "refreshedAt": { "type": ["string", "null"], "format": "date-time" },
+        "stale": { "type": "boolean" }
+      }
+    }
+  }
+}

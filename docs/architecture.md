@@ -1,0 +1,28 @@
+# Architecture
+
+Linux Usage is split into two runtime layers:
+
+- `extension/`: GNOME Shell extension that owns the top-bar button, popup UI, refresh cadence, and preferences.
+- `helper/`: Rust helper that detects local provider sessions, queries provider APIs, normalizes data, and caches the last snapshot.
+
+## Data flow
+
+1. The extension opens or auto-refreshes.
+2. `extension/src/services/helper_client.js` tries D-Bus first, then falls back to the helper CLI.
+3. The helper fetches Codex, Claude, and Copilot in parallel.
+4. The helper returns a normalized snapshot matching `contracts/snapshot.schema.json`.
+5. The extension renders either the Overview tab or a provider detail card.
+
+## Current v1 choices
+
+- GNOME Shell target: `40`
+- Helper transport: D-Bus service plus CLI fallback
+- Auth strategy: local sessions first
+- Copilot fallback: GitHub token via env or `gh auth token`
+
+## Planned follow-ups
+
+- stronger Copilot login flow
+- richer Claude fallback paths
+- trend history and notifications
+- user service packaging for the helper

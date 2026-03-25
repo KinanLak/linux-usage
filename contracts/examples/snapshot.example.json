@@ -1,0 +1,38 @@
+{
+  "generatedAt": "2026-03-25T14:00:00Z",
+  "overallStatus": "ok",
+  "providers": [
+    {
+      "providerId": "codex",
+      "title": "Codex",
+      "iconName": "utilities-terminal-symbolic",
+      "status": "ok",
+      "sourceLabel": "Local session + OpenAI usage API",
+      "accountLabel": "user@example.com",
+      "planLabel": "PLUS",
+      "primaryQuota": {
+        "label": "Session",
+        "usedPercent": 27,
+        "remainingPercent": 73,
+        "usedDisplay": "27% used",
+        "remainingDisplay": "73% left",
+        "resetAt": "2026-03-25T16:30:00Z",
+        "resetText": "Resets in 2h 30m"
+      },
+      "secondaryQuota": {
+        "label": "Weekly",
+        "usedPercent": 9,
+        "remainingPercent": 91,
+        "usedDisplay": "9% used",
+        "remainingDisplay": "91% left",
+        "resetAt": "2026-03-30T11:00:00Z",
+        "resetText": "Resets in 4d 21h"
+      },
+      "detailLines": ["Credits: 197.00"],
+      "errorMessage": null,
+      "remediation": null,
+      "refreshedAt": "2026-03-25T14:00:00Z",
+      "stale": false
+    }
+  ]
+}

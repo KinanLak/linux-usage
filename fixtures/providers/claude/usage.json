@@ -1,0 +1,14 @@
+{
+  "five_hour": {
+    "percent_used": 12,
+    "resets_in": "3h 41m"
+  },
+  "seven_day": {
+    "percent_used": 28,
+    "resets_in": "2d 5h"
+  },
+  "extra_usage": {
+    "spend": 4.2,
+    "limit": 200.0
+  }
+}

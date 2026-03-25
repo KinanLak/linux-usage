@@ -1,0 +1,9 @@
+{
+  "uuid": "linux-usage@kinanl",
+  "name": "Linux Usage",
+  "description": "Monitor Codex, Claude, and Copilot quotas from the GNOME top bar.",
+  "shell-version": ["40"],
+  "settings-schema": "org.kinanl.linux-usage",
+  "url": "https://github.com/kinanl/linux-usage",
+  "version": 1
+}

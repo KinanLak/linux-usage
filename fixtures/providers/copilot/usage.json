@@ -1,0 +1,12 @@
+{
+  "userLogin": "kinanl",
+  "copilotPlan": "Pro",
+  "quotaSnapshots": {
+    "premiumInteractions": {
+      "percentRemaining": 74
+    },
+    "chat": {
+      "percentRemaining": 88
+    }
+  }
+}
