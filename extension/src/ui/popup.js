@@ -6,6 +6,7 @@ const ExtensionUtils = imports.misc.extensionUtils;
 const Me = ExtensionUtils.getCurrentExtension();
 const { LinuxUsageState } = Me.imports.src.models.state;
 const { HelperClient } = Me.imports.src.services.helper_client;
+const { ProviderCatalog } = Me.imports.src.providers.catalog;
 
 const PROGRESS_TRACK_WIDTH = 320;
 
@@ -103,6 +104,7 @@ class LinuxUsageIndicator extends PanelMenu.Button {
 
         this._settings = ExtensionUtils.getSettings('org.kinanl.linux-usage');
         this._state = new LinuxUsageState();
+        this._providerCatalog = ProviderCatalog.loadProviderCatalog(Me.path);
         this._selectedTab = this._settings.get_string('last-selected-tab') || 'overview';
         this._refreshTimeoutId = 0;
 
@@ -179,7 +181,9 @@ class LinuxUsageIndicator extends PanelMenu.Button {
     _visibleProviders() {
         if (!this._state.snapshot || !this._state.snapshot.providers)
             return [];
-        const enabled = new Set(this._settings.get_strv('enabled-providers'));
+        const enabled = new Set(ProviderCatalog.getEnabledProviderIds(this._settings, this._providerCatalog));
+        if (this._settings.get_user_value('enabled-providers') === null && enabled.size === 0)
+            return this._state.snapshot.providers;
         return this._state.snapshot.providers.filter(provider => enabled.has(provider.providerId));
     }
 

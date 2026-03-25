@@ -5,6 +5,7 @@ GNOME top-bar quota monitor for Codex, Claude, and GitHub Copilot on Rocky Linux
 ## Layout
 
 - `extension/`: GNOME Shell extension
+- `extension/providers.json`: shared provider catalog consumed by the helper and prefs UI
 - `helper/`: Rust helper CLI/D-Bus service
 - `contracts/`: normalized snapshot schema
 - `docs/`: architecture and provider notes
@@ -25,6 +26,12 @@ GNOME top-bar quota monitor for Codex, Claude, and GitHub Copilot on Rocky Linux
 ```
 
 Then restart GNOME Shell or log out/in before enabling the extension.
+
+## Adding a provider
+
+- Add the provider metadata once in `extension/providers.json`
+- Implement the provider module in `helper/src/providers/`
+- Register the provider in `helper/src/providers/mod.rs`
 
 ## Notes
 

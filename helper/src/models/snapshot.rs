@@ -1,31 +1,7 @@
 use chrono::{DateTime, Utc};
-use clap::ValueEnum;
 use serde::{Deserialize, Serialize};
 
-#[derive(Debug, Clone, Copy, Serialize, Deserialize, PartialEq, Eq, Hash, ValueEnum)]
-#[serde(rename_all = "lowercase")]
-pub enum ProviderId {
-    Codex,
-    Claude,
-    Copilot,
-}
-
-impl ProviderId {
-    pub fn title(self) -> &'static str {
-        match self {
-            Self::Codex => "Codex",
-            Self::Claude => "Claude",
-            Self::Copilot => "Copilot",
-        }
-    }
-    pub fn icon_name(self) -> &'static str {
-        match self {
-            Self::Codex => "utilities-terminal-symbolic",
-            Self::Claude => "weather-overcast-symbolic",
-            Self::Copilot => "system-users-symbolic",
-        }
-    }
-}
+use super::ProviderMetadata;
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(rename_all = "snake_case")]
@@ -55,7 +31,7 @@ pub struct QuotaWindow {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct ProviderSnapshot {
-    pub provider_id: ProviderId,
+    pub provider_id: String,
     pub title: String,
     pub icon_name: String,
     pub status: ProviderStatus,
@@ -80,11 +56,11 @@ pub struct AppSnapshot {
 }
 
 impl ProviderSnapshot {
-    pub fn base(provider_id: ProviderId) -> Self {
+    pub fn base(metadata: &ProviderMetadata) -> Self {
         Self {
-            provider_id,
-            title: provider_id.title().to_string(),
-            icon_name: provider_id.icon_name().to_string(),
+            provider_id: metadata.id.clone(),
+            title: metadata.title.clone(),
+            icon_name: metadata.icon_name.clone(),
             status: ProviderStatus::Refreshing,
             source_label: None,
             account_label: None,

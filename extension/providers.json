@@ -1,0 +1,23 @@
+[
+  {
+    "id": "codex",
+    "title": "Codex",
+    "description": "OpenAI Codex session and weekly quota",
+    "iconName": "utilities-terminal-symbolic",
+    "defaultEnabled": true
+  },
+  {
+    "id": "claude",
+    "title": "Claude",
+    "description": "Anthropic Claude quota and local auth state",
+    "iconName": "weather-overcast-symbolic",
+    "defaultEnabled": true
+  },
+  {
+    "id": "copilot",
+    "title": "Copilot",
+    "description": "GitHub Copilot premium interactions and included chat",
+    "iconName": "system-users-symbolic",
+    "defaultEnabled": true
+  }
+]

@@ -14,12 +14,21 @@ try {
     ExtensionUtils = null;
 }
 
+let ProviderCatalog = null;
+try {
+    ProviderCatalog = imports.src.providers.catalog.ProviderCatalog;
+} catch (_error) {
+    if (ExtensionUtils)
+        ProviderCatalog = ExtensionUtils.getCurrentExtension().imports.src.providers.catalog.ProviderCatalog;
+}
+
 const SCHEMA_ID = 'org.kinanl.linux-usage';
 
 function buildPrefsWidget() {
-    loadCss(ExtensionUtils.getCurrentExtension().path);
+    const extensionDir = ExtensionUtils.getCurrentExtension().path;
+    loadCss(extensionDir);
     const settings = ExtensionUtils.getSettings(SCHEMA_ID);
-    const widget = buildPreferencesContent(settings, { standalone: false });
+    const widget = buildPreferencesContent(settings, { standalone: false, extensionDir });
     widget.connect('realize', () => {
         const root = widget.get_root();
         if (root && root.set_default_size)
@@ -43,7 +52,7 @@ function buildStandaloneWindow(application, extensionDir) {
         css_classes: ['linux-usage-prefs-shell'],
     });
     shell.append(buildStandaloneTopbar(window));
-    shell.append(buildPreferencesContent(settings, { standalone: true }));
+    shell.append(buildPreferencesContent(settings, { standalone: true, extensionDir }));
 
     window.set_content(shell);
     return window;
@@ -71,6 +80,7 @@ function loadCss(extensionDir) {
 }
 
 function buildPreferencesContent(settings, options) {
+    const providers = ProviderCatalog.loadProviderCatalog(options.extensionDir);
     const root = new Gtk.ScrolledWindow({
         hscrollbar_policy: Gtk.PolicyType.NEVER,
         propagate_natural_height: true,
@@ -96,7 +106,7 @@ function buildPreferencesContent(settings, options) {
     clamp.set_child(page);
 
     page.append(buildGeneralSection(settings));
-    page.append(buildProvidersSection(settings));
+    page.append(buildProvidersSection(settings, providers));
 
     return root;
 }
@@ -151,30 +161,28 @@ function buildGeneralSection(settings) {
     return section.box;
 }
 
-function buildProvidersSection(settings) {
+function buildProvidersSection(settings, providers) {
     const section = createSection(
         'Providers',
         'Choose which providers appear in the overview and detail tabs.'
     );
 
-    [
-        ['codex', 'Codex', 'OpenAI Codex session and weekly quota'],
-        ['claude', 'Claude', 'Anthropic Claude quota and local auth state'],
-        ['copilot', 'Copilot', 'GitHub Copilot premium interactions and included chat'],
-    ].forEach(([providerId, title, description]) => {
+    providers.forEach(provider => {
         const toggle = new Gtk.Switch({
-            active: settings.get_strv('enabled-providers').includes(providerId),
+            active: ProviderCatalog.getEnabledProviderIds(settings, providers).includes(provider.id),
             valign: Gtk.Align.CENTER,
         });
         toggle.connect('notify::active', widget => {
-            const current = new Set(settings.get_strv('enabled-providers'));
+            const current = new Set(ProviderCatalog.getEnabledProviderIds(settings, providers));
             if (widget.active)
-                current.add(providerId);
+                current.add(provider.id);
             else
-                current.delete(providerId);
-            settings.set_strv('enabled-providers', Array.from(current));
+                current.delete(provider.id);
+            settings.set_strv('enabled-providers', providers
+                .map(entry => entry.id)
+                .filter(id => current.has(id)));
         });
-        section.card.append(createRow(title, description, toggle));
+        section.card.append(createRow(provider.title, provider.description, toggle));
     });
 
     return section.box;

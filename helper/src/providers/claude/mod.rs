@@ -1,7 +1,7 @@
-use crate::models::{ProviderId, ProviderSnapshot, ProviderStatus, QuotaWindow};
+use crate::models::{ProviderMetadata, ProviderSnapshot, ProviderStatus, QuotaWindow};
 use crate::providers::{
     BoxFuture, Provider, ProviderContext, parse_jwt_claims, percent_pair_from_used_limit,
-    status_snapshot, value_as_f64, value_as_string,
+    required_provider_metadata, status_snapshot, value_as_f64, value_as_string,
 };
 use crate::sessions::{config_dir, first_existing, home_dir, read_json_file};
 use chrono::Utc;
@@ -12,6 +12,8 @@ use std::path::PathBuf;
 #[derive(Debug, Default)]
 pub struct ClaudeProvider;
 
+const PROVIDER_ID: &str = "claude";
+
 #[derive(Debug, Deserialize)]
 struct ClaudeCredentials {
     access_token: Option<String>,
@@ -20,11 +22,17 @@ struct ClaudeCredentials {
 }
 
 impl Provider for ClaudeProvider {
+    fn metadata(&self) -> &'static ProviderMetadata {
+        required_provider_metadata(PROVIDER_ID)
+    }
+
     fn fetch<'a>(&'a self, ctx: &'a ProviderContext) -> BoxFuture<'a, ProviderSnapshot> {
         Box::pin(async move {
+            let metadata = self.metadata();
+
             let Some(path) = discover_credentials_path() else {
                 return status_snapshot(
-                    ProviderId::Claude,
+                    metadata,
                     ProviderStatus::Unconfigured,
                     Some("No local Claude credentials found".to_string()),
                     Some("Sign in with Claude Code to enable quota monitoring.".to_string()),
@@ -35,7 +43,7 @@ impl Provider for ClaudeProvider {
                 Ok(value) => value,
                 Err(error) => {
                     return status_snapshot(
-                        ProviderId::Claude,
+                        metadata,
                         ProviderStatus::Error,
                         Some(error.to_string()),
                         Some("Inspect the Claude credentials file on disk.".to_string()),
@@ -45,7 +53,7 @@ impl Provider for ClaudeProvider {
 
             let Some(token) = creds.access_token.clone() else {
                 return status_snapshot(
-                    ProviderId::Claude,
+                    metadata,
                     ProviderStatus::AuthRequired,
                     Some("Claude credentials exist but no access token is present".to_string()),
                     Some("Run `claude login` again to refresh the token.".to_string()),
@@ -63,7 +71,7 @@ impl Provider for ClaudeProvider {
                 Ok(value) => value,
                 Err(error) => {
                     return status_snapshot(
-                        ProviderId::Claude,
+                        metadata,
                         ProviderStatus::Error,
                         Some(format!("Claude request failed: {error}")),
                         Some("Check network access or retry later.".to_string()),
@@ -77,7 +85,7 @@ impl Provider for ClaudeProvider {
                     "Claude usage endpoint returned an unexpected status",
                 );
                 return status_snapshot(
-                    ProviderId::Claude,
+                    metadata,
                     if response.status().is_client_error() {
                         ProviderStatus::AuthRequired
                     } else {
@@ -92,7 +100,7 @@ impl Provider for ClaudeProvider {
                 Ok(value) => value,
                 Err(error) => {
                     return status_snapshot(
-                        ProviderId::Claude,
+                        metadata,
                         ProviderStatus::Error,
                         Some(format!("Claude payload parse failed: {error}")),
                         Some("The provider response format may have changed.".to_string()),
@@ -101,7 +109,7 @@ impl Provider for ClaudeProvider {
             };
 
             let claims = parse_jwt_claims(&token);
-            let mut snapshot = ProviderSnapshot::base(ProviderId::Claude);
+            let mut snapshot = ProviderSnapshot::base(metadata);
             snapshot.status = ProviderStatus::Ok;
             snapshot.source_label = Some("Local session + Claude OAuth API".to_string());
             snapshot.account_label = creds.email.or_else(|| {

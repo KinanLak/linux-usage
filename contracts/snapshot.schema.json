@@ -37,7 +37,7 @@
       "type": "object",
       "required": ["providerId", "title", "iconName", "status", "detailLines", "stale"],
       "properties": {
-        "providerId": { "enum": ["codex", "claude", "copilot"] },
+        "providerId": { "type": "string" },
         "title": { "type": "string" },
         "iconName": { "type": "string" },
         "status": {

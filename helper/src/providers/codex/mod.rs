@@ -1,7 +1,7 @@
-use crate::models::{ProviderId, ProviderSnapshot, ProviderStatus, QuotaWindow};
+use crate::models::{ProviderMetadata, ProviderSnapshot, ProviderStatus, QuotaWindow};
 use crate::providers::{
     BoxFuture, Provider, ProviderContext, parse_jwt_claims, percent_pair_from_remaining_limit,
-    status_snapshot, value_as_f64, value_as_string, value_at_path,
+    required_provider_metadata, status_snapshot, value_as_f64, value_as_string, value_at_path,
 };
 use crate::sessions::{first_existing, home_dir, read_json_file};
 use chrono::{TimeZone, Utc};
@@ -16,6 +16,8 @@ use tokio::process::Command;
 #[derive(Debug, Default)]
 pub struct CodexProvider;
 
+const PROVIDER_ID: &str = "codex";
+
 #[derive(Debug, Deserialize, Serialize)]
 struct CodexAuthFile {
     tokens: Option<CodexTokens>,
@@ -29,11 +31,17 @@ struct CodexTokens {
 }
 
 impl Provider for CodexProvider {
+    fn metadata(&self) -> &'static ProviderMetadata {
+        required_provider_metadata(PROVIDER_ID)
+    }
+
     fn fetch<'a>(&'a self, ctx: &'a ProviderContext) -> BoxFuture<'a, ProviderSnapshot> {
         Box::pin(async move {
+            let metadata = self.metadata();
+
             let Some(path) = discover_auth_path() else {
                 return status_snapshot(
-                    ProviderId::Codex,
+                    metadata,
                     ProviderStatus::Unconfigured,
                     Some("No local Codex session found".to_string()),
                     Some("Sign in with the Codex CLI to enable quota monitoring.".to_string()),
@@ -44,7 +52,7 @@ impl Provider for CodexProvider {
                 Ok(value) => value,
                 Err(error) => {
                     return status_snapshot(
-                        ProviderId::Codex,
+                        metadata,
                         ProviderStatus::Error,
                         Some(error.to_string()),
                         Some("Inspect ~/.codex/auth.json permissions and content.".to_string()),
@@ -59,7 +67,7 @@ impl Provider for CodexProvider {
 
             let Some(mut token_value) = token.take() else {
                 return status_snapshot(
-                    ProviderId::Codex,
+                    metadata,
                     ProviderStatus::AuthRequired,
                     Some("Codex auth file exists but has no access token".to_string()),
                     Some("Run `codex login` again to refresh the local session.".to_string()),
@@ -83,7 +91,7 @@ impl Provider for CodexProvider {
                 Ok(value) => value,
                 Err(error) => {
                     return status_snapshot(
-                        ProviderId::Codex,
+                        metadata,
                         ProviderStatus::Error,
                         Some(format!("Codex request failed: {error}")),
                         Some("Check network access or try again later.".to_string()),
@@ -105,7 +113,7 @@ impl Provider for CodexProvider {
                         Ok(value) => value,
                         Err(error) => {
                             return status_snapshot(
-                                ProviderId::Codex,
+                                metadata,
                                 ProviderStatus::Error,
                                 Some(format!("Codex retry failed after refresh: {error}")),
                                 Some("Check network access or try again later.".to_string()),
@@ -133,7 +141,7 @@ impl Provider for CodexProvider {
                     )
                 });
                 return status_snapshot(
-                    ProviderId::Codex,
+                    metadata,
                     if status.is_client_error() {
                         ProviderStatus::AuthRequired
                     } else {
@@ -148,7 +156,7 @@ impl Provider for CodexProvider {
                 Ok(value) => value,
                 Err(error) => {
                     return status_snapshot(
-                        ProviderId::Codex,
+                        metadata,
                         ProviderStatus::Error,
                         Some(format!("Codex payload parse failed: {error}")),
                         Some("The provider response format may have changed.".to_string()),
@@ -156,7 +164,7 @@ impl Provider for CodexProvider {
                 }
             };
 
-            let mut snapshot = ProviderSnapshot::base(ProviderId::Codex);
+            let mut snapshot = ProviderSnapshot::base(metadata);
             snapshot.status = ProviderStatus::Ok;
             snapshot.source_label = Some("Local session + OpenAI usage API".to_string());
             snapshot.account_label = claims
@@ -494,7 +502,7 @@ async fn fetch_via_rpc() -> Result<ProviderSnapshot, String> {
     let stderr_lines = stderr_task.await.unwrap_or_default();
 
     if let Some(rate_limits) = rate_limits {
-        let mut snapshot = ProviderSnapshot::base(ProviderId::Codex);
+        let mut snapshot = ProviderSnapshot::base(required_provider_metadata(PROVIDER_ID));
         snapshot.status = ProviderStatus::Ok;
         snapshot.source_label = Some("Codex CLI app-server".to_string());
         snapshot.account_label = account

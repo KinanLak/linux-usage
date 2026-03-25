@@ -12,7 +12,7 @@
       <description>How often the extension refreshes provider data.</description>
     </key>
     <key name="enabled-providers" type="as">
-      <default>[ 'codex', 'claude', 'copilot' ]</default>
+      <default>[]</default>
       <summary>Enabled providers</summary>
       <description>The providers visible in the extension overview.</description>
     </key>

@@ -6,7 +6,7 @@ mod sessions;
 
 use anyhow::Result;
 use clap::{Parser, Subcommand};
-use models::{AppSnapshot, ProviderId};
+use models::AppSnapshot;
 use providers::ProviderRegistry;
 use tracing_subscriber::EnvFilter;
 
@@ -25,7 +25,7 @@ enum Command {
         pretty: bool,
     },
     Probe {
-        provider: ProviderId,
+        provider: String,
     },
     ServeDbus,
 }
@@ -46,7 +46,12 @@ async fn main() -> Result<()> {
             print_snapshot(&snapshot, pretty)?;
         }
         Command::Probe { provider } => {
-            let snapshot = registry.fetch_one(provider).await;
+            let snapshot = registry.fetch_one(&provider).await.ok_or_else(|| {
+                anyhow::anyhow!(
+                    "unknown provider `{provider}`; available providers: {}",
+                    registry.known_provider_ids().join(", ")
+                )
+            })?;
             println!("{}", serde_json::to_string_pretty(&snapshot)?);
         }
         Command::ServeDbus => {

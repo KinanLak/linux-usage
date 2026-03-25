@@ -1,6 +1,7 @@
-use crate::models::{ProviderId, ProviderSnapshot, ProviderStatus, QuotaWindow};
+use crate::models::{ProviderMetadata, ProviderSnapshot, ProviderStatus, QuotaWindow};
 use crate::providers::{
-    BoxFuture, Provider, ProviderContext, gh_cli_token, status_snapshot, value_as_f64,
+    BoxFuture, Provider, ProviderContext, gh_cli_token, required_provider_metadata,
+    status_snapshot, value_as_f64,
 };
 use chrono::{DateTime, Utc};
 use serde_json::Value;
@@ -9,9 +10,16 @@ use std::env;
 #[derive(Debug, Default)]
 pub struct CopilotProvider;
 
+const PROVIDER_ID: &str = "copilot";
+
 impl Provider for CopilotProvider {
+    fn metadata(&self) -> &'static ProviderMetadata {
+        required_provider_metadata(PROVIDER_ID)
+    }
+
     fn fetch<'a>(&'a self, ctx: &'a ProviderContext) -> BoxFuture<'a, ProviderSnapshot> {
         Box::pin(async move {
+            let metadata = self.metadata();
             let token = env::var("GITHUB_TOKEN")
                 .ok()
                 .or_else(|| env::var("GH_TOKEN").ok())
@@ -19,7 +27,7 @@ impl Provider for CopilotProvider {
 
             let Some(token) = token else {
                 return status_snapshot(
-                    ProviderId::Copilot,
+                    metadata,
                     ProviderStatus::AuthRequired,
                     Some("No GitHub token available for Copilot".to_string()),
                     Some(
@@ -44,7 +52,7 @@ impl Provider for CopilotProvider {
                 Ok(value) => value,
                 Err(error) => {
                     return status_snapshot(
-                        ProviderId::Copilot,
+                        metadata,
                         ProviderStatus::Error,
                         Some(format!("Copilot request failed: {error}")),
                         Some("Check network access or retry later.".to_string()),
@@ -58,7 +66,7 @@ impl Provider for CopilotProvider {
                     "Copilot usage endpoint returned an unexpected status",
                 );
                 return status_snapshot(
-                    ProviderId::Copilot,
+                    metadata,
                     if response.status().is_client_error() {
                         ProviderStatus::AuthRequired
                     } else {
@@ -76,7 +84,7 @@ impl Provider for CopilotProvider {
                 Ok(value) => value,
                 Err(error) => {
                     return status_snapshot(
-                        ProviderId::Copilot,
+                        metadata,
                         ProviderStatus::Error,
                         Some(format!("Copilot payload parse failed: {error}")),
                         Some("The provider response format may have changed.".to_string()),
@@ -84,7 +92,7 @@ impl Provider for CopilotProvider {
                 }
             };
 
-            let mut snapshot = ProviderSnapshot::base(ProviderId::Copilot);
+            let mut snapshot = ProviderSnapshot::base(metadata);
             snapshot.status = ProviderStatus::Ok;
             snapshot.source_label = Some("GitHub token + Copilot usage API".to_string());
             snapshot.account_label = payload

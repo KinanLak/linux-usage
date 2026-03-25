@@ -1,18 +1,22 @@
+pub mod catalog;
 pub mod claude;
 pub mod codex;
 pub mod copilot;
 
 use crate::cache::SnapshotCache;
-use crate::models::{AppSnapshot, ProviderId, ProviderSnapshot, ProviderStatus};
-use anyhow::{Context, Result};
+use crate::models::{AppSnapshot, ProviderMetadata, ProviderSnapshot, ProviderStatus};
+use anyhow::{Context, Result, anyhow, ensure};
 use chrono::Utc;
+use futures::future::join_all;
 use reqwest::{Client, StatusCode};
 use serde_json::Value;
+use std::collections::HashSet;
 use std::future::Future;
 use std::pin::Pin;
 use std::process::Command;
 use std::sync::Arc;
-use tokio::join;
+
+pub use catalog::{provider_catalog, required_provider_metadata};
 
 pub type BoxFuture<'a, T> = Pin<Box<dyn Future<Output = T> + Send + 'a>>;
 
@@ -22,6 +26,7 @@ pub struct ProviderContext {
 }
 
 pub trait Provider: Send + Sync {
+    fn metadata(&self) -> &'static ProviderMetadata;
     fn fetch<'a>(&'a self, ctx: &'a ProviderContext) -> BoxFuture<'a, ProviderSnapshot>;
 }
 
@@ -29,9 +34,7 @@ pub trait Provider: Send + Sync {
 pub struct ProviderRegistry {
     ctx: ProviderContext,
     cache: Arc<SnapshotCache>,
-    codex: Arc<dyn Provider>,
-    claude: Arc<dyn Provider>,
-    copilot: Arc<dyn Provider>,
+    providers: Vec<Arc<dyn Provider>>,
 }
 
 impl ProviderRegistry {
@@ -41,24 +44,20 @@ impl ProviderRegistry {
             .build()
             .context("failed to build HTTP client")?;
 
+        let providers = registered_providers();
+        validate_provider_registry(&providers)?;
+
         Ok(Self {
             ctx: ProviderContext { client },
             cache: Arc::new(SnapshotCache::new()?),
-            codex: Arc::new(codex::CodexProvider::default()),
-            claude: Arc::new(claude::ClaudeProvider::default()),
-            copilot: Arc::new(copilot::CopilotProvider::default()),
+            providers,
         })
     }
 
     pub async fn fetch_all(&self) -> AppSnapshot {
         let cached = self.cache.load();
-        let (codex, claude, copilot) = join!(
-            self.codex.fetch(&self.ctx),
-            self.claude.fetch(&self.ctx),
-            self.copilot.fetch(&self.ctx)
-        );
-
-        let providers = vec![codex, claude, copilot]
+        let providers = join_all(self.providers.iter().map(|provider| provider.fetch(&self.ctx)))
+            .await
             .into_iter()
             .map(|snapshot| merge_stale(snapshot, cached.as_ref()))
             .collect::<Vec<_>>();
@@ -93,13 +92,64 @@ impl ProviderRegistry {
         self.fetch_all().await
     }
 
-    pub async fn fetch_one(&self, provider: ProviderId) -> ProviderSnapshot {
-        match provider {
-            ProviderId::Codex => self.codex.fetch(&self.ctx).await,
-            ProviderId::Claude => self.claude.fetch(&self.ctx).await,
-            ProviderId::Copilot => self.copilot.fetch(&self.ctx).await,
-        }
+    pub async fn fetch_one(&self, provider: &str) -> Option<ProviderSnapshot> {
+        let candidate = self
+            .providers
+            .iter()
+            .find(|entry| entry.metadata().id == provider)?;
+        Some(candidate.fetch(&self.ctx).await)
     }
+
+    pub fn known_provider_ids(&self) -> Vec<&str> {
+        self.providers
+            .iter()
+            .map(|provider| provider.metadata().id.as_str())
+            .collect()
+    }
+}
+
+fn registered_providers() -> Vec<Arc<dyn Provider>> {
+    vec![
+        Arc::new(codex::CodexProvider::default()),
+        Arc::new(claude::ClaudeProvider::default()),
+        Arc::new(copilot::CopilotProvider::default()),
+    ]
+}
+
+fn validate_provider_registry(providers: &[Arc<dyn Provider>]) -> Result<()> {
+    let catalog_ids = provider_catalog()
+        .iter()
+        .map(|metadata| metadata.id.as_str())
+        .collect::<HashSet<_>>();
+    let mut registered_ids = HashSet::new();
+
+    for provider in providers {
+        let metadata = provider.metadata();
+        ensure!(
+            catalog_ids.contains(metadata.id.as_str()),
+            "registered provider `{}` is missing from extension/providers.json",
+            metadata.id
+        );
+        ensure!(
+            registered_ids.insert(metadata.id.as_str()),
+            "provider `{}` is registered more than once",
+            metadata.id
+        );
+    }
+
+    for metadata in provider_catalog() {
+        ensure!(
+            registered_ids.contains(metadata.id.as_str()),
+            "provider `{}` exists in extension/providers.json but has no helper implementation",
+            metadata.id
+        );
+    }
+
+    if providers.is_empty() {
+        return Err(anyhow!("provider registry is empty"));
+    }
+
+    Ok(())
 }
 
 fn merge_stale(mut snapshot: ProviderSnapshot, cached: Option<&AppSnapshot>) -> ProviderSnapshot {
@@ -134,12 +184,12 @@ fn merge_stale(mut snapshot: ProviderSnapshot, cached: Option<&AppSnapshot>) -> 
 }
 
 pub fn status_snapshot(
-    provider_id: ProviderId,
+    metadata: &ProviderMetadata,
     status: ProviderStatus,
     error_message: impl Into<Option<String>>,
     remediation: impl Into<Option<String>>,
 ) -> ProviderSnapshot {
-    let mut snapshot = ProviderSnapshot::base(provider_id);
+    let mut snapshot = ProviderSnapshot::base(metadata);
     snapshot.status = status;
     snapshot.error_message = error_message.into();
     snapshot.remediation = remediation.into();

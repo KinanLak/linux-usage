@@ -9,9 +9,15 @@ Linux Usage is split into two runtime layers:
 
 1. The extension opens or auto-refreshes.
 2. `extension/src/services/helper_client.js` tries D-Bus first, then falls back to the helper CLI.
-3. The helper fetches Codex, Claude, and Copilot in parallel.
+3. The helper fetches every registered provider in parallel.
 4. The helper returns a normalized snapshot matching `contracts/snapshot.schema.json`.
 5. The extension renders either the Overview tab or a provider detail card.
+
+## Provider catalog
+
+- `extension/providers.json` is the shared provider metadata source.
+- The helper uses it for stable IDs, titles, and icons.
+- The preferences UI uses it to build provider toggles dynamically.
 
 ## Current v1 choices
 
