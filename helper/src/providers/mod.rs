@@ -264,6 +264,13 @@ pub fn error_from_status(status: StatusCode, fallback: &str) -> String {
     }
 }
 
+pub fn provider_status_from_http_status(status: StatusCode) -> ProviderStatus {
+    match status {
+        StatusCode::UNAUTHORIZED | StatusCode::FORBIDDEN => ProviderStatus::AuthRequired,
+        _ => ProviderStatus::Error,
+    }
+}
+
 pub fn gh_cli_token() -> Option<String> {
     let output = Command::new("gh").args(["auth", "token"]).output().ok()?;
     if !output.status.success() {
@@ -275,5 +282,32 @@ pub fn gh_cli_token() -> Option<String> {
         None
     } else {
         Some(trimmed.to_string())
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::provider_status_from_http_status;
+    use crate::models::ProviderStatus;
+    use reqwest::StatusCode;
+
+    #[test]
+    fn maps_rate_limit_to_error_instead_of_auth() {
+        assert!(matches!(
+            provider_status_from_http_status(StatusCode::TOO_MANY_REQUESTS),
+            ProviderStatus::Error
+        ));
+    }
+
+    #[test]
+    fn keeps_auth_status_for_auth_failures() {
+        assert!(matches!(
+            provider_status_from_http_status(StatusCode::UNAUTHORIZED),
+            ProviderStatus::AuthRequired
+        ));
+        assert!(matches!(
+            provider_status_from_http_status(StatusCode::FORBIDDEN),
+            ProviderStatus::AuthRequired
+        ));
     }
 }

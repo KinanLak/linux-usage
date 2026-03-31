@@ -1,7 +1,8 @@
 use crate::models::{ProviderMetadata, ProviderSnapshot, ProviderStatus, QuotaWindow};
 use crate::providers::{
     BoxFuture, Provider, ProviderContext, parse_jwt_claims, percent_pair_from_remaining_limit,
-    required_provider_metadata, status_snapshot, value_as_f64, value_as_string, value_at_path,
+    provider_status_from_http_status, required_provider_metadata, status_snapshot, value_as_f64,
+    value_as_string, value_at_path,
 };
 use crate::sessions::{first_existing, home_dir, read_json_file};
 use chrono::{TimeZone, Utc};
@@ -142,11 +143,7 @@ impl Provider for CodexProvider {
                 });
                 return status_snapshot(
                     metadata,
-                    if status.is_client_error() {
-                        ProviderStatus::AuthRequired
-                    } else {
-                        ProviderStatus::Error
-                    },
+                    provider_status_from_http_status(status),
                     Some(message.clone()),
                     Some(remediation_for_error(Some(&message))),
                 );

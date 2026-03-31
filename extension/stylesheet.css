@@ -172,3 +172,7 @@
 .linux-usage-error {
     color: rgba(255, 184, 184, 1);
 }
+
+.linux-usage-warning {
+    color: rgba(255, 220, 150, 1);
+}

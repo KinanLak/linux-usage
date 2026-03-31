@@ -110,6 +110,11 @@ function statusClass(status) {
     }
 }
 
+function providerMessageClass(provider, detailed = false) {
+    const baseClass = detailed ? 'linux-usage-detail-error' : 'linux-usage-subtle';
+    return `${baseClass} ${provider.status === 'stale' ? 'linux-usage-warning' : 'linux-usage-error'}`;
+}
+
 function providerColorClass(window) {
     if (window && window.valueLabel === 'Included')
         return 'linux-usage-progress-fill-info';
@@ -211,8 +216,9 @@ class LinuxUsageIndicator extends PanelMenu.Button {
 
     _updateIcon() {
         const providers = this._visibleProviders();
-        const degraded = providers.some(provider => ['error', 'auth_required'].includes(provider.status));
-        const stale = providers.every(provider => provider.stale);
+        const degraded = providers.some(provider => ['error', 'auth_required'].includes(provider.status)
+            || (provider.status === 'stale' && provider.errorMessage));
+        const stale = providers.length > 0 && providers.every(provider => provider.stale);
 
         if (degraded)
             this._icon.set_icon_name('dialog-warning-symbolic');
@@ -356,14 +362,14 @@ class LinuxUsageIndicator extends PanelMenu.Button {
         if (!provider.primaryQuota) {
             row.add_child(new St.Label({
                 text: detailStatus(provider.status),
-                style_class: provider.errorMessage ? 'linux-usage-subtle linux-usage-error' : 'linux-usage-overview-summary',
+                style_class: provider.errorMessage ? providerMessageClass(provider) : 'linux-usage-overview-summary',
             }));
         }
 
         if (provider.primaryQuota)
             row.add_child(this._buildQuotaBlock(provider.primaryQuota));
-        else if (provider.errorMessage)
-            row.add_child(new St.Label({ text: provider.errorMessage, style_class: 'linux-usage-subtle linux-usage-error' }));
+        if (provider.errorMessage)
+            row.add_child(new St.Label({ text: provider.errorMessage, style_class: providerMessageClass(provider) }));
 
         button.set_child(row);
         button.connect('clicked', () => {
@@ -396,7 +402,7 @@ class LinuxUsageIndicator extends PanelMenu.Button {
         this._visibleDetailLines(provider)
             .forEach(line => card.add_child(new St.Label({ text: line, style_class: 'linux-usage-detail-line' })));
         if (provider.errorMessage)
-            card.add_child(new St.Label({ text: provider.errorMessage, style_class: 'linux-usage-detail-error linux-usage-error' }));
+            card.add_child(new St.Label({ text: provider.errorMessage, style_class: providerMessageClass(provider, true) }));
         if (provider.remediation)
             card.add_child(new St.Label({ text: provider.remediation, style_class: 'linux-usage-detail-remediation' }));
 

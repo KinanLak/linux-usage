@@ -1,7 +1,7 @@
 use crate::models::{ProviderMetadata, ProviderSnapshot, ProviderStatus, QuotaWindow};
 use crate::providers::{
-    BoxFuture, Provider, ProviderContext, gh_cli_token, required_provider_metadata,
-    status_snapshot, value_as_f64,
+    BoxFuture, Provider, ProviderContext, gh_cli_token, provider_status_from_http_status,
+    required_provider_metadata, status_snapshot, value_as_f64,
 };
 use chrono::{DateTime, Utc};
 use serde_json::Value;
@@ -67,11 +67,7 @@ impl Provider for CopilotProvider {
                 );
                 return status_snapshot(
                     metadata,
-                    if response.status().is_client_error() {
-                        ProviderStatus::AuthRequired
-                    } else {
-                        ProviderStatus::Error
-                    },
+                    provider_status_from_http_status(response.status()),
                     Some(message),
                     Some(
                         "Refresh your GitHub login or use a token with access to Copilot usage."

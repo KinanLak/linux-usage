@@ -1,7 +1,8 @@
 use crate::models::{ProviderMetadata, ProviderSnapshot, ProviderStatus, QuotaWindow};
 use crate::providers::{
     BoxFuture, Provider, ProviderContext, parse_jwt_claims, percent_pair_from_used_limit,
-    required_provider_metadata, status_snapshot, value_as_f64, value_as_string,
+    provider_status_from_http_status, required_provider_metadata, status_snapshot, value_as_f64,
+    value_as_string,
 };
 use crate::sessions::{config_dir, first_existing, home_dir, read_json_file};
 use chrono::Utc;
@@ -134,11 +135,7 @@ impl Provider for ClaudeProvider {
                 );
                 return status_snapshot(
                     metadata,
-                    if response.status().is_client_error() {
-                        ProviderStatus::AuthRequired
-                    } else {
-                        ProviderStatus::Error
-                    },
+                    provider_status_from_http_status(response.status()),
                     Some(message),
                     Some("Refresh Claude Code with `claude auth login` or update the scope."
                         .to_string()),
