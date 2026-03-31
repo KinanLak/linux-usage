@@ -49,9 +49,9 @@ make install
 - `npm run clean:extension`: remove the generated `dist/` bundle
 - `make`: build the runtime bundle in `dist/`
 - `make check`: run typecheck, lint, and build
-- `make pack`: compile schemas and create `packaging/extension-bundle/linux-usage@kinanl.zip`
+- `make pack`: compile schemas and create `linux-usage.zip`
 - `make install`: install the zipped extension with `gnome-extensions install --force`
-- `make clean`: remove `dist/`, the packaged zip, and `node_modules/`
+- `make clean`: remove `dist/`, `linux-usage.zip`, `node_modules/`, and the compiled schema artifact
 
 ## Adding a provider
 
