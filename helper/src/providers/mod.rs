@@ -40,7 +40,7 @@ pub struct ProviderRegistry {
 impl ProviderRegistry {
     pub fn new() -> Result<Self> {
         let client = Client::builder()
-            .user_agent("linux-usage-helper/0.1.0")
+            .user_agent("linux-usage/1.0.0 (httops://github.com/KinanLak/linux-usage)")
             .build()
             .context("failed to build HTTP client")?;
 
