@@ -5,8 +5,8 @@ import path from "node:path";
 import ts from "typescript";
 
 const rootDir = path.resolve(import.meta.dirname, "..");
-const sourceDir = path.join(rootDir, "ts", "extension");
-const staticDir = path.join(rootDir, "extension");
+const extensionSourceDir = path.join(rootDir, "src", "extension");
+const helperSourceDir = path.join(rootDir, "src", "helper");
 const distDir = path.join(rootDir, "dist");
 const compilerOptions = loadCompilerOptions();
 
@@ -16,30 +16,35 @@ if (process.argv.includes("--clean")) {
 }
 
 await fs.rm(distDir, { recursive: true, force: true });
-await copyStaticExtensionFiles(staticDir, distDir);
+await copyStaticFiles(extensionSourceDir, distDir);
 
-const sourceFiles = await collectTypeScriptFiles(sourceDir);
+await transpileDirectory(extensionSourceDir, distDir);
+await transpileDirectory(helperSourceDir, path.join(distDir, "helper"));
 
-for (const sourceFile of sourceFiles) {
-  const sourceText = await fs.readFile(sourceFile, "utf8");
-  const result = ts.transpileModule(sourceText, {
-    compilerOptions,
-    fileName: sourceFile,
-    reportDiagnostics: true,
-  });
+async function transpileDirectory(sourceDir, outputBase) {
+  const sourceFiles = await collectTypeScriptFiles(sourceDir);
 
-  if (result.diagnostics?.length)
-    throw new Error(ts.formatDiagnosticsWithColorAndContext(result.diagnostics, formatHost()));
+  for (const sourceFile of sourceFiles) {
+    const sourceText = await fs.readFile(sourceFile, "utf8");
+    const result = ts.transpileModule(sourceText, {
+      compilerOptions,
+      fileName: sourceFile,
+      reportDiagnostics: true,
+    });
 
-  const relativePath = path.relative(sourceDir, sourceFile);
-  const outputFile = path.join(distDir, relativePath.replace(/\.ts$/, ".js"));
-  await fs.mkdir(path.dirname(outputFile), { recursive: true });
-  await fs.writeFile(outputFile, result.outputText);
+    if (result.diagnostics?.length)
+      throw new Error(ts.formatDiagnosticsWithColorAndContext(result.diagnostics, formatHost()));
 
-  if (sourceText.startsWith("#!")) await fs.chmod(outputFile, 0o755);
+    const relativePath = path.relative(sourceDir, sourceFile);
+    const outputFile = path.join(outputBase, relativePath.replace(/\.ts$/, ".js"));
+    await fs.mkdir(path.dirname(outputFile), { recursive: true });
+    await fs.writeFile(outputFile, result.outputText);
+
+    if (sourceText.startsWith("#!")) await fs.chmod(outputFile, 0o755);
+  }
 }
 
-async function copyStaticExtensionFiles(sourcePath, destinationPath) {
+async function copyStaticFiles(sourcePath, destinationPath) {
   const entries = await fs.readdir(sourcePath, { withFileTypes: true });
   await fs.mkdir(destinationPath, { recursive: true });
 
@@ -48,11 +53,12 @@ async function copyStaticExtensionFiles(sourcePath, destinationPath) {
     const destinationEntry = path.join(destinationPath, entry.name);
 
     if (entry.isDirectory()) {
-      await copyStaticExtensionFiles(sourceEntry, destinationEntry);
+      await copyStaticFiles(sourceEntry, destinationEntry);
       continue;
     }
 
     if (!entry.isFile()) continue;
+    if (entry.name.endsWith(".ts")) continue;
     if (entry.name.endsWith(".js")) continue;
     if (entry.name === "gschemas.compiled") continue;
 

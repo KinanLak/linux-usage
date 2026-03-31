@@ -5,10 +5,14 @@ import path from "node:path";
 import ts from "typescript";
 
 const rootDir = path.resolve(import.meta.dirname, "..");
-const sourceDir = path.join(rootDir, "ts", "extension");
-const ambientFile = path.join(rootDir, "ts", "ambient.d.ts");
+const extensionSourceDir = path.join(rootDir, "src", "extension");
+const helperSourceDir = path.join(rootDir, "src", "helper");
+const ambientFile = path.join(rootDir, "src", "ambient.d.ts");
 const compilerOptions = loadCompilerOptions();
-const sourceFiles = await collectTypeScriptFiles(sourceDir);
+const sourceFiles = [
+  ...(await collectTypeScriptFiles(extensionSourceDir)),
+  ...(await collectTypeScriptFiles(helperSourceDir)),
+];
 let failed = false;
 
 for (const sourceFile of sourceFiles) {

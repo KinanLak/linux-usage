@@ -12,7 +12,7 @@
     "newLine": "lf"
   },
   "include": [
-    "ts/**/*.ts",
-    "ts/ambient.d.ts"
+    "src/**/*.ts",
+    "src/ambient.d.ts"
   ]
 }

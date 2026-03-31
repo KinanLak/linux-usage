@@ -2,19 +2,8 @@
 
 ## Reload extension after changes
 
-If only the GNOME extension changed:
-
 ```bash
-./scripts/install-extension.sh
-gnome-extensions disable linux-usage@kinanl
-gnome-extensions enable linux-usage@kinanl
-```
-
-If the helper also changed:
-
-```bash
-./scripts/install-helper.sh
-./scripts/install-extension.sh
+make install
 gnome-extensions disable linux-usage@kinanl
 gnome-extensions enable linux-usage@kinanl
 ```

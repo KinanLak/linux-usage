@@ -1,9 +1,0 @@
-{
-  "uuid": "linux-usage@KinanLak.github.io",
-  "name": "Linux Usage",
-  "description": "Monitor Codex, Claude, and Copilot quotas from the GNOME top bar.",
-  "shell-version": ["40", "41", "42", "43", "44", "45"],
-  "settings-schema": "fr.kinan.linux-usage",
-  "url": "https://github.com/KinanLak/linux-usage",
-  "version": 1
-}

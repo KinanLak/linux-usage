@@ -3,12 +3,12 @@
   "type": "module",
   "private": true,
   "scripts": {
-    "build:extension": "node ./scripts/build-extension.mjs",
-    "clean:extension": "node ./scripts/build-extension.mjs --clean",
-    "typecheck:extension": "node ./scripts/typecheck-extension.mjs",
-    "check:extension": "npm run typecheck:extension && npm run lint:extension && npm run build:extension",
-    "lint:extension": "oxlint ts scripts",
-    "format:extension": "oxfmt --write ts scripts"
+    "build": "node ./scripts/build-extension.mjs",
+    "clean": "node ./scripts/build-extension.mjs --clean",
+    "typecheck": "node ./scripts/typecheck-extension.mjs",
+    "check": "npm run typecheck && npm run lint && npm run build",
+    "lint": "oxlint src scripts --fix",
+    "format": "oxfmt --write src scripts"
   },
   "devDependencies": {
     "oxfmt": "^0.43.0",

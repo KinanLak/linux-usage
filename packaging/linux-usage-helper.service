@@ -1,9 +1,0 @@
-[Unit]
-Description=Linux Usage helper service
-
-[Service]
-ExecStart=%h/.local/bin/linux-usage-helper serve-dbus
-Restart=on-failure
-
-[Install]
-WantedBy=default.target

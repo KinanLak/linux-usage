@@ -1,0 +1,3 @@
+- Ajouter une ligne dans les bar d'usage qui correspond à la progression selon le temps, pas l'usage
+- Fix certaines bar d'usage qui n'ont pas les bord arrondie d'un seul cote (coté gauche)
+- Dans les préférences on peur normalement enlever l'input du path du helper

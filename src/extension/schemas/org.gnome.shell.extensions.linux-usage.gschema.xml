@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schemalist>
+  <schema id="org.gnome.shell.extensions.linux-usage" path="/org/gnome/shell/extensions/linux-usage/">
+    <key name="helper-path" type="s">
+      <default>'linux-usage-helper'</default>
+      <summary>Helper executable path</summary>
+      <description>Custom helper executable path. When set to the default, the extension uses its bundled GJS helper.</description>
+    </key>
+    <key name="refresh-interval-seconds" type="u">
+      <default>300</default>
+      <summary>Refresh interval</summary>
+      <description>How often the extension refreshes provider data.</description>
+    </key>
+    <key name="enabled-providers" type="as">
+      <default>[]</default>
+      <summary>Enabled providers</summary>
+      <description>The providers visible in the extension overview.</description>
+    </key>
+    <key name="last-selected-tab" type="s">
+      <default>'overview'</default>
+      <summary>Last selected tab</summary>
+      <description>The last provider tab selected in the popup.</description>
+    </key>
+    <key name="show-source-label" type="b">
+      <default>false</default>
+      <summary>Show provider source label</summary>
+      <description>Whether to show the provider source string in the popup detail view.</description>
+    </key>
+    <key name="show-extra-credits" type="b">
+      <default>true</default>
+      <summary>Show extra credits and usage</summary>
+      <description>Whether to show supplemental credits or extra usage lines in provider detail views.</description>
+    </key>
+  </schema>
+</schemalist>
