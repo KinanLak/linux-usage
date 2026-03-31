@@ -158,6 +158,19 @@ function buildGeneralSection(settings) {
         sourceSwitch
     ));
 
+    const extraCreditsSwitch = new Gtk.Switch({
+        active: settings.get_boolean('show-extra-credits'),
+        valign: Gtk.Align.CENTER,
+    });
+    extraCreditsSwitch.connect('notify::active', widget => {
+        settings.set_boolean('show-extra-credits', widget.active);
+    });
+    section.card.append(createRow(
+        'Show extra credits',
+        'Display supplemental credits and extra usage lines in provider details.',
+        extraCreditsSwitch
+    ));
+
     return section.box;
 }
 

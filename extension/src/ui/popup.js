@@ -32,6 +32,30 @@ function humanAge(isoString) {
     return `Updated ${Math.floor(diff / 3600)}h ago`;
 }
 
+function humanReset(resetText, resetAt) {
+    if (resetText)
+        return resetText;
+    if (!resetAt)
+        return null;
+
+    const dt = GLib.DateTime.new_from_iso8601(resetAt, null);
+    if (!dt)
+        return null;
+
+    const diff = Math.max(0, Math.floor(dt.to_unix() - GLib.DateTime.new_now_local().to_unix()));
+    const days = Math.floor(diff / 86400);
+    const hours = Math.floor((diff % 86400) / 3600);
+    const minutes = Math.floor((diff % 3600) / 60);
+
+    if (diff < 60)
+        return 'Resets in <1m';
+    if (days > 0)
+        return `Resets in ${days}d ${hours}h`;
+    if (hours > 0)
+        return `Resets in ${hours}h ${minutes}m`;
+    return `Resets in ${minutes}m`;
+}
+
 function statusLabel(status) {
     switch (status) {
     case 'ok':
@@ -97,12 +121,17 @@ function providerColorClass(window) {
     return 'linux-usage-progress-fill';
 }
 
+function isExtraCreditsLine(line) {
+    return typeof line === 'string' && (line.startsWith('Credits:') || line.startsWith('Extra usage:'));
+}
+
 var LinuxUsageIndicator = GObject.registerClass(
 class LinuxUsageIndicator extends PanelMenu.Button {
     _init() {
         super._init(0.0, 'Linux Usage');
 
         this._settings = ExtensionUtils.getSettings('org.kinanl.linux-usage');
+        this._settingsSignals = [];
         this._state = new LinuxUsageState();
         this._providerCatalog = ProviderCatalog.loadProviderCatalog(Me.path);
         this._selectedTab = this._settings.get_string('last-selected-tab') || 'overview';
@@ -121,11 +150,26 @@ class LinuxUsageIndicator extends PanelMenu.Button {
                 this._rebuildMenu();
         });
 
+        this._settingsSignals.push(
+            this._settings.connect('changed::show-source-label', () => this._rebuildMenu())
+        );
+        this._settingsSignals.push(
+            this._settings.connect('changed::show-extra-credits', () => this._rebuildMenu())
+        );
+        this._settingsSignals.push(
+            this._settings.connect('changed::enabled-providers', () => this._rebuildMenu())
+        );
+        this._settingsSignals.push(
+            this._settings.connect('changed::refresh-interval-seconds', () => this._scheduleRefresh())
+        );
+
         this._scheduleRefresh();
         this._refresh(false);
     }
 
     destroy() {
+        this._settingsSignals.forEach(signalId => this._settings.disconnect(signalId));
+        this._settingsSignals = [];
         if (this._refreshTimeoutId) {
             GLib.source_remove(this._refreshTimeoutId);
             this._refreshTimeoutId = 0;
@@ -209,6 +253,18 @@ class LinuxUsageIndicator extends PanelMenu.Button {
 
     _showSourceLabel() {
         return this._settings.get_boolean('show-source-label');
+    }
+
+    _showExtraCredits() {
+        return this._settings.get_boolean('show-extra-credits');
+    }
+
+    _visibleDetailLines(provider) {
+        if (!provider.detailLines)
+            return [];
+        if (this._showExtraCredits())
+            return provider.detailLines;
+        return provider.detailLines.filter(line => !isExtraCreditsLine(line));
     }
 
     _updatedText() {
@@ -337,8 +393,8 @@ class LinuxUsageIndicator extends PanelMenu.Button {
         if (provider.secondaryQuota)
             card.add_child(this._buildQuotaBlock(provider.secondaryQuota));
 
-        if (provider.detailLines)
-            provider.detailLines.forEach(line => card.add_child(new St.Label({ text: line, style_class: 'linux-usage-detail-line' })));
+        this._visibleDetailLines(provider)
+            .forEach(line => card.add_child(new St.Label({ text: line, style_class: 'linux-usage-detail-line' })));
         if (provider.errorMessage)
             card.add_child(new St.Label({ text: provider.errorMessage, style_class: 'linux-usage-detail-error linux-usage-error' }));
         if (provider.remediation)
@@ -366,8 +422,9 @@ class LinuxUsageIndicator extends PanelMenu.Button {
         track.add_child(fill);
         box.add_child(track);
 
-        if (window.resetText)
-            box.add_child(new St.Label({ text: window.resetText, style_class: 'linux-usage-quota-meta' }));
+        const resetLabel = humanReset(window.resetText, window.resetAt);
+        if (resetLabel)
+            box.add_child(new St.Label({ text: resetLabel, style_class: 'linux-usage-quota-meta' }));
         return box;
     }
 
