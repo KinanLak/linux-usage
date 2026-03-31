@@ -1,0 +1,18 @@
+{
+  "compilerOptions": {
+    "target": "ES2021",
+    "module": "preserve",
+    "lib": [
+      "ES2021"
+    ],
+    "strict": false,
+    "noEmitOnError": true,
+    "removeComments": false,
+    "skipLibCheck": true,
+    "newLine": "lf"
+  },
+  "include": [
+    "ts/**/*.ts",
+    "ts/ambient.d.ts"
+  ]
+}

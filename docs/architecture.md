@@ -2,13 +2,15 @@
 
 Linux Usage is split into two runtime layers:
 
-- `extension/`: GNOME Shell extension that owns the top-bar button, popup UI, refresh cadence, and preferences.
+- `ts/extension/`: TypeScript source for the GNOME Shell extension.
+- `extension/`: static extension assets copied into the runtime bundle.
+- `dist/`: generated GNOME Shell extension bundle consumed by GJS at runtime.
 - `helper/`: Rust helper that detects local provider sessions, queries provider APIs, normalizes data, and caches the last snapshot.
 
 ## Data flow
 
 1. The extension opens or auto-refreshes.
-2. `extension/src/services/helper_client.js` tries D-Bus first, then falls back to the helper CLI.
+2. `dist/src/services/helper_client.js` tries D-Bus first, then falls back to the helper CLI.
 3. The helper fetches every registered provider in parallel.
 4. The helper returns a normalized snapshot matching `contracts/snapshot.schema.json`.
 5. The extension renders either the Overview tab or a provider detail card.

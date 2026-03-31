@@ -1,0 +1,18 @@
+{
+  "name": "linux-usage",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "build:extension": "node ./scripts/build-extension.mjs",
+    "clean:extension": "node ./scripts/build-extension.mjs --clean",
+    "typecheck:extension": "node ./scripts/typecheck-extension.mjs",
+    "check:extension": "npm run typecheck:extension && npm run lint:extension && npm run build:extension",
+    "lint:extension": "oxlint ts scripts",
+    "format:extension": "oxfmt --write ts scripts"
+  },
+  "devDependencies": {
+    "oxfmt": "^0.43.0",
+    "oxlint": "^1.58.0",
+    "typescript": "^6.0.2"
+  }
+}

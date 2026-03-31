@@ -4,7 +4,9 @@ GNOME top-bar quota monitor for Codex, Claude, and GitHub Copilot on Rocky Linux
 
 ## Layout
 
-- `extension/`: GNOME Shell extension
+- `ts/extension/`: TypeScript source of truth for the GNOME extension
+- `extension/`: static extension assets copied into the runtime bundle
+- `dist/`: generated GNOME Shell extension bundle consumed by GJS at runtime
 - `extension/providers.json`: shared provider catalog consumed by the helper and prefs UI
 - `helper/`: Rust helper CLI/D-Bus service
 - `contracts/`: normalized snapshot schema
@@ -21,11 +23,35 @@ GNOME top-bar quota monitor for Codex, Claude, and GitHub Copilot on Rocky Linux
 ## Local development
 
 ```bash
+npm install
+npm run check:extension
 ./scripts/install-helper.sh
 ./scripts/install-extension.sh
 ```
 
 Then restart GNOME Shell or log out/in before enabling the extension.
+
+The repo also has a `Makefile` aligned with the `gjs.guide` TypeScript workflow:
+
+```bash
+make
+make check
+make pack
+make install
+```
+
+## Extension tooling
+
+- `npm run typecheck:extension`: run per-file TypeScript checks for the GJS sources
+- `npm run lint:extension`: run `oxlint` on the TypeScript sources and build scripts
+- `npm run format:extension`: format the TypeScript sources and build scripts with `oxfmt`
+- `npm run build:extension`: assemble `dist/` from `extension/` assets plus transpiled `ts/extension/` code
+- `npm run clean:extension`: remove the generated `dist/` bundle
+- `make`: build the runtime bundle in `dist/`
+- `make check`: run typecheck, lint, and build
+- `make pack`: compile schemas and create `packaging/extension-bundle/linux-usage@kinanl.zip`
+- `make install`: install the zipped extension with `gnome-extensions install --force`
+- `make clean`: remove `dist/`, the packaged zip, and `node_modules/`
 
 ## Adding a provider
 
