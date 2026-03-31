@@ -1,4 +1,5 @@
-const { GObject, St, Gio, GLib } = imports.gi;
+const { GObject, St, Gio, GLib, Clutter, Meta } = imports.gi;
+const Main = imports.ui.main;
 const PanelMenu = imports.ui.panelMenu;
 const PopupMenu = imports.ui.popupMenu;
 const ExtensionUtils = imports.misc.extensionUtils;
@@ -8,125 +9,107 @@ const { LinuxUsageState } = Me.imports.src.models.state;
 const { HelperClient } = Me.imports.src.services.helper_client;
 const { ProviderCatalog } = Me.imports.src.providers.catalog;
 
-const PROGRESS_TRACK_WIDTH = 320;
+const BAR_WIDTH = 350;
+const TOOLTIP_OFFSET = 8;
+const TOOLTIP_ANIMATION_MS = 120;
 
-function formatPercent(value) {
-    if (value === null || value === undefined)
+function fmtPct(v) {
+    if (v === null || v === undefined)
         return '--';
-    return `${Math.round(value)}%`;
+    return `${Math.round(v)}%`;
 }
 
-function humanAge(isoString) {
-    if (!isoString)
-        return 'Waiting for first refresh';
-
-    const dt = GLib.DateTime.new_from_iso8601(isoString, null);
-    if (!dt)
-        return 'Recently updated';
-
-    const diff = Math.max(0, Math.floor(GLib.DateTime.new_now_local().to_unix() - dt.to_unix()));
-    if (diff < 60)
-        return 'Updated just now';
-    if (diff < 3600)
-        return `Updated ${Math.floor(diff / 60)}m ago`;
-    return `Updated ${Math.floor(diff / 3600)}h ago`;
+function titleCase(text) {
+    if (!text)
+        return text;
+    return text
+        .split(/\s+/)
+        .map(word => word ? `${word[0].toUpperCase()}${word.slice(1).toLowerCase()}` : word)
+        .join(' ');
 }
 
-function humanReset(resetText, resetAt) {
-    if (resetText)
-        return resetText;
-    if (!resetAt)
-        return null;
+function humanAge(iso) {
+    if (!iso)
+        return 'Waiting for data';
+    const dt = GLib.DateTime.new_from_iso8601(iso, null);
+    if (!dt)
+        return 'Updated';
+    const s = Math.max(0, Math.floor(GLib.DateTime.new_now_local().to_unix() - dt.to_unix()));
+    if (s < 60)
+        return 'Just now';
+    if (s < 3600)
+        return `${Math.floor(s / 60)}m ago`;
+    return `${Math.floor(s / 3600)}h ago`;
+}
 
-    const dt = GLib.DateTime.new_from_iso8601(resetAt, null);
+function humanReset(text, at) {
+    if (text)
+        return text;
+    if (!at)
+        return null;
+    const dt = GLib.DateTime.new_from_iso8601(at, null);
     if (!dt)
         return null;
-
-    const diff = Math.max(0, Math.floor(dt.to_unix() - GLib.DateTime.new_now_local().to_unix()));
-    const days = Math.floor(diff / 86400);
-    const hours = Math.floor((diff % 86400) / 3600);
-    const minutes = Math.floor((diff % 3600) / 60);
-
-    if (diff < 60)
+    const s = Math.max(0, Math.floor(dt.to_unix() - GLib.DateTime.new_now_local().to_unix()));
+    const d = Math.floor(s / 86400);
+    const h = Math.floor((s % 86400) / 3600);
+    const m = Math.floor((s % 3600) / 60);
+    if (s < 60)
         return 'Resets in <1m';
-    if (days > 0)
-        return `Resets in ${days}d ${hours}h`;
-    if (hours > 0)
-        return `Resets in ${hours}h ${minutes}m`;
-    return `Resets in ${minutes}m`;
+    if (d > 0)
+        return `Resets in ${d}d ${h}h`;
+    if (h > 0)
+        return `Resets in ${h}h ${m}m`;
+    return `Resets in ${m}m`;
 }
 
-function statusLabel(status) {
+function statusText(status) {
     switch (status) {
-    case 'ok':
-        return 'Healthy';
-    case 'stale':
-        return 'Stale';
-    case 'refreshing':
-        return 'Refreshing';
-    case 'unconfigured':
-        return 'Needs setup';
-    case 'auth_required':
-        return 'Sign in';
-    case 'unavailable':
-        return 'Unavailable';
-    default:
-        return 'Issue';
+    case 'ok': return 'Healthy';
+    case 'stale': return 'Stale';
+    case 'refreshing': return 'Refreshing';
+    case 'unconfigured': return 'Setup needed';
+    case 'auth_required': return 'Auth needed';
+    case 'unavailable': return 'Offline';
+    default: return 'Issue';
     }
 }
 
-function detailStatus(status) {
+function detailStatusText(status) {
     switch (status) {
-    case 'ok':
-        return 'All good';
-    case 'stale':
-        return 'Showing cached data';
-    case 'refreshing':
-        return 'Refreshing provider';
-    case 'unconfigured':
-        return 'Not configured on this machine';
-    case 'auth_required':
-        return 'Authentication required';
-    case 'unavailable':
-        return 'Unavailable';
-    default:
-        return 'Needs attention';
+    case 'stale': return 'Showing cached data';
+    case 'refreshing': return 'Refreshing provider data';
+    case 'unconfigured': return 'Not configured on this machine';
+    case 'auth_required': return 'Authentication required';
+    case 'unavailable': return 'Provider unavailable';
+    case 'error': return 'Something went wrong';
+    default: return null;
     }
 }
 
-function statusClass(status) {
+function dotClass(status) {
     switch (status) {
-    case 'ok':
-        return 'linux-usage-pill-ok';
-    case 'stale':
-        return 'linux-usage-pill-warning';
-    case 'refreshing':
-        return 'linux-usage-pill-info';
+    case 'ok': return 'lu-dot-ok';
+    case 'stale': return 'lu-dot-warn';
+    case 'refreshing': return 'lu-dot-info';
     case 'error':
-    case 'auth_required':
-        return 'linux-usage-pill-danger';
-    default:
-        return 'linux-usage-pill-muted';
+    case 'auth_required': return 'lu-dot-err';
+    default: return 'lu-dot-muted';
     }
 }
 
-function providerMessageClass(provider, detailed = false) {
-    const baseClass = detailed ? 'linux-usage-detail-error' : 'linux-usage-subtle';
-    return `${baseClass} ${provider.status === 'stale' ? 'linux-usage-warning' : 'linux-usage-error'}`;
+function barColorClass(w) {
+    if (w && w.valueLabel === 'Included')
+        return 'lu-fill-info';
+    const u = w && w.usedPercent !== null && w.usedPercent !== undefined ? w.usedPercent : 0;
+    if (u >= 85)
+        return 'lu-fill-danger';
+    if (u >= 60)
+        return 'lu-fill-warn';
+    return '';
 }
 
-function providerColorClass(window) {
-    if (window && window.valueLabel === 'Included')
-        return 'linux-usage-progress-fill-info';
-    const used = window && window.usedPercent !== null && window.usedPercent !== undefined ? window.usedPercent : 0;
-    if (used >= 85)
-        return 'linux-usage-progress-fill-danger';
-    if (used >= 60)
-        return 'linux-usage-progress-fill-warning';
-    return 'linux-usage-progress-fill';
-}
-
-function isExtraCreditsLine(line) {
+function isExtraLine(line) {
     return typeof line === 'string' && (line.startsWith('Credits:') || line.startsWith('Extra usage:'));
 }
 
@@ -134,35 +117,31 @@ var LinuxUsageIndicator = GObject.registerClass(
 class LinuxUsageIndicator extends PanelMenu.Button {
     _init() {
         super._init(0.0, 'Linux Usage');
-
         this._settings = ExtensionUtils.getSettings('org.kinanl.linux-usage');
         this._settingsSignals = [];
         this._state = new LinuxUsageState();
         this._providerCatalog = ProviderCatalog.loadProviderCatalog(Me.path);
-        this._selectedTab = this._settings.get_string('last-selected-tab') || 'overview';
+        const saved = this._settings.get_string('last-selected-tab');
+        this._selectedProvider = saved === 'overview' ? null : (saved || null);
         this._refreshTimeoutId = 0;
 
-        this.add_style_class_name('linux-usage-popup');
-
+        this.add_style_class_name('lu-popup');
         this._icon = new St.Icon({
             icon_name: 'network-cellular-signal-excellent-symbolic',
             style_class: 'system-status-icon',
         });
         this.add_child(this._icon);
+        this._attachPointerCursor(this);
 
-        this.menu.connect('open-state-changed', (_menu, isOpen) => {
-            if (isOpen)
+        this.menu.box.add_style_class_name('lu-menu');
+
+        this.menu.connect('open-state-changed', (_, open) => {
+            if (open)
                 this._rebuildMenu();
         });
 
-        this._settingsSignals.push(
-            this._settings.connect('changed::show-source-label', () => this._rebuildMenu())
-        );
-        this._settingsSignals.push(
-            this._settings.connect('changed::show-extra-credits', () => this._rebuildMenu())
-        );
-        this._settingsSignals.push(
-            this._settings.connect('changed::enabled-providers', () => this._rebuildMenu())
+        ['show-source-label', 'show-extra-credits', 'enabled-providers'].forEach(key =>
+            this._settingsSignals.push(this._settings.connect(`changed::${key}`, () => this._rebuildMenu()))
         );
         this._settingsSignals.push(
             this._settings.connect('changed::refresh-interval-seconds', () => this._scheduleRefresh())
@@ -173,7 +152,7 @@ class LinuxUsageIndicator extends PanelMenu.Button {
     }
 
     destroy() {
-        this._settingsSignals.forEach(signalId => this._settings.disconnect(signalId));
+        this._settingsSignals.forEach(id => this._settings.disconnect(id));
         this._settingsSignals = [];
         if (this._refreshTimeoutId) {
             GLib.source_remove(this._refreshTimeoutId);
@@ -185,26 +164,26 @@ class LinuxUsageIndicator extends PanelMenu.Button {
     _scheduleRefresh() {
         if (this._refreshTimeoutId)
             GLib.source_remove(this._refreshTimeoutId);
-
-        const interval = Math.max(60, this._settings.get_uint('refresh-interval-seconds'));
-        this._refreshTimeoutId = GLib.timeout_add_seconds(GLib.PRIORITY_DEFAULT, interval, () => {
+        const sec = Math.max(60, this._settings.get_uint('refresh-interval-seconds'));
+        this._refreshTimeoutId = GLib.timeout_add_seconds(GLib.PRIORITY_DEFAULT, sec, () => {
             this._refresh(false);
             return GLib.SOURCE_CONTINUE;
         });
     }
 
     async _refresh(force) {
+        if (this._state.loading)
+            return;
         this._state.loading = true;
         this._rebuildMenu();
-
         try {
-            const result = force ? await HelperClient.refreshSnapshot() : await HelperClient.getSnapshot();
-            this._state.snapshot = result.snapshot;
-            this._state.helperMode = result.helperMode;
-            this._state.helperLabel = result.helperLabel;
+            const r = force ? await HelperClient.refreshSnapshot() : await HelperClient.getSnapshot();
+            this._state.snapshot = r.snapshot;
+            this._state.helperMode = r.helperMode;
+            this._state.helperLabel = r.helperLabel;
             this._state.error = null;
-        } catch (error) {
-            this._state.error = `${error}`;
+        } catch (e) {
+            this._state.error = `${e}`;
             this._state.helperMode = 'unknown';
             this._state.helperLabel = 'Helper unreachable';
         } finally {
@@ -215,73 +194,352 @@ class LinuxUsageIndicator extends PanelMenu.Button {
     }
 
     _updateIcon() {
-        const providers = this._visibleProviders();
-        const degraded = providers.some(provider => ['error', 'auth_required'].includes(provider.status)
-            || (provider.status === 'stale' && provider.errorMessage));
-        const stale = providers.length > 0 && providers.every(provider => provider.stale);
-
-        if (degraded)
-            this._icon.set_icon_name('dialog-warning-symbolic');
-        else if (stale)
-            this._icon.set_icon_name('view-refresh-symbolic');
-        else
-            this._icon.set_icon_name('network-cellular-signal-excellent-symbolic');
+        const ps = this._visibleProviders();
+        const bad = ps.some(p => ['error', 'auth_required'].includes(p.status)
+            || (p.status === 'stale' && p.errorMessage));
+        const stale = ps.length > 0 && ps.every(p => p.stale);
+        this._icon.set_icon_name(
+            bad ? 'dialog-warning-symbolic'
+                : stale ? 'view-refresh-symbolic'
+                    : 'network-cellular-signal-excellent-symbolic'
+        );
     }
 
     _visibleProviders() {
         if (!this._state.snapshot || !this._state.snapshot.providers)
             return [];
-        const enabled = new Set(ProviderCatalog.getEnabledProviderIds(this._settings, this._providerCatalog));
-        if (this._settings.get_user_value('enabled-providers') === null && enabled.size === 0)
+        const en = new Set(ProviderCatalog.getEnabledProviderIds(this._settings, this._providerCatalog));
+        if (this._settings.get_user_value('enabled-providers') === null && en.size === 0)
             return this._state.snapshot.providers;
-        return this._state.snapshot.providers.filter(provider => enabled.has(provider.providerId));
-    }
-
-    _tabIds() {
-        const providers = this._visibleProviders().map(provider => provider.providerId);
-        if (!providers.length)
-            return ['overview'];
-        return ['overview'].concat(providers);
-    }
-
-    _rebuildMenu() {
-        const tabIds = this._tabIds();
-        if (!tabIds.includes(this._selectedTab))
-            this._selectedTab = tabIds[0];
-
-        this.menu.removeAll();
-
-        this.menu.addMenuItem(this._buildTabsItem());
-        this.menu.addMenuItem(this._buildContentItem());
-        this.menu.addMenuItem(new PopupMenu.PopupSeparatorMenuItem());
-        this.menu.addMenuItem(this._buildActionsItem());
-    }
-
-    _showSourceLabel() {
-        return this._settings.get_boolean('show-source-label');
+        return this._state.snapshot.providers.filter(p => en.has(p.providerId));
     }
 
     _showExtraCredits() {
         return this._settings.get_boolean('show-extra-credits');
     }
 
+    _showSourceLabel() {
+        return this._settings.get_boolean('show-source-label');
+    }
+
     _visibleDetailLines(provider) {
         if (!provider.detailLines)
             return [];
-        if (this._showExtraCredits())
-            return provider.detailLines;
-        return provider.detailLines.filter(line => !isExtraCreditsLine(line));
+        return this._showExtraCredits()
+            ? provider.detailLines
+            : provider.detailLines.filter(l => !isExtraLine(l));
     }
 
-    _updatedText() {
-        if (this._state.loading)
-            return 'Refreshing now';
-        if (this._state.snapshot)
-            return humanAge(this._state.snapshot.generatedAt);
-        return 'Waiting for first refresh';
+    _navigate(providerId) {
+        this._selectedProvider = providerId;
+        this._settings.set_string('last-selected-tab', providerId || 'overview');
+        this._rebuildMenu();
+    }
+
+    _rebuildMenu() {
+        const providers = this._visibleProviders();
+        if (this._selectedProvider && !providers.find(p => p.providerId === this._selectedProvider))
+            this._selectedProvider = null;
+
+        this.menu.removeAll();
+
+        if (this._selectedProvider) {
+            const provider = providers.find(p => p.providerId === this._selectedProvider);
+            this.menu.addMenuItem(this._buildDetailView(provider));
+        } else {
+            this.menu.addMenuItem(this._buildHeader());
+            this.menu.addMenuItem(this._buildOverview(providers));
+        }
+
+        this.menu.addMenuItem(this._buildFooter());
+    }
+
+    _makeItem() {
+        const item = new PopupMenu.PopupBaseMenuItem({ reactive: false, can_focus: false });
+        item.add_style_class_name('lu-item');
+        item.remove_style_class_name('popup-menu-item');
+        if (item._ornamentLabel)
+            item._ornamentLabel.visible = false;
+        if (item._ornamentIcon)
+            item._ornamentIcon.visible = false;
+        return item;
+    }
+
+    _buildHeader() {
+        const item = this._makeItem();
+        const box = new St.BoxLayout({ style_class: 'lu-header', x_expand: true });
+        box.add_child(new St.Label({ text: 'Linux Usage', style_class: 'lu-title', x_expand: true }));
+        item.add_child(box);
+        return item;
+    }
+
+    _buildOverview(providers) {
+        const item = this._makeItem();
+        const box = new St.BoxLayout({ vertical: true, style_class: 'lu-card', x_expand: true });
+
+        if (!providers.length) {
+            box.add_child(new St.Label({
+                text: 'No providers enabled.',
+                style_class: 'lu-empty',
+            }));
+            box.add_child(new St.Label({
+                text: 'Open Preferences to add one.',
+                style_class: 'lu-empty-hint',
+            }));
+            item.add_child(box);
+            return item;
+        }
+
+        providers.forEach((provider, i) => {
+            box.add_child(this._buildOverviewRow(provider));
+            if (i < providers.length - 1)
+                box.add_child(new St.Widget({ style_class: 'lu-divider' }));
+        });
+
+        item.add_child(box);
+        return item;
+    }
+
+    _buildOverviewRow(provider) {
+        const btn = new St.Button({
+            style_class: 'lu-row lu-clickable',
+            can_focus: true,
+            track_hover: true,
+            reactive: true,
+        });
+        this._attachPointerCursor(btn);
+        const col = new St.BoxLayout({ vertical: true, style_class: 'lu-row-inner' });
+
+        const top = new St.BoxLayout({ style_class: 'lu-row-top' });
+        top.add_child(new St.Label({
+            text: provider.title,
+            style_class: 'lu-row-name',
+            x_expand: true,
+        }));
+        const statusBox = new St.BoxLayout({ style_class: 'lu-status-box' });
+        statusBox.add_child(new St.Label({
+            text: '\u25CF',
+            style_class: `lu-dot-text ${dotClass(provider.status)}`,
+        }));
+        statusBox.add_child(new St.Label({
+            text: statusText(provider.status),
+            style_class: 'lu-status-label',
+        }));
+        top.add_child(statusBox);
+        top.add_child(new St.Icon({
+            icon_name: 'go-next-symbolic',
+            style_class: 'lu-chevron',
+            y_align: Clutter.ActorAlign.CENTER,
+        }));
+        col.add_child(top);
+
+        if (provider.primaryQuota) {
+            col.add_child(this._buildBar(provider.primaryQuota));
+            const q = provider.primaryQuota;
+            const parts = [fmtPct(q.usedPercent), q.label];
+            const reset = humanReset(q.resetText, q.resetAt);
+            if (reset)
+                parts.push(reset);
+            col.add_child(new St.Label({
+                text: parts.join(' · '),
+                style_class: 'lu-row-meta',
+            }));
+        } else {
+            col.add_child(new St.Label({
+                text: detailStatusText(provider.status) || statusText(provider.status),
+                style_class: 'lu-row-meta',
+            }));
+        }
+
+        if (provider.errorMessage) {
+            col.add_child(new St.Label({
+                text: provider.errorMessage,
+                style_class: provider.status === 'stale' ? 'lu-warn-text' : 'lu-err-text',
+            }));
+        }
+
+        btn.set_child(col);
+        btn.connect('clicked', () => this._navigate(provider.providerId));
+        return btn;
+    }
+
+    _buildDetailView(provider) {
+        const item = this._makeItem();
+        const box = new St.BoxLayout({ vertical: true, style_class: 'lu-detail', x_expand: true });
+
+        const back = new St.Button({
+            style_class: 'lu-back lu-clickable',
+            can_focus: true,
+            track_hover: true,
+            reactive: true,
+        });
+        this._attachPointerCursor(back);
+        const backInner = new St.BoxLayout({ style_class: 'lu-back-row' });
+        backInner.add_child(new St.Label({ text: '\u2190', style_class: 'lu-back-arrow' }));
+        backInner.add_child(new St.Label({ text: 'Overview', style_class: 'lu-back-text' }));
+        back.set_child(backInner);
+        back.connect('clicked', () => this._navigate(null));
+        box.add_child(back);
+
+        const titleRow = new St.BoxLayout({ style_class: 'lu-detail-title-row' });
+        titleRow.add_child(new St.Label({
+            text: provider.title,
+            style_class: 'lu-detail-name',
+            x_expand: true,
+        }));
+        const statusBox = new St.BoxLayout({ style_class: 'lu-status-box' });
+        statusBox.add_child(new St.Label({
+            text: '\u25CF',
+            style_class: `lu-dot-text ${dotClass(provider.status)}`,
+        }));
+        statusBox.add_child(new St.Label({
+            text: statusText(provider.status),
+            style_class: 'lu-status-label',
+        }));
+        titleRow.add_child(statusBox);
+        box.add_child(titleRow);
+
+        const meta = [provider.accountLabel, titleCase(provider.planLabel)].filter(Boolean).join(' \u00B7 ');
+        if (meta)
+            box.add_child(new St.Label({ text: meta, style_class: 'lu-detail-meta' }));
+        if (provider.sourceLabel && this._showSourceLabel())
+            box.add_child(new St.Label({ text: provider.sourceLabel, style_class: 'lu-detail-source' }));
+
+        const statusMsg = detailStatusText(provider.status);
+        if (statusMsg)
+            box.add_child(new St.Label({ text: statusMsg, style_class: 'lu-detail-status' }));
+
+        if (provider.primaryQuota)
+            box.add_child(this._buildQuotaBlock(provider.primaryQuota));
+        if (provider.secondaryQuota)
+            box.add_child(this._buildQuotaBlock(provider.secondaryQuota));
+
+        const lines = this._visibleDetailLines(provider);
+        if (lines.length > 0) {
+            const linesBox = new St.BoxLayout({ vertical: true, style_class: 'lu-lines' });
+            lines.forEach(line =>
+                linesBox.add_child(new St.Label({ text: line, style_class: 'lu-detail-line' }))
+            );
+            box.add_child(linesBox);
+        }
+
+        if (provider.errorMessage)
+            box.add_child(new St.Label({
+                text: provider.errorMessage,
+                style_class: provider.status === 'stale' ? 'lu-warn-text' : 'lu-err-text',
+            }));
+        if (provider.remediation)
+            box.add_child(new St.Label({ text: provider.remediation, style_class: 'lu-remedy' }));
+
+        item.add_child(box);
+        return item;
+    }
+
+    _buildQuotaBlock(q) {
+        const block = new St.BoxLayout({ vertical: true, style_class: 'lu-quota' });
+
+        const top = new St.BoxLayout({ style_class: 'lu-quota-top' });
+        top.add_child(new St.Label({
+            text: q.label,
+            style_class: 'lu-quota-label',
+            x_expand: true,
+        }));
+        top.add_child(new St.Label({
+            text: q.valueLabel || fmtPct(q.usedPercent),
+            style_class: 'lu-quota-value',
+        }));
+        block.add_child(top);
+
+        block.add_child(this._buildBar(q));
+
+        const reset = humanReset(q.resetText, q.resetAt);
+        if (reset)
+            block.add_child(new St.Label({ text: reset, style_class: 'lu-quota-reset' }));
+
+        return block;
+    }
+
+    _buildBar(q) {
+        const track = new St.BoxLayout({ style_class: 'lu-bar-track' });
+        const pct = q.valueLabel === 'Included'
+            ? 100
+            : Math.max(0, Math.min(100, q.usedPercent || 0));
+        const w = pct === 0 ? 0 : Math.round(pct * BAR_WIDTH / 100);
+        const fill = new St.Widget({
+            style_class: `lu-bar-fill ${barColorClass(q)}`,
+            style: `width: ${w}px;`,
+        });
+        track.add_child(fill);
+        return track;
+    }
+
+    _buildFooter() {
+        const item = this._makeItem();
+        const box = new St.BoxLayout({ style_class: 'lu-footer', x_expand: true });
+
+        const left = new St.BoxLayout({ style_class: 'lu-footer-left', x_expand: true });
+        const helperDotClass = this._state.helperMode === 'dbus'
+            ? 'lu-dot-ok'
+            : this._state.helperMode === 'cli'
+                ? 'lu-dot-muted'
+                : 'lu-dot-err';
+        left.add_child(new St.Widget({
+            style_class: `lu-dot-sm ${helperDotClass}`,
+            y_align: Clutter.ActorAlign.CENTER,
+        }));
+        const timeText = this._state.loading
+            ? 'Refreshing\u2026'
+            : humanAge(this._state.snapshot && this._state.snapshot.generatedAt);
+        left.add_child(new St.Label({
+            text: timeText,
+            style_class: 'lu-footer-time',
+            y_align: Clutter.ActorAlign.CENTER,
+        }));
+        box.add_child(left);
+
+        const actions = new St.BoxLayout({ style_class: 'lu-footer-actions' });
+        const refreshBtn = new St.Button({
+            style_class: 'lu-icon-btn lu-clickable',
+            can_focus: true,
+            track_hover: true,
+            reactive: true,
+            child: new St.Icon({ icon_name: 'view-refresh-symbolic', style_class: 'lu-icon-btn-img' }),
+        });
+        this._attachActionHint(refreshBtn, 'Refresh');
+        refreshBtn.connect('clicked', () => this._refresh(true));
+
+        const prefsBtn = new St.Button({
+            style_class: 'lu-icon-btn lu-clickable',
+            can_focus: true,
+            track_hover: true,
+            reactive: true,
+            child: new St.Icon({ icon_name: 'emblem-system-symbolic', style_class: 'lu-icon-btn-img' }),
+        });
+        this._attachActionHint(prefsBtn, 'Preferences');
+        prefsBtn.connect('clicked', () => this._openPreferences());
+
+        const closeBtn = new St.Button({
+            style_class: 'lu-icon-btn lu-clickable',
+            can_focus: true,
+            track_hover: true,
+            reactive: true,
+            child: new St.Icon({ icon_name: 'window-close-symbolic', style_class: 'lu-icon-btn-img' }),
+        });
+        this._attachActionHint(closeBtn, 'Close');
+        closeBtn.connect('clicked', () => this.menu.close());
+
+        actions.add_child(refreshBtn);
+        actions.add_child(prefsBtn);
+        actions.add_child(closeBtn);
+        box.add_child(actions);
+
+        item.add_child(box);
+        return item;
     }
 
     _openPreferences() {
+        this.menu.close();
+
         try {
             const prefsScript = Me.dir.get_child('preferences-app.js').get_path();
             Gio.Subprocess.new(
@@ -289,7 +547,7 @@ class LinuxUsageIndicator extends PanelMenu.Button {
                 Gio.SubprocessFlags.NONE
             );
             return;
-        } catch (_error) {
+        } catch (_e) {
         }
 
         try {
@@ -298,177 +556,74 @@ class LinuxUsageIndicator extends PanelMenu.Button {
                 Gio.SubprocessFlags.NONE
             );
             return;
-        } catch (_error) {
+        } catch (_e) {
         }
 
         if (ExtensionUtils.openPrefs)
             ExtensionUtils.openPrefs();
     }
 
-    _buildTabsItem() {
-        const item = new PopupMenu.PopupBaseMenuItem({ reactive: false, can_focus: false });
-        const box = new St.BoxLayout({ style_class: 'linux-usage-chip-row' });
-        this._tabIds().forEach(tab => {
-            const label = tab === 'overview' ? 'Overview' : tab.charAt(0).toUpperCase() + tab.slice(1);
-            const button = new St.Button({
-                label,
-                style_class: `linux-usage-chip ${this._selectedTab === tab ? 'linux-usage-chip-active' : ''}`,
-                can_focus: true,
+    _attachActionHint(actor, label) {
+        this._attachPointerCursor(actor);
+        this._attachTooltip(actor, label);
+    }
+
+    _attachPointerCursor(actor) {
+        actor.connect('enter-event', () => {
+            global.display.set_cursor(Meta.Cursor.POINTING_HAND);
+            return Clutter.EVENT_PROPAGATE;
+        });
+        actor.connect('leave-event', () => {
+            global.display.set_cursor(Meta.Cursor.DEFAULT);
+            return Clutter.EVENT_PROPAGATE;
+        });
+        actor.connect('destroy', () => global.display.set_cursor(Meta.Cursor.DEFAULT));
+    }
+
+    _attachTooltip(actor, label) {
+        const tooltip = new St.Label({
+            style_class: 'dash-label',
+            text: label,
+            visible: false,
+            opacity: 0,
+        });
+        Main.uiGroup.add_child(tooltip);
+
+        actor.connect('notify::hover', () => {
+            if (actor.hover) {
+                tooltip.set({
+                    text: label,
+                    visible: true,
+                    opacity: 0,
+                });
+
+                const [stageX, stageY] = actor.get_transformed_position();
+                const [actorWidth, actorHeight] = actor.allocation.get_size();
+                const [tipWidth, tipHeight] = tooltip.get_size();
+                const monitor = Main.layoutManager.findMonitorForActor(actor);
+                const x = Math.max(
+                    monitor.x,
+                    Math.min(
+                        stageX + Math.floor((actorWidth - tipWidth) / 2),
+                        monitor.x + monitor.width - tipWidth
+                    )
+                );
+                const y = stageY - monitor.y > tipHeight + TOOLTIP_OFFSET
+                    ? stageY - tipHeight - TOOLTIP_OFFSET
+                    : stageY + actorHeight + TOOLTIP_OFFSET;
+                tooltip.set_position(x, y);
+            }
+
+            tooltip.ease({
+                opacity: actor.hover ? 255 : 0,
+                duration: TOOLTIP_ANIMATION_MS,
+                mode: Clutter.AnimationMode.EASE_OUT_QUAD,
+                onComplete: () => {
+                    tooltip.visible = actor.hover;
+                },
             });
-            button.connect('clicked', () => {
-                this._selectedTab = tab;
-                this._settings.set_string('last-selected-tab', tab);
-                this._rebuildMenu();
-            });
-            box.add_child(button);
-        });
-        item.add_child(box);
-        return item;
-    }
-
-    _buildContentItem() {
-        const item = new PopupMenu.PopupBaseMenuItem({ reactive: false, can_focus: false });
-        const providers = this._visibleProviders();
-        const box = new St.BoxLayout({ vertical: true, style_class: 'linux-usage-section linux-usage-content-card' });
-
-        if (!providers.length) {
-            box.add_child(new St.Label({
-                text: 'No providers enabled in preferences.',
-                style_class: 'linux-usage-subtle',
-            }));
-            item.add_child(box);
-            return item;
-        }
-
-        if (this._selectedTab === 'overview') {
-            providers.forEach(provider => box.add_child(this._buildOverviewRow(provider)));
-        } else {
-            const provider = providers.find(entry => entry.providerId === this._selectedTab) || providers[0];
-            box.add_child(this._buildProviderCard(provider));
-        }
-
-        item.add_child(box);
-        return item;
-    }
-
-    _buildOverviewRow(provider) {
-        const button = new St.Button({ style_class: 'linux-usage-provider-row linux-usage-clickable', can_focus: true, track_hover: true, reactive: true });
-        const row = new St.BoxLayout({ vertical: true, style_class: 'linux-usage-overview-row' });
-        const header = new St.BoxLayout({ x_expand: true, style_class: 'linux-usage-space-between' });
-        header.add_child(new St.Label({ text: provider.title, style_class: 'linux-usage-card-title' }));
-        header.add_child(new St.Label({ text: statusLabel(provider.status), style_class: `linux-usage-status-pill ${statusClass(provider.status)}` }));
-        row.add_child(header);
-
-        if (!provider.primaryQuota) {
-            row.add_child(new St.Label({
-                text: detailStatus(provider.status),
-                style_class: provider.errorMessage ? providerMessageClass(provider) : 'linux-usage-overview-summary',
-            }));
-        }
-
-        if (provider.primaryQuota)
-            row.add_child(this._buildQuotaBlock(provider.primaryQuota));
-        if (provider.errorMessage)
-            row.add_child(new St.Label({ text: provider.errorMessage, style_class: providerMessageClass(provider) }));
-
-        button.set_child(row);
-        button.connect('clicked', () => {
-            this._selectedTab = provider.providerId;
-            this._settings.set_string('last-selected-tab', provider.providerId);
-            this._rebuildMenu();
-        });
-        return button;
-    }
-
-    _buildProviderCard(provider) {
-        const card = new St.BoxLayout({ vertical: true, style_class: 'linux-usage-detail-card' });
-        const titleRow = new St.BoxLayout({ style_class: 'linux-usage-space-between' });
-        titleRow.add_child(new St.Label({ text: provider.title, style_class: 'linux-usage-card-title' }));
-        titleRow.add_child(new St.Label({ text: statusLabel(provider.status), style_class: `linux-usage-status-pill ${statusClass(provider.status)}` }));
-        card.add_child(titleRow);
-
-        const meta = [provider.accountLabel, provider.planLabel].filter(Boolean).join(' · ');
-        if (meta)
-            card.add_child(new St.Label({ text: meta, style_class: 'linux-usage-detail-meta' }));
-        if (provider.sourceLabel && this._showSourceLabel())
-            card.add_child(new St.Label({ text: provider.sourceLabel, style_class: 'linux-usage-subtle' }));
-        card.add_child(new St.Label({ text: detailStatus(provider.status), style_class: 'linux-usage-provider-status-line' }));
-
-        if (provider.primaryQuota)
-            card.add_child(this._buildQuotaBlock(provider.primaryQuota));
-        if (provider.secondaryQuota)
-            card.add_child(this._buildQuotaBlock(provider.secondaryQuota));
-
-        this._visibleDetailLines(provider)
-            .forEach(line => card.add_child(new St.Label({ text: line, style_class: 'linux-usage-detail-line' })));
-        if (provider.errorMessage)
-            card.add_child(new St.Label({ text: provider.errorMessage, style_class: providerMessageClass(provider, true) }));
-        if (provider.remediation)
-            card.add_child(new St.Label({ text: provider.remediation, style_class: 'linux-usage-detail-remediation' }));
-
-        return card;
-    }
-
-    _buildQuotaBlock(window) {
-        const box = new St.BoxLayout({ vertical: true, style_class: 'linux-usage-quota-block' });
-        const titleRow = new St.BoxLayout({ x_expand: true, style_class: 'linux-usage-space-between' });
-        titleRow.add_child(new St.Label({ text: window.label, style_class: 'linux-usage-quota-title' }));
-        titleRow.add_child(new St.Label({ text: window.valueLabel || formatPercent(window.usedPercent), style_class: 'linux-usage-quota-value' }));
-        box.add_child(titleRow);
-
-        const track = new St.BoxLayout({ style_class: 'linux-usage-progress-track' });
-        const normalizedPercent = window.valueLabel === 'Included'
-            ? 100
-            : Math.max(0, Math.min(100, window.usedPercent || 0));
-        const fillWidth = normalizedPercent === 0 ? 0 : Math.round(normalizedPercent * PROGRESS_TRACK_WIDTH / 100);
-        const fill = new St.Widget({
-            style_class: `linux-usage-progress-fill ${providerColorClass(window)}`,
-            style: `width: ${fillWidth}px;`,
-        });
-        track.add_child(fill);
-        box.add_child(track);
-
-        const resetLabel = humanReset(window.resetText, window.resetAt);
-        if (resetLabel)
-            box.add_child(new St.Label({ text: resetLabel, style_class: 'linux-usage-quota-meta' }));
-        return box;
-    }
-
-    _buildActionsItem() {
-        const item = new PopupMenu.PopupBaseMenuItem({ reactive: false, can_focus: false });
-        const box = new St.BoxLayout({ vertical: true, style_class: 'linux-usage-footer' });
-
-        box.add_child(new St.Label({
-            text: `${this._updatedText()}${this._state.helperMode === 'dbus' ? ' · Live helper' : ''}`,
-            style_class: 'linux-usage-footer-status',
-        }));
-
-        const actions = new St.BoxLayout({ style_class: 'linux-usage-chip-row' });
-
-        const prefsButton = new St.Button({
-            label: 'Preferences',
-            style_class: 'linux-usage-action-button linux-usage-clickable',
-            can_focus: true,
-            reactive: true,
-            track_hover: true,
-        });
-        prefsButton.connect('clicked', () => {
-            this._openPreferences();
         });
 
-        const refreshButton = new St.Button({
-            label: this._state.loading ? 'Refreshing...' : 'Refresh now',
-            style_class: 'linux-usage-primary-button linux-usage-clickable',
-            can_focus: true,
-            reactive: true,
-            track_hover: true,
-        });
-        refreshButton.connect('clicked', () => this._refresh(true));
-
-        actions.add_child(refreshButton);
-        actions.add_child(prefsButton);
-        box.add_child(actions);
-        item.add_child(box);
-        return item;
+        actor.connect('destroy', () => tooltip.destroy());
     }
 });

@@ -9,11 +9,13 @@ use chrono::Utc;
 use serde::Deserialize;
 use serde_json::Value;
 use std::path::PathBuf;
+use std::process::Command;
 
 #[derive(Debug, Default)]
 pub struct ClaudeProvider;
 
 const PROVIDER_ID: &str = "claude";
+const FALLBACK_CLAUDE_CODE_VERSION: &str = "2.1.0";
 
 #[derive(Debug, Deserialize)]
 struct ClaudeOauthCredentials {
@@ -114,6 +116,7 @@ impl Provider for ClaudeProvider {
                 .get("https://api.anthropic.com/api/oauth/usage")
                 .header("Authorization", format!("Bearer {token}"))
                 .header("anthropic-beta", "oauth-2025-04-20")
+                .header("User-Agent", claude_code_user_agent())
                 .send()
                 .await
             {
@@ -137,8 +140,7 @@ impl Provider for ClaudeProvider {
                     metadata,
                     provider_status_from_http_status(response.status()),
                     Some(message),
-                    Some("Refresh Claude Code with `claude auth login` or update the scope."
-                        .to_string()),
+                    Some("Refresh Claude Code with `claude auth login`.".to_string()),
                 );
             }
 
@@ -220,6 +222,7 @@ async fn fetch_account_label(ctx: &ProviderContext, token: &str) -> Option<Strin
         .get("https://api.anthropic.com/api/oauth/account")
         .header("Authorization", format!("Bearer {token}"))
         .header("anthropic-beta", "oauth-2025-04-20")
+        .header("User-Agent", claude_code_user_agent())
         .send()
         .await
         .ok()?;
@@ -235,8 +238,7 @@ async fn fetch_account_label(ctx: &ProviderContext, token: &str) -> Option<Strin
 }
 
 fn quota_from_usage(label: &str, value: &Value) -> Option<QuotaWindow> {
-    let used = value_as_f64(value.get("used"))
-        .or_else(|| value_as_f64(value.get("usage")));
+    let used = value_as_f64(value.get("used")).or_else(|| value_as_f64(value.get("usage")));
     let used_percent = value_as_f64(value.get("percent_used"))
         .or_else(|| value_as_f64(value.get("utilization")).map(normalize_percent));
     let limit = value_as_f64(value.get("limit")).or_else(|| {
@@ -266,9 +268,7 @@ fn quota_from_usage(label: &str, value: &Value) -> Option<QuotaWindow> {
             .or_else(|| used.map(|v| format!("{v:.0}")))
             .or_else(|| used_percent.map(|percent| format!("{percent:.0}% used"))),
         remaining_display: value_as_string(value.get("remaining_display"))
-            .or_else(|| {
-                remaining_percent.map(|percent| format!("{percent:.0}% left"))
-            })
+            .or_else(|| remaining_percent.map(|percent| format!("{percent:.0}% left")))
             .or_else(|| value_as_string(value.get("reset_text"))),
         reset_at: value
             .get("resets_at")
@@ -289,22 +289,66 @@ fn normalize_percent(value: f64) -> f64 {
     }
 }
 
+fn claude_code_user_agent() -> String {
+    claude_code_user_agent_from_version(detect_claude_version().as_deref())
+}
+
+fn claude_code_user_agent_from_version(version: Option<&str>) -> String {
+    let version = normalized_claude_version(version.unwrap_or_default())
+        .unwrap_or(FALLBACK_CLAUDE_CODE_VERSION);
+    format!("claude-code/{version}")
+}
+
+fn detect_claude_version() -> Option<String> {
+    let output = Command::new("claude")
+        .args(["--allowed-tools", "", "--version"])
+        .output()
+        .ok()?;
+    if !output.status.success() {
+        return None;
+    }
+
+    let stdout = String::from_utf8(output.stdout).ok()?;
+    normalized_claude_version(&stdout).map(ToString::to_string)
+}
+
+fn normalized_claude_version(raw: &str) -> Option<&str> {
+    let trimmed = raw.trim();
+    if trimmed.is_empty() {
+        return None;
+    }
+
+    let token = trimmed.split_whitespace().next().unwrap_or(trimmed).trim();
+    if token.is_empty() { None } else { Some(token) }
+}
+
 fn format_plan_label(value: &str) -> String {
     let mut parts = value
         .split('_')
         .filter(|part| !part.is_empty())
         .collect::<Vec<_>>();
 
-    if parts.first().is_some_and(|part| part.eq_ignore_ascii_case("default")) {
+    if parts
+        .first()
+        .is_some_and(|part| part.eq_ignore_ascii_case("default"))
+    {
         parts.remove(0);
     }
 
-    parts.into_iter().map(format_plan_token).collect::<Vec<_>>().join(" ")
+    parts
+        .into_iter()
+        .map(format_plan_token)
+        .collect::<Vec<_>>()
+        .join(" ")
 }
 
 fn format_plan_token(token: &str) -> String {
     let lower = token.to_ascii_lowercase();
-    if lower.ends_with('x') && lower[..lower.len() - 1].chars().all(|ch| ch.is_ascii_digit()) {
+    if lower.ends_with('x')
+        && lower[..lower.len() - 1]
+            .chars()
+            .all(|ch| ch.is_ascii_digit())
+    {
         return lower;
     }
 
@@ -321,7 +365,10 @@ fn format_plan_token(token: &str) -> String {
 
 #[cfg(test)]
 mod tests {
-    use super::{format_plan_label, normalize_percent, quota_from_usage};
+    use super::{
+        FALLBACK_CLAUDE_CODE_VERSION, claude_code_user_agent_from_version, format_plan_label,
+        normalize_percent, normalized_claude_version, quota_from_usage,
+    };
     use serde_json::json;
 
     #[test]
@@ -352,5 +399,31 @@ mod tests {
         assert_eq!(window.used_display.as_deref(), Some("2% used"));
         assert_eq!(window.remaining_display.as_deref(), Some("98% left"));
         assert!(window.reset_at.is_some());
+    }
+
+    #[test]
+    fn normalizes_claude_version_for_user_agent() {
+        assert_eq!(
+            normalized_claude_version("2.1.70 (Claude Code)"),
+            Some("2.1.70")
+        );
+        assert_eq!(normalized_claude_version("  2.1.70\n"), Some("2.1.70"));
+        assert_eq!(normalized_claude_version("   \n"), None);
+    }
+
+    #[test]
+    fn falls_back_to_known_claude_user_agent_version() {
+        assert_eq!(
+            format!("claude-code/{FALLBACK_CLAUDE_CODE_VERSION}"),
+            claude_code_user_agent_from_version(None)
+        );
+    }
+
+    #[test]
+    fn uses_detected_claude_version_in_user_agent() {
+        assert_eq!(
+            claude_code_user_agent_from_version(Some("2.1.70 (Claude Code)")),
+            "claude-code/2.1.70"
+        );
     }
 }

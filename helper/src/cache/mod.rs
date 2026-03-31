@@ -1,3 +1,5 @@
+pub mod backoff;
+
 use crate::models::AppSnapshot;
 use anyhow::{Context, Result};
 use std::fs;

@@ -4,9 +4,10 @@ pub mod codex;
 pub mod copilot;
 
 use crate::cache::SnapshotCache;
+use crate::cache::backoff::{ProviderBackoffCache, ProviderBackoffEntry};
 use crate::models::{AppSnapshot, ProviderMetadata, ProviderSnapshot, ProviderStatus};
 use anyhow::{Context, Result, anyhow, ensure};
-use chrono::Utc;
+use chrono::{DateTime, Utc};
 use futures::future::join_all;
 use reqwest::{Client, StatusCode};
 use serde_json::Value;
@@ -15,6 +16,8 @@ use std::future::Future;
 use std::pin::Pin;
 use std::process::Command;
 use std::sync::Arc;
+use std::time::Duration;
+use tracing::warn;
 
 pub use catalog::{provider_catalog, required_provider_metadata};
 
@@ -33,6 +36,7 @@ pub trait Provider: Send + Sync {
 #[derive(Clone)]
 pub struct ProviderRegistry {
     ctx: ProviderContext,
+    backoff: Arc<ProviderBackoffCache>,
     cache: Arc<SnapshotCache>,
     providers: Vec<Arc<dyn Provider>>,
 }
@@ -41,6 +45,7 @@ impl ProviderRegistry {
     pub fn new() -> Result<Self> {
         let client = Client::builder()
             .user_agent("linux-usage/1.0.0 (httops://github.com/KinanLak/linux-usage)")
+            .timeout(Duration::from_secs(20))
             .build()
             .context("failed to build HTTP client")?;
 
@@ -49,6 +54,7 @@ impl ProviderRegistry {
 
         Ok(Self {
             ctx: ProviderContext { client },
+            backoff: Arc::new(ProviderBackoffCache::new()?),
             cache: Arc::new(SnapshotCache::new()?),
             providers,
         })
@@ -56,11 +62,13 @@ impl ProviderRegistry {
 
     pub async fn fetch_all(&self) -> AppSnapshot {
         let cached = self.cache.load();
-        let providers = join_all(self.providers.iter().map(|provider| provider.fetch(&self.ctx)))
-            .await
-            .into_iter()
-            .map(|snapshot| merge_stale(snapshot, cached.as_ref()))
-            .collect::<Vec<_>>();
+        let providers = join_all(
+            self.providers
+                .iter()
+                .cloned()
+                .map(|provider| self.fetch_provider_snapshot(provider, cached.as_ref())),
+        )
+        .await;
 
         let overall_status = if [ProviderStatus::Error, ProviderStatus::AuthRequired]
             .iter()
@@ -93,11 +101,16 @@ impl ProviderRegistry {
     }
 
     pub async fn fetch_one(&self, provider: &str) -> Option<ProviderSnapshot> {
+        let cached = self.cache.load();
         let candidate = self
             .providers
             .iter()
-            .find(|entry| entry.metadata().id == provider)?;
-        Some(candidate.fetch(&self.ctx).await)
+            .find(|entry| entry.metadata().id == provider)?
+            .clone();
+        Some(
+            self.fetch_provider_snapshot(candidate, cached.as_ref())
+                .await,
+        )
     }
 
     pub fn known_provider_ids(&self) -> Vec<&str> {
@@ -105,6 +118,35 @@ impl ProviderRegistry {
             .iter()
             .map(|provider| provider.metadata().id.as_str())
             .collect()
+    }
+
+    async fn fetch_provider_snapshot(
+        &self,
+        provider: Arc<dyn Provider>,
+        cached: Option<&AppSnapshot>,
+    ) -> ProviderSnapshot {
+        let provider_id = provider.metadata().id.clone();
+        let cached_provider = cached_provider(cached, &provider_id);
+        let now = Utc::now();
+
+        if let Some(backoff) = self.backoff.active(&provider_id, now) {
+            return snapshot_from_backoff(provider.metadata(), cached_provider.as_ref(), &backoff);
+        }
+
+        let snapshot = provider.fetch(&self.ctx).await;
+        if matches!(snapshot.status, ProviderStatus::Error) {
+            if let Err(error) = self.backoff.record_failure(
+                &snapshot.provider_id,
+                now,
+                snapshot.error_message.as_deref(),
+            ) {
+                warn!(provider_id = snapshot.provider_id.as_str(), %error, "failed to persist provider backoff state");
+            }
+        } else if let Err(error) = self.backoff.clear(&snapshot.provider_id) {
+            warn!(provider_id = snapshot.provider_id.as_str(), %error, "failed to clear provider backoff state");
+        }
+
+        merge_stale(snapshot, cached_provider.as_ref())
     }
 }
 
@@ -152,13 +194,19 @@ fn validate_provider_registry(providers: &[Arc<dyn Provider>]) -> Result<()> {
     Ok(())
 }
 
-fn merge_stale(mut snapshot: ProviderSnapshot, cached: Option<&AppSnapshot>) -> ProviderSnapshot {
-    let cached_provider = cached.and_then(|app| {
+fn cached_provider(cached: Option<&AppSnapshot>, provider_id: &str) -> Option<ProviderSnapshot> {
+    cached.and_then(|app| {
         app.providers
             .iter()
-            .find(|candidate| candidate.provider_id == snapshot.provider_id)
-    });
+            .find(|candidate| candidate.provider_id == provider_id)
+            .cloned()
+    })
+}
 
+fn merge_stale(
+    mut snapshot: ProviderSnapshot,
+    cached_provider: Option<&ProviderSnapshot>,
+) -> ProviderSnapshot {
     let should_use_stale = matches!(snapshot.status, ProviderStatus::Error)
         && snapshot.primary_quota.is_none()
         && cached_provider.is_some_and(|cached| {
@@ -181,6 +229,48 @@ fn merge_stale(mut snapshot: ProviderSnapshot, cached: Option<&AppSnapshot>) -> 
     }
 
     snapshot
+}
+
+fn snapshot_from_backoff(
+    metadata: &ProviderMetadata,
+    cached_provider: Option<&ProviderSnapshot>,
+    backoff: &ProviderBackoffEntry,
+) -> ProviderSnapshot {
+    if let Some(cached) = cached_provider
+        .filter(|cached| cached.primary_quota.is_some() || cached.secondary_quota.is_some())
+        .cloned()
+    {
+        let mut snapshot = cached;
+        snapshot.status = ProviderStatus::Stale;
+        snapshot.stale = true;
+        snapshot.error_message = Some(backoff_message(backoff));
+        snapshot.remediation =
+            Some("Using cached data until the provider cooldown expires.".to_string());
+        return snapshot;
+    }
+
+    status_snapshot(
+        metadata,
+        ProviderStatus::Error,
+        Some(backoff_message(backoff)),
+        Some("Wait for the provider cooldown to expire before retrying.".to_string()),
+    )
+}
+
+fn backoff_message(backoff: &ProviderBackoffEntry) -> String {
+    let retry_at = format_backoff_time(backoff.blocked_until);
+    match backoff.last_error.as_deref() {
+        Some(last_error) if !last_error.is_empty() => {
+            format!(
+                "Provider temporarily backed off until {retry_at} after recent failures: {last_error}"
+            )
+        }
+        _ => format!("Provider temporarily backed off until {retry_at} after recent failures"),
+    }
+}
+
+fn format_backoff_time(value: DateTime<Utc>) -> String {
+    value.format("%Y-%m-%d %H:%M UTC").to_string()
 }
 
 pub fn status_snapshot(
@@ -287,8 +377,13 @@ pub fn gh_cli_token() -> Option<String> {
 
 #[cfg(test)]
 mod tests {
-    use super::provider_status_from_http_status;
+    use super::{
+        ProviderBackoffEntry, backoff_message, provider_status_from_http_status,
+        snapshot_from_backoff,
+    };
     use crate::models::ProviderStatus;
+    use crate::models::{ProviderMetadata, ProviderSnapshot};
+    use chrono::{Duration, Utc};
     use reqwest::StatusCode;
 
     #[test]
@@ -309,5 +404,58 @@ mod tests {
             provider_status_from_http_status(StatusCode::FORBIDDEN),
             ProviderStatus::AuthRequired
         ));
+    }
+
+    #[test]
+    fn uses_cached_snapshot_while_provider_is_in_backoff() {
+        let metadata = ProviderMetadata {
+            id: "claude".to_string(),
+            title: "Claude".to_string(),
+            description: "test".to_string(),
+            icon_name: "test-symbolic".to_string(),
+            default_enabled: true,
+        };
+        let mut cached = ProviderSnapshot::base(&metadata);
+        cached.status = ProviderStatus::Ok;
+        cached.stale = false;
+        cached.error_message = None;
+        cached.remediation = None;
+        cached.primary_quota = Some(crate::models::QuotaWindow {
+            label: "Session".to_string(),
+            used_percent: Some(10.0),
+            remaining_percent: Some(90.0),
+            value_label: None,
+            used_display: None,
+            remaining_display: None,
+            reset_at: None,
+            reset_text: None,
+        });
+
+        let backoff = ProviderBackoffEntry {
+            blocked_until: Utc::now() + Duration::minutes(5),
+            failure_count: 2,
+            last_error: Some("Provider rate-limited the usage request".to_string()),
+        };
+
+        let snapshot = snapshot_from_backoff(&metadata, Some(&cached), &backoff);
+        assert!(matches!(snapshot.status, ProviderStatus::Stale));
+        assert!(snapshot.stale);
+        assert!(snapshot.primary_quota.is_some());
+        assert!(
+            snapshot
+                .error_message
+                .as_deref()
+                .is_some_and(|message| message.contains("rate-limited"))
+        );
+    }
+
+    #[test]
+    fn backoff_message_mentions_retry_time() {
+        let backoff = ProviderBackoffEntry {
+            blocked_until: Utc::now() + Duration::minutes(5),
+            failure_count: 1,
+            last_error: None,
+        };
+        assert!(backoff_message(&backoff).contains("temporarily backed off until"));
     }
 }
