@@ -1,4 +1,4 @@
-const { GObject, St, Gio, GLib, Clutter, Meta } = imports.gi;
+const { GObject, St, Gio, GLib, Clutter, Meta, Pango } = imports.gi;
 const Main = imports.ui.main;
 const PanelMenu = imports.ui.panelMenu;
 const PopupMenu = imports.ui.popupMenu;
@@ -9,7 +9,7 @@ const { LinuxUsageState } = Me.imports.src.models.state;
 const { HelperClient } = Me.imports.src.services.helper_client;
 const { ProviderCatalog } = Me.imports.src.providers.catalog;
 
-const BAR_WIDTH = 350;
+const OVERVIEW_ALERT_THRESHOLD = 80;
 const TOOLTIP_OFFSET = 8;
 const TOOLTIP_ANIMATION_MS = 120;
 
@@ -63,6 +63,20 @@ function humanReset(text, at) {
     return `Resets in ${m}m`;
 }
 
+function wrapLabel(text, styleClass) {
+    const label = new St.Label({
+        text,
+        style_class: styleClass,
+        x_expand: true,
+        x_align: Clutter.ActorAlign.START,
+    });
+    label.clutter_text.set_single_line_mode(false);
+    label.clutter_text.set_line_wrap(true);
+    label.clutter_text.set_line_wrap_mode(Pango.WrapMode.WORD_CHAR);
+    label.clutter_text.set_ellipsize(Pango.EllipsizeMode.NONE);
+    return label;
+}
+
 function statusText(status) {
     switch (status) {
     case 'ok': return 'Healthy';
@@ -101,12 +115,23 @@ function dotClass(status) {
 function barColorClass(w) {
     if (w && w.valueLabel === 'Included')
         return 'lu-fill-info';
-    const u = w && w.usedPercent !== null && w.usedPercent !== undefined ? w.usedPercent : 0;
+    const u = quotaPercent(w);
     if (u >= 85)
         return 'lu-fill-danger';
     if (u >= 60)
         return 'lu-fill-warn';
     return '';
+}
+
+function quotaPercent(quota) {
+    if (!quota)
+        return 0;
+    if (quota.valueLabel === 'Included')
+        return 100;
+    const used = quota.usedPercent;
+    if (used === null || used === undefined || Number.isNaN(used))
+        return 0;
+    return Math.max(0, Math.min(100, used));
 }
 
 function isExtraLine(line) {
@@ -308,7 +333,7 @@ class LinuxUsageIndicator extends PanelMenu.Button {
             reactive: true,
         });
         this._attachPointerCursor(btn);
-        const col = new St.BoxLayout({ vertical: true, style_class: 'lu-row-inner' });
+        const col = new St.BoxLayout({ vertical: true, style_class: 'lu-row-inner', x_expand: true });
 
         const top = new St.BoxLayout({ style_class: 'lu-row-top' });
         top.add_child(new St.Label({
@@ -316,16 +341,18 @@ class LinuxUsageIndicator extends PanelMenu.Button {
             style_class: 'lu-row-name',
             x_expand: true,
         }));
-        const statusBox = new St.BoxLayout({ style_class: 'lu-status-box' });
-        statusBox.add_child(new St.Label({
-            text: '\u25CF',
-            style_class: `lu-dot-text ${dotClass(provider.status)}`,
-        }));
-        statusBox.add_child(new St.Label({
-            text: statusText(provider.status),
-            style_class: 'lu-status-label',
-        }));
-        top.add_child(statusBox);
+        if (provider.status !== 'ok') {
+            const statusBox = new St.BoxLayout({ style_class: 'lu-status-box' });
+            statusBox.add_child(new St.Label({
+                text: '\u25CF',
+                style_class: `lu-dot-text ${dotClass(provider.status)}`,
+            }));
+            statusBox.add_child(new St.Label({
+                text: statusText(provider.status),
+                style_class: 'lu-status-label',
+            }));
+            top.add_child(statusBox);
+        }
         top.add_child(new St.Icon({
             icon_name: 'go-next-symbolic',
             style_class: 'lu-chevron',
@@ -333,17 +360,10 @@ class LinuxUsageIndicator extends PanelMenu.Button {
         }));
         col.add_child(top);
 
-        if (provider.primaryQuota) {
-            col.add_child(this._buildBar(provider.primaryQuota));
-            const q = provider.primaryQuota;
-            const parts = [fmtPct(q.usedPercent), q.label];
-            const reset = humanReset(q.resetText, q.resetAt);
-            if (reset)
-                parts.push(reset);
-            col.add_child(new St.Label({
-                text: parts.join(' · '),
-                style_class: 'lu-row-meta',
-            }));
+        const overviewQuota = this._selectOverviewQuota(provider);
+        if (overviewQuota) {
+            col.add_child(this._buildBar(overviewQuota));
+            col.add_child(this._buildOverviewMeta(overviewQuota));
         } else {
             col.add_child(new St.Label({
                 text: detailStatusText(provider.status) || statusText(provider.status),
@@ -352,10 +372,10 @@ class LinuxUsageIndicator extends PanelMenu.Button {
         }
 
         if (provider.errorMessage) {
-            col.add_child(new St.Label({
-                text: provider.errorMessage,
-                style_class: provider.status === 'stale' ? 'lu-warn-text' : 'lu-err-text',
-            }));
+            col.add_child(wrapLabel(
+                provider.errorMessage,
+                provider.status === 'stale' ? 'lu-warn-text' : 'lu-err-text'
+            ));
         }
 
         btn.set_child(col);
@@ -406,8 +426,11 @@ class LinuxUsageIndicator extends PanelMenu.Button {
             box.add_child(new St.Label({ text: provider.sourceLabel, style_class: 'lu-detail-source' }));
 
         const statusMsg = detailStatusText(provider.status);
-        if (statusMsg)
+        if (provider.status === 'stale' && provider.remediation) {
+            box.add_child(wrapLabel(provider.remediation, 'lu-remedy'));
+        } else if (statusMsg) {
             box.add_child(new St.Label({ text: statusMsg, style_class: 'lu-detail-status' }));
+        }
 
         if (provider.primaryQuota)
             box.add_child(this._buildQuotaBlock(provider.primaryQuota));
@@ -424,15 +447,52 @@ class LinuxUsageIndicator extends PanelMenu.Button {
         }
 
         if (provider.errorMessage)
-            box.add_child(new St.Label({
-                text: provider.errorMessage,
-                style_class: provider.status === 'stale' ? 'lu-warn-text' : 'lu-err-text',
-            }));
-        if (provider.remediation)
-            box.add_child(new St.Label({ text: provider.remediation, style_class: 'lu-remedy' }));
+            box.add_child(wrapLabel(
+                provider.errorMessage,
+                provider.status === 'stale' ? 'lu-warn-text' : 'lu-err-text'
+            ));
+        if (provider.remediation && provider.status !== 'stale')
+            box.add_child(wrapLabel(provider.remediation, 'lu-remedy'));
 
         item.add_child(box);
         return item;
+    }
+
+    _selectOverviewQuota(provider) {
+        const quotas = [provider.primaryQuota, provider.secondaryQuota].filter(Boolean);
+        if (!quotas.length)
+            return null;
+
+        const highestQuota = quotas.reduce((best, quota) =>
+            quotaPercent(quota) > quotaPercent(best) ? quota : best
+        );
+
+        if (quotaPercent(highestQuota) >= OVERVIEW_ALERT_THRESHOLD)
+            return highestQuota;
+
+        return provider.primaryQuota || highestQuota;
+    }
+
+    _buildOverviewMeta(q) {
+        const meta = new St.BoxLayout({ style_class: 'lu-row-meta-box' });
+        const labelClass = quotaPercent(q) >= OVERVIEW_ALERT_THRESHOLD
+            ? 'lu-row-meta-alert'
+            : 'lu-row-meta';
+
+        meta.add_child(new St.Label({
+            text: q.valueLabel || fmtPct(quotaPercent(q)),
+            style_class: 'lu-row-meta',
+        }));
+        meta.add_child(new St.Label({ text: '·', style_class: 'lu-row-meta-sep' }));
+        meta.add_child(new St.Label({ text: q.label, style_class: labelClass }));
+
+        const reset = humanReset(q.resetText, q.resetAt);
+        if (reset) {
+            meta.add_child(new St.Label({ text: '·', style_class: 'lu-row-meta-sep' }));
+            meta.add_child(new St.Label({ text: reset, style_class: 'lu-row-meta' }));
+        }
+
+        return meta;
     }
 
     _buildQuotaBlock(q) {
@@ -460,15 +520,22 @@ class LinuxUsageIndicator extends PanelMenu.Button {
     }
 
     _buildBar(q) {
-        const track = new St.BoxLayout({ style_class: 'lu-bar-track' });
-        const pct = q.valueLabel === 'Included'
-            ? 100
-            : Math.max(0, Math.min(100, q.usedPercent || 0));
-        const w = pct === 0 ? 0 : Math.round(pct * BAR_WIDTH / 100);
+        const track = new St.Widget({
+            style_class: 'lu-bar-track',
+            x_expand: true,
+            layout_manager: new Clutter.BinLayout(),
+            clip_to_allocation: true,
+        });
+        const pct = quotaPercent(q);
         const fill = new St.Widget({
             style_class: `lu-bar-fill ${barColorClass(q)}`,
-            style: `width: ${w}px;`,
+            x_expand: true,
+            y_expand: true,
+            x_align: Clutter.ActorAlign.FILL,
+            y_align: Clutter.ActorAlign.FILL,
         });
+        fill.set_pivot_point(0, 0.5);
+        fill.scale_x = pct / 100;
         track.add_child(fill);
         return track;
     }

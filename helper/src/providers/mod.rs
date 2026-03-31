@@ -258,19 +258,44 @@ fn snapshot_from_backoff(
 }
 
 fn backoff_message(backoff: &ProviderBackoffEntry) -> String {
-    let retry_at = format_backoff_time(backoff.blocked_until);
-    match backoff.last_error.as_deref() {
-        Some(last_error) if !last_error.is_empty() => {
-            format!(
-                "Provider temporarily backed off until {retry_at} after recent failures: {last_error}"
-            )
+    let duration = format_backoff_duration(backoff.blocked_until);
+    let reason = format_backoff_reason(backoff.last_error.as_deref());
+    format!("Provider temporarily backed off for {duration} before retry after {reason}")
+}
+
+fn format_backoff_duration(value: DateTime<Utc>) -> String {
+    let remaining = value.signed_duration_since(Utc::now());
+    let total_seconds = remaining.num_seconds().max(60);
+    let total_minutes = (total_seconds + 59) / 60;
+    if total_minutes >= 60 && total_minutes % 60 == 0 {
+        let hours = total_minutes / 60;
+        if hours == 1 {
+            "1 hour".to_string()
+        } else {
+            format!("{hours} hours")
         }
-        _ => format!("Provider temporarily backed off until {retry_at} after recent failures"),
+    } else if total_minutes == 1 {
+        "1 minute".to_string()
+    } else {
+        format!("{total_minutes} minutes")
     }
 }
 
-fn format_backoff_time(value: DateTime<Utc>) -> String {
-    value.format("%Y-%m-%d %H:%M UTC").to_string()
+fn format_backoff_reason(last_error: Option<&str>) -> String {
+    match last_error.map(str::trim).filter(|value| !value.is_empty()) {
+        Some(reason) => {
+            let normalized = reason.to_ascii_lowercase();
+            if normalized.contains("rate-limit") || normalized.contains("rate limit") {
+                return "rate-limit".to_string();
+            }
+
+            reason
+                .strip_prefix("Provider ")
+                .unwrap_or(reason)
+                .to_string()
+        }
+        None => "recent failures".to_string(),
+    }
 }
 
 pub fn status_snapshot(
@@ -441,12 +466,9 @@ mod tests {
         assert!(matches!(snapshot.status, ProviderStatus::Stale));
         assert!(snapshot.stale);
         assert!(snapshot.primary_quota.is_some());
-        assert!(
-            snapshot
-                .error_message
-                .as_deref()
-                .is_some_and(|message| message.contains("rate-limited"))
-        );
+        assert!(snapshot.error_message.as_deref().is_some_and(|message| {
+            message.contains("for 5 minutes before retry") && message.contains("after rate-limit")
+        }));
     }
 
     #[test]
@@ -456,6 +478,18 @@ mod tests {
             failure_count: 1,
             last_error: None,
         };
-        assert!(backoff_message(&backoff).contains("temporarily backed off until"));
+        assert!(
+            backoff_message(&backoff).contains("temporarily backed off for 5 minutes before retry")
+        );
+    }
+
+    #[test]
+    fn backoff_message_uses_rate_limit_reason() {
+        let backoff = ProviderBackoffEntry {
+            blocked_until: Utc::now() + Duration::minutes(5),
+            failure_count: 1,
+            last_error: Some("Provider rate-limited the usage request".to_string()),
+        };
+        assert!(backoff_message(&backoff).contains("after rate-limit"));
     }
 }
