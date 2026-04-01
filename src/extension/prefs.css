@@ -84,16 +84,77 @@
 .linux-usage-prefs-input text,
 .linux-usage-prefs-input image,
 .linux-usage-prefs-input label,
+.linux-usage-prefs-input button,
+.linux-usage-prefs-input contents,
+.linux-usage-prefs-dropdown,
+.linux-usage-prefs-dropdown > button,
+.linux-usage-prefs-dropdown > button > box,
+.linux-usage-prefs-dropdown > button > box > label,
+.linux-usage-prefs-dropdown > button > box > arrow,
+.linux-usage-prefs-dropdown arrow,
+.linux-usage-prefs-dropdown label,
 entry.linux-usage-prefs-input,
 entry.linux-usage-prefs-input text,
 spinbutton.linux-usage-prefs-input,
-spinbutton.linux-usage-prefs-input text {
+spinbutton.linux-usage-prefs-input text,
+dropdown.linux-usage-prefs-input,
+dropdown.linux-usage-prefs-input > button {
     color: rgba(255, 255, 255, 0.98);
     caret-color: rgba(255, 255, 255, 0.98);
 }
 
 entry.linux-usage-prefs-input,
-spinbutton.linux-usage-prefs-input {
+spinbutton.linux-usage-prefs-input,
+dropdown.linux-usage-prefs-input,
+dropdown.linux-usage-prefs-input > button,
+.linux-usage-prefs-dropdown,
+.linux-usage-prefs-dropdown > button {
     background: rgba(29, 31, 38, 0.98);
+    background-image: none;
     border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 12px;
+}
+
+.linux-usage-prefs-warning {
+    border-radius: 999px;
+    min-width: 30px;
+    min-height: 30px;
+    padding: 0;
+}
+
+.linux-usage-prefs-warning-icon {
+    color: rgba(255, 190, 92, 1);
+}
+
+.linux-usage-prefs-dropdown-label,
+.linux-usage-prefs-dropdown label,
+.linux-usage-prefs-dropdown arrow,
+.linux-usage-prefs-dropdown image,
+.linux-usage-prefs-dropdown button,
+.linux-usage-prefs-dropdown > button,
+.linux-usage-prefs-dropdown > button > box,
+.linux-usage-prefs-dropdown > button > box > label,
+.linux-usage-prefs-dropdown > button > box > arrow {
+    color: rgba(244, 246, 250, 0.98);
+}
+
+.linux-usage-prefs-dropdown > button,
+.linux-usage-prefs-dropdown > button:hover,
+.linux-usage-prefs-dropdown > button:focus,
+.linux-usage-prefs-dropdown > button:checked {
+    background: rgba(29, 31, 38, 0.98);
+    background-image: none;
+}
+
+.linux-usage-prefs-dropdown popover contents,
+.linux-usage-prefs-dropdown popover scrolledwindow,
+.linux-usage-prefs-dropdown popover listview,
+.linux-usage-prefs-dropdown popover row {
+    background: rgba(29, 31, 38, 0.98);
+    color: rgba(244, 246, 250, 0.98);
+}
+
+.linux-usage-prefs-dropdown popover row:hover,
+.linux-usage-prefs-dropdown popover row:selected {
+    background: rgba(61, 66, 79, 1);
 }

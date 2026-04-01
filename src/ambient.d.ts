@@ -1,15 +1,15 @@
-declare const ARGV: string[];
-declare const global: any;
-declare const imports: any;
-declare function print(...args: any[]): void;
-declare function printerr(...args: any[]): void;
-
-declare class TextDecoder {
-  constructor(label?: string);
-  decode(input?: ArrayBuffer | Uint8Array): string;
-}
-
-declare class TextEncoder {
-  constructor();
-  encode(input?: string): Uint8Array;
-}
+import "@girs/gjs";
+import "@girs/gjs/dom";
+import "@girs/adw-1";
+import "@girs/clutter-14";
+import "@girs/gdk-4.0";
+import "@girs/gio-2.0";
+import "@girs/glib-2.0";
+import "@girs/gnome-shell/ambient";
+import "@girs/gnome-shell/extensions/global";
+import "@girs/gobject-2.0";
+import "@girs/gtk-4.0";
+import "@girs/meta-14";
+import "@girs/pango-1.0";
+import "@girs/soup-2.4";
+import "@girs/st-16";

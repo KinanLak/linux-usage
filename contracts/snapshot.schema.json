@@ -30,7 +30,10 @@
         "usedDisplay": { "type": ["string", "null"] },
         "remainingDisplay": { "type": ["string", "null"] },
         "resetAt": { "type": ["string", "null"], "format": "date-time" },
-        "resetText": { "type": ["string", "null"] }
+        "resetText": { "type": ["string", "null"] },
+        "periodSeconds": { "type": ["number", "null"] },
+        "periodStartAt": { "type": ["string", "null"], "format": "date-time" },
+        "periodEndAt": { "type": ["string", "null"], "format": "date-time" }
       }
     },
     "provider": {

@@ -1,13 +1,9 @@
-/* oxlint-disable no-unused-vars */
+import { ExtensionPreferences } from "resource:///org/gnome/Shell/Extensions/js/extensions/prefs.js";
 
-imports.gi.versions.Gtk = "4.0";
-imports.gi.versions.Adw = "1";
+import { buildPrefsWidget } from "./prefs/prefs.js";
 
-const Me = imports.misc.extensionUtils.getCurrentExtension();
-const prefs = Me.imports.prefs.prefs;
-
-function init() {}
-
-function buildPrefsWidget() {
-  return prefs.buildPrefsWidget();
+export default class LinuxUsagePreferences extends ExtensionPreferences {
+    override getPreferencesWidget(): any {
+        return buildPrefsWidget(this.getSettings("org.gnome.shell.extensions.linux-usage"), this.path);
+    }
 }

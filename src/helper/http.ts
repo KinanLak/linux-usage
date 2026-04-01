@@ -1,44 +1,50 @@
-/* oxlint-disable no-unused-vars */
+import Soup from "gi://Soup?version=2.4";
 
-const Soup = imports.gi.Soup;
-const GLib = imports.gi.GLib;
+const ByteArray = (globalThis as any).imports?.byteArray;
 
-const _session = new Soup.Session();
+function bytesToString(bytes: Uint8Array | null | undefined) {
+    if (!bytes) return "";
+    if (typeof TextDecoder !== "undefined") return new TextDecoder().decode(bytes);
+    if (!ByteArray) throw new Error("ByteArray support is unavailable");
+    return ByteArray.toString(bytes);
+}
+
+function stringToBytes(text: string) {
+    if (typeof TextEncoder !== "undefined") return new TextEncoder().encode(text);
+    if (!ByteArray) throw new Error("ByteArray support is unavailable");
+    return ByteArray.fromString(text);
+}
+
+const _session = new Soup.SessionAsync();
 _session.timeout = 10;
 
-function httpGet(
-  url: string,
-  headers: Record<string, string>,
-): { status: number; body: string } {
-  const message = Soup.Message.new("GET", url);
-  const reqHeaders = message.get_request_headers();
-  for (const key of Object.keys(headers)) {
-    reqHeaders.append(key, headers[key]);
-  }
-  const bytes = _session.send_and_read(message, null);
-  return {
-    status: message.get_status(),
-    body: bytes ? new TextDecoder().decode(bytes.get_data()) : "",
-  };
+function httpGet(url: string, headers: Record<string, string>): { status: number; body: string } {
+    const message = Soup.Message.new("GET", url);
+    for (const key of Object.keys(headers)) {
+        const value = headers[key];
+        if (value !== undefined) message.request_headers.append(key, value);
+    }
+    _session.send_message(message);
+    const bytes = message.response_body ? message.response_body.flatten().get_data() : null;
+    return {
+        status: message.status_code,
+        body: bytesToString(bytes),
+    };
 }
 
-function httpPost(
-  url: string,
-  headers: Record<string, string>,
-  body: any,
-): { status: number; body: string } {
-  const message = Soup.Message.new("POST", url);
-  const reqHeaders = message.get_request_headers();
-  for (const key of Object.keys(headers)) {
-    reqHeaders.append(key, headers[key]);
-  }
-  const encoded = new TextEncoder().encode(JSON.stringify(body));
-  message.set_request_body_from_bytes("application/json", new GLib.Bytes(encoded));
-  const responseBytes = _session.send_and_read(message, null);
-  return {
-    status: message.get_status(),
-    body: responseBytes ? new TextDecoder().decode(responseBytes.get_data()) : "",
-  };
+function httpPost(url: string, headers: Record<string, string>, body: any): { status: number; body: string } {
+    const message = Soup.Message.new("POST", url);
+    for (const key of Object.keys(headers)) {
+        const value = headers[key];
+        if (value !== undefined) message.request_headers.append(key, value);
+    }
+    message.set_request("application/json", Soup.MemoryUse.COPY, stringToBytes(JSON.stringify(body)));
+    _session.send_message(message);
+    const bytes = message.response_body ? message.response_body.flatten().get_data() : null;
+    return {
+        status: message.status_code,
+        body: bytesToString(bytes),
+    };
 }
 
-var Http = { httpGet, httpPost };
+export const Http = { httpGet, httpPost };

@@ -1,15 +1,14 @@
 #!/usr/bin/gjs
 
-imports.gi.versions.Soup = "3.0";
+import GLib from "gi://GLib";
+import System from "system";
 
-const GLib = imports.gi.GLib;
-const System = imports.system;
+import { DbusService } from "./dbus.js";
+import { Registry } from "./registry.js";
 
 const scriptDir = GLib.path_get_dirname(System.programInvocationName);
-imports.searchPath.unshift(scriptDir);
 
 const extensionDir = GLib.path_get_dirname(scriptDir);
-const { Registry } = imports.registry;
 
 const args = ARGV;
 const command = args[0] || "snapshot";
@@ -31,7 +30,6 @@ if (command === "snapshot") {
   }
   print(JSON.stringify(snapshot, null, 2));
 } else if (command === "serve-dbus") {
-  const { DbusService } = imports.dbus;
   DbusService.run(extensionDir);
 } else {
   printerr(`Unknown command: ${command}`);

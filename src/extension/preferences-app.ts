@@ -1,17 +1,13 @@
 #!/usr/bin/gjs
 
-imports.gi.versions.Gtk = "4.0";
-imports.gi.versions.Adw = "1";
+import Adw from "gi://Adw?version=1";
+import Gio from "gi://Gio";
+import GLib from "gi://GLib";
+import System from "system";
 
-const Adw = imports.gi.Adw;
-const GLib = imports.gi.GLib;
-const Gio = imports.gi.Gio;
-const System = imports.system;
+import { buildStandaloneWindow, loadCss } from "./prefs/prefs.js";
 
 const scriptPath = GLib.path_get_dirname(System.programInvocationName);
-imports.searchPath.unshift(scriptPath);
-
-const prefs = imports.prefs.prefs;
 
 const app = new Adw.Application({
   application_id: "org.kinanl.LinuxUsage.Preferences",
@@ -22,8 +18,8 @@ let window: any = null;
 
 app.connect("activate", () => {
   if (!window) {
-    prefs.loadCss(scriptPath);
-    window = prefs.buildStandaloneWindow(app, scriptPath);
+    loadCss(scriptPath);
+    window = buildStandaloneWindow(app, scriptPath);
     window.connect("close-request", () => {
       window = null;
       return false;

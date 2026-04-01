@@ -31,5 +31,10 @@
       <summary>Show extra credits and usage</summary>
       <description>Whether to show supplemental credits or extra usage lines in provider detail views.</description>
     </key>
+    <key name="show-time-progress-marker" type="b">
+      <default>true</default>
+      <summary>Show time progress marker</summary>
+      <description>Whether to display the current-time marker inside quota bars.</description>
+    </key>
   </schema>
 </schemalist>
