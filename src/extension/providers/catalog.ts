@@ -1,15 +1,3 @@
-import Gio from "gi://Gio";
-import GLib from "gi://GLib";
-
-const ByteArray = (globalThis as any).imports?.byteArray;
-
-function bytesToString(bytes: Uint8Array | null | undefined) {
-    if (!bytes) return "";
-    if (typeof TextDecoder !== "undefined") return new TextDecoder().decode(bytes);
-    if (!ByteArray) throw new Error("ByteArray support is unavailable");
-    return ByteArray.toString(bytes);
-}
-
 type ProviderCatalogEntry = {
     id: string;
     title: string;
@@ -18,28 +6,32 @@ type ProviderCatalogEntry = {
     defaultEnabled: boolean;
 };
 
-function catalogPath(extensionDir: string) {
-    return GLib.build_filenamev([extensionDir, "providers.json"]);
-}
+const PROVIDER_CATALOG: ProviderCatalogEntry[] = [
+    {
+        id: "codex",
+        title: "Codex",
+        description: "OpenAI Codex session and weekly quota",
+        iconName: "utilities-terminal-symbolic",
+        defaultEnabled: true,
+    },
+    {
+        id: "claude",
+        title: "Claude",
+        description: "Anthropic Claude quota and local auth state",
+        iconName: "weather-overcast-symbolic",
+        defaultEnabled: true,
+    },
+    {
+        id: "copilot",
+        title: "Copilot",
+        description: "GitHub Copilot premium interactions and included chat",
+        iconName: "system-users-symbolic",
+        defaultEnabled: true,
+    },
+];
 
-function loadProviderCatalog(extensionDir: string): ProviderCatalogEntry[] {
-    const file = Gio.File.new_for_path(catalogPath(extensionDir));
-    const [ok, contents] = file.load_contents(null);
-
-    if (!ok) throw new Error("Unable to read providers.json");
-
-    const catalog = JSON.parse(bytesToString(contents));
-    if (!Array.isArray(catalog)) throw new Error("Provider catalog must be an array");
-
-    return catalog
-        .filter((provider) => provider && provider.id)
-        .map((provider) => ({
-            id: `${provider.id}`,
-            title: provider.title ? `${provider.title}` : `${provider.id}`,
-            description: provider.description ? `${provider.description}` : "",
-            iconName: provider.iconName ? `${provider.iconName}` : "applications-system-symbolic",
-            defaultEnabled: provider.defaultEnabled !== false,
-        }));
+function loadProviderCatalog(_extensionDir?: string): ProviderCatalogEntry[] {
+    return PROVIDER_CATALOG.map((provider) => ({ ...provider }));
 }
 
 function getEnabledProviderIds(settings: any, providers: ProviderCatalogEntry[]) {

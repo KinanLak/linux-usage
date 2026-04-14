@@ -36,16 +36,16 @@ $(DIST_DIR)/.bundle-stamp: node_modules/.install-stamp $(TS_SOURCES) $(STATIC_AS
 		cp "$$asset" "$$target"; \
 	done
 	node ./scripts/write-metadata.mjs esm "$(EXTENSION_SRC_DIR)/metadata.json" "$(DIST_DIR)/metadata.json"
-	mkdir -p "$(DIST_DIR)/schemas"
-	cp "$(SCHEMAS_DIR)/gschemas.compiled" "$(DIST_DIR)/schemas/gschemas.compiled"
 	chmod 755 "$(DIST_DIR)/preferences-app.js" "$(DIST_DIR)/helper/helper.js"
 	touch "$@"
 
-$(LEGACY_DIST_DIR)/.bundle-stamp: $(DIST_DIR)/.bundle-stamp $(BUILD_FILES)
+$(LEGACY_DIST_DIR)/.bundle-stamp: $(DIST_DIR)/.bundle-stamp $(BUILD_FILES) $(SCHEMAS_DIR)/gschemas.compiled
 	rm -rf "$(LEGACY_DIST_DIR)"
 	cp -r "$(DIST_DIR)" "$(LEGACY_DIST_DIR)"
 	node ./scripts/write-metadata.mjs legacy "$(EXTENSION_SRC_DIR)/metadata.json" "$(LEGACY_DIST_DIR)/metadata.json"
 	node ./scripts/build-legacy-gjs.mjs "$(LEGACY_DIST_DIR)"
+	mkdir -p "$(LEGACY_DIST_DIR)/schemas"
+	cp "$(SCHEMAS_DIR)/gschemas.compiled" "$(LEGACY_DIST_DIR)/schemas/gschemas.compiled"
 	chmod 755 "$(LEGACY_DIST_DIR)/preferences-app.js" "$(LEGACY_DIST_DIR)/helper/helper.js"
 	touch "$@"
 
