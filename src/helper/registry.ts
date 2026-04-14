@@ -148,8 +148,9 @@ function fetchAll(extensionDir: string): any {
 }
 
 function fetchCachedOrLive(extensionDir: string): any {
-    const cached = Cache.loadSnapshot();
-    if (cached) return cached;
+    // Always run fetchAll so backoff countdowns stay live and stale-cache messages
+    // refresh. Cache.activeBackoff short-circuits hammered providers without
+    // touching the network, so this is safe to call on every UI refresh.
     return fetchAll(extensionDir);
 }
 

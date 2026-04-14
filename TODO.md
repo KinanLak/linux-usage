@@ -1,3 +1,0 @@
-- Le cache de quota de session de claude en marche plus en cas de rate limit. On a aucune info qui est affiché
-- La session affiche toujorus 100% et le weekly aussi l'affiche parfois même si c'est pas le cas
-- Le backoff de rate limit semble un peu cassé, et ne change pas son temps restant dynamiquement

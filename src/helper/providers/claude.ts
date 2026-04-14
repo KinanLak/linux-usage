@@ -48,16 +48,13 @@ function _formatPlanToken(token: string): string {
     return lower.charAt(0).toUpperCase() + lower.slice(1);
 }
 
-function _normalizePercent(value: number): number {
-    return value >= 0 && value <= 1 ? value * 100 : value;
-}
-
 function _quotaFromUsage(label: string, data: any): any | null {
     const used = Utils.valueAsNumber(data.used) ?? Utils.valueAsNumber(data.usage);
     let usedPercent = Utils.valueAsNumber(data.percent_used);
     if (usedPercent === null) {
-        const utilization = Utils.valueAsNumber(data.utilization);
-        if (utilization !== null) usedPercent = _normalizePercent(utilization);
+        // Anthropic's /oauth/usage returns `utilization` as a percentage (e.g. 9.0 = 9%),
+        // not as a 0-1 fraction — use the value as-is.
+        usedPercent = Utils.valueAsNumber(data.utilization);
     }
 
     let limit = Utils.valueAsNumber(data.limit) ?? Utils.valueAsNumber(data.max);
