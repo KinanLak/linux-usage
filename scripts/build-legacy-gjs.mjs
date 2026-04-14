@@ -97,7 +97,7 @@ function init() {
   if (relativePath === "prefs.js") {
     return `const ExtensionUtils = imports.misc.extensionUtils;
 const Me = ExtensionUtils.getCurrentExtension();
-const prefs = Me.imports.prefs.prefs;
+const prefs = Me.imports["prefs-widget"].prefs;
 
 function init() {}
 
@@ -121,7 +121,7 @@ const System = imports.system;
 const scriptPath = GLib.path_get_dirname(System.programInvocationName);
 imports.searchPath.unshift(scriptPath);
 
-const prefs = imports.prefs.prefs;
+const prefs = imports["prefs-widget"].prefs;
 
 const app = new Adw.Application({
     application_id: "org.kinanl.LinuxUsage.Preferences",

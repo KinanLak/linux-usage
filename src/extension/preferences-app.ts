@@ -5,7 +5,7 @@ import Gio from "gi://Gio";
 import GLib from "gi://GLib";
 import System from "system";
 
-import { buildStandaloneWindow, loadCss } from "./prefs/prefs.js";
+import { buildStandaloneWindow, loadCss } from "./prefs-widget/prefs.js";
 
 const scriptPath = GLib.path_get_dirname(System.programInvocationName);
 
