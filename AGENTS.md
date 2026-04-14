@@ -62,5 +62,5 @@ gjs ~/.local/share/gnome-shell/extensions/linux-usage@KinanLak.github.io/prefere
 ## Checks avant commit
 
 ```bash
-npm run check   # typecheck + lint + build:all
+bun run check   # typecheck + lint + build:all
 ```

@@ -1,0 +1,643 @@
+{
+  "lockfileVersion": 1,
+  "configVersion": 1,
+  "workspaces": {
+    "": {
+      "name": "linux-usage",
+      "devDependencies": {
+        "@girs/adw-1": "^1.10.0-4.0.0-beta.43",
+        "@girs/clutter-14": "^14.0.0-4.0.0-beta.43",
+        "@girs/gdk-4.0": "^4.0.0-4.0.0-beta.43",
+        "@girs/gio-2.0": "^2.88.0-4.0.0-beta.43",
+        "@girs/gjs": "^4.0.0-beta.43",
+        "@girs/glib-2.0": "^2.88.0-4.0.0-beta.43",
+        "@girs/gnome-shell": "^49.1.0",
+        "@girs/gobject-2.0": "^2.88.0-4.0.0-beta.43",
+        "@girs/gtk-4.0": "^4.22.1-4.0.0-beta.43",
+        "@girs/meta-14": "^14.0.0-4.0.0-beta.43",
+        "@girs/pango-1.0": "^1.57.0-4.0.0-beta.43",
+        "@girs/soup-2.4": "^2.74.3-4.0.0-beta.43",
+        "@girs/st-16": "^16.0.0-4.0.0-beta.43",
+        "@types/node": "^25.5.0",
+        "oxfmt": "^0.43.0",
+        "oxlint": "^1.58.0",
+        "typescript": "^6.0.2",
+      },
+    },
+  },
+  "overrides": {
+    "@girs/clutter-14": "14.0.0-4.0.0-beta.43",
+    "@girs/cogl-14": "14.0.0-4.0.0-beta.43",
+    "@girs/meta-14": "14.0.0-4.0.0-beta.43",
+    "@girs/mtk-14": "14.0.0-4.0.0-beta.43",
+  },
+  "packages": {
+    "@girs/accountsservice-1.0": ["@girs/accountsservice-1.0@1.0.0-4.0.0-beta.38", "", { "dependencies": { "@girs/gio-2.0": "2.86.0-4.0.0-beta.38", "@girs/gjs": "4.0.0-beta.38", "@girs/glib-2.0": "2.86.0-4.0.0-beta.38", "@girs/gmodule-2.0": "2.0.0-4.0.0-beta.38", "@girs/gobject-2.0": "2.86.0-4.0.0-beta.38" } }, "sha512-6QzytM5dztmMynF2bxN73EuNK9ArMFxkP2L8wUC7IH45zBeBOfYcqL85BFh2PmkGmqRk+Rli5EFR8dAkx3Ig5Q=="],
+
+    "@girs/adw-1": ["@girs/adw-1@1.10.0-4.0.0-rc.3", "", { "dependencies": { "@girs/cairo-1.0": "1.0.0-4.0.0-rc.3", "@girs/freetype2-2.0": "2.0.0-4.0.0-rc.3", "@girs/gdk-4.0": "4.0.0-4.0.0-rc.3", "@girs/gdkpixbuf-2.0": "2.0.0-4.0.0-rc.3", "@girs/gio-2.0": "2.88.0-4.0.0-rc.3", "@girs/gjs": "4.0.0-rc.3", "@girs/glib-2.0": "2.88.0-4.0.0-rc.3", "@girs/gmodule-2.0": "2.0.0-4.0.0-rc.3", "@girs/gobject-2.0": "2.88.0-4.0.0-rc.3", "@girs/graphene-1.0": "1.0.0-4.0.0-rc.3", "@girs/gsk-4.0": "4.0.0-4.0.0-rc.3", "@girs/gtk-4.0": "4.23.0-4.0.0-rc.3", "@girs/harfbuzz-0.0": "13.2.1-4.0.0-rc.3", "@girs/pango-1.0": "1.57.1-4.0.0-rc.3", "@girs/pangocairo-1.0": "1.0.0-4.0.0-rc.3" } }, "sha512-9VFEjsFc4+jCHSob2TSw0dIGQ8ZSR32CIQBOm9L/7feqWQWRCzN8hEr7kt+s8vRBYJy3MqOoryLbnwE34NFHEQ=="],
+
+    "@girs/atk-1.0": ["@girs/atk-1.0@2.60.0-4.0.0-beta.43", "", { "dependencies": { "@girs/gjs": "4.0.0-beta.43", "@girs/glib-2.0": "2.88.0-4.0.0-beta.43", "@girs/gobject-2.0": "2.88.0-4.0.0-beta.43" } }, "sha512-QGs1azUURReiQOjKoL8aGCWsvIhrhdrDBIGgT9e1Y1bMM1IQ9qiSb92Pntwrn33NQB8Wc/EeSRnKcnHhrOBn4w=="],
+
+    "@girs/cairo-1.0": ["@girs/cairo-1.0@1.0.0-4.0.0-rc.3", "", { "dependencies": { "@girs/gjs": "4.0.0-rc.3", "@girs/glib-2.0": "2.88.0-4.0.0-rc.3", "@girs/gobject-2.0": "2.88.0-4.0.0-rc.3" } }, "sha512-k/yDmgmzn811QDQYkqsA3sgmvXqystLQBEcTaT46XXX42z14rVybimqlXylsoCTTaC61SIOelFLolzWP7z8ZEg=="],
+
+    "@girs/clutter-14": ["@girs/clutter-14@14.0.0-4.0.0-beta.43", "", { "dependencies": { "@girs/atk-1.0": "2.60.0-4.0.0-beta.43", "@girs/cairo-1.0": "1.0.0-4.0.0-beta.43", "@girs/cogl-14": "14.0.0-4.0.0-beta.43", "@girs/coglpango-14": "14.0.0-4.0.0-beta.43", "@girs/freetype2-2.0": "2.0.0-4.0.0-beta.43", "@girs/gio-2.0": "2.88.0-4.0.0-beta.43", "@girs/gjs": "4.0.0-beta.43", "@girs/gl-1.0": "1.0.0-4.0.0-beta.43", "@girs/glib-2.0": "2.88.0-4.0.0-beta.43", "@girs/gmodule-2.0": "2.0.0-4.0.0-beta.43", "@girs/gobject-2.0": "2.88.0-4.0.0-beta.43", "@girs/graphene-1.0": "1.0.0-4.0.0-beta.43", "@girs/harfbuzz-0.0": "12.3.2-4.0.0-beta.43", "@girs/mtk-14": "14.0.0-4.0.0-beta.43", "@girs/pango-1.0": "1.57.0-4.0.0-beta.43", "@girs/pangocairo-1.0": "1.0.0-4.0.0-beta.43", "@girs/xlib-2.0": "2.0.0-4.0.0-beta.43" } }, "sha512-Vn5UdqZGzsl3csH3xE2GcWx6DGodpmxrxYToQu3lb4Umcj66TLfSn7vCzE6mviJ52T6hmhkFRTnebDqqhCztMg=="],
+
+    "@girs/clutter-16": ["@girs/clutter-16@16.0.0-4.0.0-rc.3", "", { "dependencies": { "@girs/atk-1.0": "2.60.0-4.0.0-rc.3", "@girs/cairo-1.0": "1.0.0-4.0.0-rc.3", "@girs/cogl-16": "16.0.0-4.0.0-rc.3", "@girs/freetype2-2.0": "2.0.0-4.0.0-rc.3", "@girs/gio-2.0": "2.88.0-4.0.0-rc.3", "@girs/gjs": "4.0.0-rc.3", "@girs/gl-1.0": "1.0.0-4.0.0-rc.3", "@girs/glib-2.0": "2.88.0-4.0.0-rc.3", "@girs/gmodule-2.0": "2.0.0-4.0.0-rc.3", "@girs/gobject-2.0": "2.88.0-4.0.0-rc.3", "@girs/graphene-1.0": "1.0.0-4.0.0-rc.3", "@girs/harfbuzz-0.0": "13.2.1-4.0.0-rc.3", "@girs/mtk-16": "16.0.0-4.0.0-rc.3", "@girs/pango-1.0": "1.57.1-4.0.0-rc.3", "@girs/xlib-2.0": "2.0.0-4.0.0-rc.3" } }, "sha512-uYg3Ybw15wZTD2Rzh+BQWR1f2ZqiYvFqFb+1QovwyaGf3Q1EvD+bGS7lBFwOAKlAgqbog5FVAFBOZFqFVjLCDQ=="],
+
+    "@girs/clutter-17": ["@girs/clutter-17@17.0.0-4.0.0-rc.3", "", { "dependencies": { "@girs/atk-1.0": "2.60.0-4.0.0-rc.3", "@girs/cairo-1.0": "1.0.0-4.0.0-rc.3", "@girs/cogl-17": "17.0.0-4.0.0-rc.3", "@girs/freetype2-2.0": "2.0.0-4.0.0-rc.3", "@girs/gio-2.0": "2.88.0-4.0.0-rc.3", "@girs/gjs": "4.0.0-rc.3", "@girs/gl-1.0": "1.0.0-4.0.0-rc.3", "@girs/glib-2.0": "2.88.0-4.0.0-rc.3", "@girs/gmodule-2.0": "2.0.0-4.0.0-rc.3", "@girs/gobject-2.0": "2.88.0-4.0.0-rc.3", "@girs/graphene-1.0": "1.0.0-4.0.0-rc.3", "@girs/harfbuzz-0.0": "13.2.1-4.0.0-rc.3", "@girs/mtk-17": "17.0.0-4.0.0-rc.3", "@girs/pango-1.0": "1.57.1-4.0.0-rc.3" } }, "sha512-bXCcaklHW85twZb0A9ul6Nj8Z/LQjDZgZxFZ/sbTLMqpAj4cS4TaRtGlqMs09eINzNAEGhO5m4mcPWHAvdGf1Q=="],
+
+    "@girs/cogl-14": ["@girs/cogl-14@14.0.0-4.0.0-beta.43", "", { "dependencies": { "@girs/gjs": "4.0.0-beta.43", "@girs/gl-1.0": "1.0.0-4.0.0-beta.43", "@girs/glib-2.0": "2.88.0-4.0.0-beta.43", "@girs/gobject-2.0": "2.88.0-4.0.0-beta.43", "@girs/graphene-1.0": "1.0.0-4.0.0-beta.43", "@girs/mtk-14": "14.0.0-4.0.0-beta.43", "@girs/xlib-2.0": "2.0.0-4.0.0-beta.43" } }, "sha512-xCUFmaiFwkNQ4jSAZMtDrRIBuG6m89q7NMgY08r2X3R7UPqvlKpUgNB7iHooRDv0/y2T/ruqVP8VkuZePIdCpA=="],
+
+    "@girs/cogl-16": ["@girs/cogl-16@16.0.0-4.0.0-rc.3", "", { "dependencies": { "@girs/gjs": "4.0.0-rc.3", "@girs/gl-1.0": "1.0.0-4.0.0-rc.3", "@girs/glib-2.0": "2.88.0-4.0.0-rc.3", "@girs/gobject-2.0": "2.88.0-4.0.0-rc.3", "@girs/graphene-1.0": "1.0.0-4.0.0-rc.3", "@girs/mtk-16": "16.0.0-4.0.0-rc.3", "@girs/xlib-2.0": "2.0.0-4.0.0-rc.3" } }, "sha512-64+C1JoytJxPyiLRpB8yEXwYKUzp5qsICEBTTL8KVKvkVXx3Xlh2phhxP5DG4WyqW8tZzTOIlh2NG/rmVNmYsA=="],
+
+    "@girs/cogl-17": ["@girs/cogl-17@17.0.0-4.0.0-rc.3", "", { "dependencies": { "@girs/gjs": "4.0.0-rc.3", "@girs/gl-1.0": "1.0.0-4.0.0-rc.3", "@girs/glib-2.0": "2.88.0-4.0.0-rc.3", "@girs/gobject-2.0": "2.88.0-4.0.0-rc.3", "@girs/graphene-1.0": "1.0.0-4.0.0-rc.3", "@girs/mtk-17": "17.0.0-4.0.0-rc.3" } }, "sha512-dSU0fnTZ3hDuWVfdPbty/X/+cw+uHVM3VwSMI2ZZGK8+bC2ZB82JbiTgsj0L8ZB1PaNfCUe7+ZrxpTqCWBKeJQ=="],
+
+    "@girs/cogl-2.0": ["@girs/cogl-2.0@2.0.0-4.0.0-rc.3", "", { "dependencies": { "@girs/gjs": "4.0.0-rc.3", "@girs/gl-1.0": "1.0.0-4.0.0-rc.3", "@girs/glib-2.0": "2.88.0-4.0.0-rc.3", "@girs/gobject-2.0": "2.88.0-4.0.0-rc.3" } }, "sha512-66E9MepSJLFjbq1DbE+3zUf2OVr9xoOx7K/q+8BwAe59ulH2foV+Y0DNTi+Ovs04Gc5cVPYeKCoQTHDny8Z3BQ=="],
+
+    "@girs/coglpango-14": ["@girs/coglpango-14@14.0.0-4.0.0-beta.43", "", { "dependencies": { "@girs/cairo-1.0": "1.0.0-4.0.0-beta.43", "@girs/cogl-14": "14.0.0-4.0.0-beta.43", "@girs/freetype2-2.0": "2.0.0-4.0.0-beta.43", "@girs/gio-2.0": "2.88.0-4.0.0-beta.43", "@girs/gjs": "4.0.0-beta.43", "@girs/gl-1.0": "1.0.0-4.0.0-beta.43", "@girs/glib-2.0": "2.88.0-4.0.0-beta.43", "@girs/gmodule-2.0": "2.0.0-4.0.0-beta.43", "@girs/gobject-2.0": "2.88.0-4.0.0-beta.43", "@girs/graphene-1.0": "1.0.0-4.0.0-beta.43", "@girs/harfbuzz-0.0": "12.3.2-4.0.0-beta.43", "@girs/mtk-14": "14.0.0-4.0.0-beta.43", "@girs/pango-1.0": "1.57.0-4.0.0-beta.43", "@girs/pangocairo-1.0": "1.0.0-4.0.0-beta.43", "@girs/xlib-2.0": "2.0.0-4.0.0-beta.43" } }, "sha512-47aEm5bDI74FIQM0VCyAsMKV2IBP/JLay0g5get3hebLfhya4tMM48KuHHRhS/qH+B/24Zu//Q0Y4GGg7vZvJA=="],
+
+    "@girs/freetype2-2.0": ["@girs/freetype2-2.0@2.0.0-4.0.0-rc.3", "", { "dependencies": { "@girs/gjs": "4.0.0-rc.3", "@girs/gobject-2.0": "2.88.0-4.0.0-rc.3" } }, "sha512-xYbmRZmMYrfyNWoOfmoQ3MNerBU2XLm9fXdlY883aE/yUX1HxXlvj5XRpA6yXStZVjs9keqwDLCklKYQHRCv9A=="],
+
+    "@girs/gck-2": ["@girs/gck-2@4.4.0-4.0.0-rc.3", "", { "dependencies": { "@girs/gio-2.0": "2.88.0-4.0.0-rc.3", "@girs/gjs": "4.0.0-rc.3", "@girs/glib-2.0": "2.88.0-4.0.0-rc.3", "@girs/gmodule-2.0": "2.0.0-4.0.0-rc.3", "@girs/gobject-2.0": "2.88.0-4.0.0-rc.3" } }, "sha512-T5lFoIOCq/tBk7sbjX0A/aBkr9KTkihIMHlTJb4SPpRP2LLXrv3Hgs/r7i8+oEQaH9M4V5zKr5JdmeHcYvGakw=="],
+
+    "@girs/gcr-4": ["@girs/gcr-4@4.4.0-4.0.0-rc.3", "", { "dependencies": { "@girs/gck-2": "4.4.0-4.0.0-rc.3", "@girs/gio-2.0": "2.88.0-4.0.0-rc.3", "@girs/gjs": "4.0.0-rc.3", "@girs/glib-2.0": "2.88.0-4.0.0-rc.3", "@girs/gmodule-2.0": "2.0.0-4.0.0-rc.3", "@girs/gobject-2.0": "2.88.0-4.0.0-rc.3" } }, "sha512-R/mF5M3uGFw9QecwbBRmeMD0DXYiWDTwsTFwtw7Y0Wx0dTUG2zDRFtpZFgBEUZ4bMLP5ug/TlhzUvVLC8EKUcw=="],
+
+    "@girs/gdesktopenums-3.0": ["@girs/gdesktopenums-3.0@3.0.0-4.0.0-beta.43", "", { "dependencies": { "@girs/gjs": "4.0.0-beta.43", "@girs/gobject-2.0": "2.88.0-4.0.0-beta.43" } }, "sha512-EpN6lQtkB3evLcAn6miRTD+Yg44Nmrx97KftxdsCq8MvX+UsvsTdW9VPiuzmMHBCLHj4e/7TAqAvb7KVSj3dVQ=="],
+
+    "@girs/gdk-4.0": ["@girs/gdk-4.0@4.0.0-4.0.0-rc.3", "", { "dependencies": { "@girs/cairo-1.0": "1.0.0-4.0.0-rc.3", "@girs/freetype2-2.0": "2.0.0-4.0.0-rc.3", "@girs/gdkpixbuf-2.0": "2.0.0-4.0.0-rc.3", "@girs/gio-2.0": "2.88.0-4.0.0-rc.3", "@girs/gjs": "4.0.0-rc.3", "@girs/glib-2.0": "2.88.0-4.0.0-rc.3", "@girs/gmodule-2.0": "2.0.0-4.0.0-rc.3", "@girs/gobject-2.0": "2.88.0-4.0.0-rc.3", "@girs/harfbuzz-0.0": "13.2.1-4.0.0-rc.3", "@girs/pango-1.0": "1.57.1-4.0.0-rc.3", "@girs/pangocairo-1.0": "1.0.0-4.0.0-rc.3" } }, "sha512-mpNhH4EohF1d+wC8cAgKnPPvnhYt4Pb6QlqOO2alLRvwlcA79pw9ZfbH6tFVsNnsylyDmQCjOEs2yOwEgxToSQ=="],
+
+    "@girs/gdkpixbuf-2.0": ["@girs/gdkpixbuf-2.0@2.0.0-4.0.0-rc.3", "", { "dependencies": { "@girs/gio-2.0": "2.88.0-4.0.0-rc.3", "@girs/gjs": "4.0.0-rc.3", "@girs/glib-2.0": "2.88.0-4.0.0-rc.3", "@girs/gmodule-2.0": "2.0.0-4.0.0-rc.3", "@girs/gobject-2.0": "2.88.0-4.0.0-rc.3" } }, "sha512-0w/oIjxcN2SPskI7TTKTl3UuhndhcVDnBVAwX9iehOeI+mGROhQXqT795qJYPfsPe9lfBKBU0mJuZNLHs27xUg=="],
+
+    "@girs/gdm-1.0": ["@girs/gdm-1.0@1.0.0-4.0.0-rc.3", "", { "dependencies": { "@girs/gio-2.0": "2.88.0-4.0.0-rc.3", "@girs/gjs": "4.0.0-rc.3", "@girs/glib-2.0": "2.88.0-4.0.0-rc.3", "@girs/gmodule-2.0": "2.0.0-4.0.0-rc.3", "@girs/gobject-2.0": "2.88.0-4.0.0-rc.3" } }, "sha512-hisc6qQ42jMsaJAMc3qNM9tVff15D8VJVQsDe5mWr4RXARC2xb45ADKSNcvoN7LV2oELtD/nWTnpty7tXpz5kQ=="],
+
+    "@girs/gio-2.0": ["@girs/gio-2.0@2.88.0-4.0.0-rc.3", "", { "dependencies": { "@girs/gjs": "4.0.0-rc.3", "@girs/glib-2.0": "2.88.0-4.0.0-rc.3", "@girs/gmodule-2.0": "2.0.0-4.0.0-rc.3", "@girs/gobject-2.0": "2.88.0-4.0.0-rc.3" } }, "sha512-yMccXSGk0/3+pdH6O2KVyPrltdQkfV/PVO2Pbsqa1nxQIQwCp+r9LnPbskYqD7hm9Rxtws44xZuHxmykCL79iA=="],
+
+    "@girs/giounix-2.0": ["@girs/giounix-2.0@2.0.0-4.0.0-rc.3", "", { "dependencies": { "@girs/gio-2.0": "2.88.0-4.0.0-rc.3", "@girs/gjs": "4.0.0-rc.3", "@girs/glib-2.0": "2.88.0-4.0.0-rc.3", "@girs/gmodule-2.0": "2.0.0-4.0.0-rc.3", "@girs/gobject-2.0": "2.88.0-4.0.0-rc.3" } }, "sha512-JbpEu7GQFDRjMEzL6KhlTKMMiefaMgIguN0o18E50ltZif+nuDJlTw2GbUfvKz8Yf34IbzGkVTNGIc2Jc2S9KA=="],
+
+    "@girs/gjs": ["@girs/gjs@4.0.0-rc.3", "", { "dependencies": { "@girs/cairo-1.0": "1.0.0-4.0.0-rc.3", "@girs/gio-2.0": "2.88.0-4.0.0-rc.3", "@girs/glib-2.0": "2.88.0-4.0.0-rc.3", "@girs/gobject-2.0": "2.88.0-4.0.0-rc.3" } }, "sha512-0+Dtzoz0cx2Wxv8TwaZIM4uhowK5j5hsw37yQSNuP07xK/X4nil/0oXMqJEsMVnPeNeGqlyksWToP4sCOzXTAQ=="],
+
+    "@girs/gl-1.0": ["@girs/gl-1.0@1.0.0-4.0.0-beta.43", "", { "dependencies": { "@girs/gjs": "4.0.0-beta.43", "@girs/gobject-2.0": "2.88.0-4.0.0-beta.43" } }, "sha512-uJJuNs1I4N7NzzH3w4Z5ALeB/Q5x/BYGzKyQq7SWL5WzbZ9Pi705TuzFXIr2Cvf/2+YM8JqjZBefWxDQevyAkQ=="],
+
+    "@girs/glib-2.0": ["@girs/glib-2.0@2.88.0-4.0.0-rc.3", "", { "dependencies": { "@girs/gjs": "4.0.0-rc.3", "@girs/gobject-2.0": "2.88.0-4.0.0-rc.3" } }, "sha512-P0A2sg0YuRJDzE8n+PYeMCSoS1gIuQgQRWHPhgtfZ0Bee01XG63Izbzo9mIyLRB+Xqpv96tppGyfi8/cr34t8w=="],
+
+    "@girs/gmodule-2.0": ["@girs/gmodule-2.0@2.0.0-4.0.0-rc.3", "", { "dependencies": { "@girs/gjs": "4.0.0-rc.3", "@girs/glib-2.0": "2.88.0-4.0.0-rc.3", "@girs/gobject-2.0": "2.88.0-4.0.0-rc.3" } }, "sha512-TvvjgbsQ/rdotrKRejdoZvf9MunjWYVgMjq0ZhHnuoNZ7xr2jcJbPf5tm58Qzq8FAmVjIgcG4Z4S+nNWRFktSg=="],
+
+    "@girs/gnome-shell": ["@girs/gnome-shell@49.1.0", "", { "dependencies": { "@girs/accountsservice-1.0": "1.0.0-4.0.0-beta.38", "@girs/adw-1": "^1.9.0-4.0.0-beta.38", "@girs/atk-1.0": "^2.58.0-4.0.0-beta.38", "@girs/clutter-17": "^17.0.0-4.0.0-beta.38", "@girs/cogl-2.0": "^2.0.0-4.0.0-beta.38", "@girs/gcr-4": "^4.4.0-4.0.0-beta.38", "@girs/gdm-1.0": "^1.0.0-4.0.0-beta.38", "@girs/gio-2.0": "^2.86.0-4.0.0-beta.38", "@girs/giounix-2.0": "^2.0.0-4.0.0-beta.38", "@girs/gjs": "^4.0.0-beta.38", "@girs/glib-2.0": "^2.86.0-4.0.0-beta.38", "@girs/gnomebg-4.0": "^4.0.0-4.0.0-beta.38", "@girs/gnomebluetooth-3.0": "^3.0.0-4.0.0-beta.38", "@girs/gnomedesktop-4.0": "^4.0.0-4.0.0-beta.38", "@girs/gobject-2.0": "^2.86.0-4.0.0-beta.38", "@girs/gtk-4.0": "^4.20.1-4.0.0-beta.38", "@girs/gvc-1.0": "^1.0.0-4.0.0-beta.38", "@girs/meta-17": "^17.0.0-4.0.0-beta.38", "@girs/mtk-17": "^17.0.0-4.0.0-beta.38", "@girs/polkit-1.0": "^1.0.0-4.0.0-beta.38", "@girs/shell-17": "^17.0.0-4.0.0-beta.38", "@girs/shew-0": "^0.0.0-4.0.0-beta.38", "@girs/st-17": "^17.0.0-4.0.0-beta.38", "@girs/upowerglib-1.0": "^0.99.1-4.0.0-beta.38" } }, "sha512-14Re6+DIrozWOErzW9fqvTAn0o9/1rMZuSDQ7BPIC+MYxmNmIlqzjo0kecbkXMN4ZY1zRpgfahbkiFwjJYZmfQ=="],
+
+    "@girs/gnomebg-4.0": ["@girs/gnomebg-4.0@4.0.0-4.0.0-rc.3", "", { "dependencies": { "@girs/cairo-1.0": "1.0.0-4.0.0-rc.3", "@girs/freetype2-2.0": "2.0.0-4.0.0-rc.3", "@girs/gdesktopenums-3.0": "3.0.0-4.0.0-rc.3", "@girs/gdk-4.0": "4.0.0-4.0.0-rc.3", "@girs/gdkpixbuf-2.0": "2.0.0-4.0.0-rc.3", "@girs/gio-2.0": "2.88.0-4.0.0-rc.3", "@girs/gjs": "4.0.0-rc.3", "@girs/glib-2.0": "2.88.0-4.0.0-rc.3", "@girs/gmodule-2.0": "2.0.0-4.0.0-rc.3", "@girs/gnomedesktop-4.0": "4.0.0-4.0.0-rc.3", "@girs/gobject-2.0": "2.88.0-4.0.0-rc.3", "@girs/harfbuzz-0.0": "13.2.1-4.0.0-rc.3", "@girs/pango-1.0": "1.57.1-4.0.0-rc.3", "@girs/pangocairo-1.0": "1.0.0-4.0.0-rc.3" } }, "sha512-5VZS89/+s3ALcJjR+HfTqg2WAF7mR+761QJGPE3H2CQOmo2QsymjXzgmqQoSUu20gKiX6V0/LebsEWjt6b/QPA=="],
+
+    "@girs/gnomebluetooth-3.0": ["@girs/gnomebluetooth-3.0@3.0.0-4.0.0-rc.3", "", { "dependencies": { "@girs/gio-2.0": "2.88.0-4.0.0-rc.3", "@girs/gjs": "4.0.0-rc.3", "@girs/glib-2.0": "2.88.0-4.0.0-rc.3", "@girs/gmodule-2.0": "2.0.0-4.0.0-rc.3", "@girs/gobject-2.0": "2.88.0-4.0.0-rc.3" } }, "sha512-Lif2zkKsP68MBzmkH142KXYm2BivvIwKoOAsQuKmnp3oBGfDPh7mo4CG8005E6hNrV+oiLNRcnQFw7naJWudrw=="],
+
+    "@girs/gnomedesktop-4.0": ["@girs/gnomedesktop-4.0@4.0.0-4.0.0-rc.3", "", { "dependencies": { "@girs/gdesktopenums-3.0": "3.0.0-4.0.0-rc.3", "@girs/gdkpixbuf-2.0": "2.0.0-4.0.0-rc.3", "@girs/gio-2.0": "2.88.0-4.0.0-rc.3", "@girs/gjs": "4.0.0-rc.3", "@girs/glib-2.0": "2.88.0-4.0.0-rc.3", "@girs/gmodule-2.0": "2.0.0-4.0.0-rc.3", "@girs/gobject-2.0": "2.88.0-4.0.0-rc.3" } }, "sha512-PzJAK7Oy8nYOGRyN9sQjeheRnf256ydeTFwjDpAbbQEw9JccTTQXIzq2qOmwgok5xye7aBNVMF+CFpeJxMYfWg=="],
+
+    "@girs/gobject-2.0": ["@girs/gobject-2.0@2.88.0-4.0.0-rc.3", "", { "dependencies": { "@girs/gjs": "4.0.0-rc.3", "@girs/glib-2.0": "2.88.0-4.0.0-rc.3" } }, "sha512-cZ2aMK42rlG0nVQ1oJD5vUlgA6/TPtscC7LRQ/kJVciG2EtfnUNso3csMvAPRGnDWadlQ7K+E723nkSDr3SNwA=="],
+
+    "@girs/graphene-1.0": ["@girs/graphene-1.0@1.0.0-4.0.0-rc.3", "", { "dependencies": { "@girs/gjs": "4.0.0-rc.3", "@girs/glib-2.0": "2.88.0-4.0.0-rc.3", "@girs/gobject-2.0": "2.88.0-4.0.0-rc.3" } }, "sha512-WWmH5PJDdtTYjOSnIaMnJuJ4SP4kQtd4tr1tvCwzbdD2Y6QSQYesVvPCQQ7G6J5QuxJktoP8Xfif4IXgyjpWRg=="],
+
+    "@girs/gsk-4.0": ["@girs/gsk-4.0@4.0.0-4.0.0-rc.3", "", { "dependencies": { "@girs/cairo-1.0": "1.0.0-4.0.0-rc.3", "@girs/freetype2-2.0": "2.0.0-4.0.0-rc.3", "@girs/gdk-4.0": "4.0.0-4.0.0-rc.3", "@girs/gdkpixbuf-2.0": "2.0.0-4.0.0-rc.3", "@girs/gio-2.0": "2.88.0-4.0.0-rc.3", "@girs/gjs": "4.0.0-rc.3", "@girs/glib-2.0": "2.88.0-4.0.0-rc.3", "@girs/gmodule-2.0": "2.0.0-4.0.0-rc.3", "@girs/gobject-2.0": "2.88.0-4.0.0-rc.3", "@girs/graphene-1.0": "1.0.0-4.0.0-rc.3", "@girs/harfbuzz-0.0": "13.2.1-4.0.0-rc.3", "@girs/pango-1.0": "1.57.1-4.0.0-rc.3", "@girs/pangocairo-1.0": "1.0.0-4.0.0-rc.3" } }, "sha512-t81A+2ZOsGS7Ube0rmd2kzLvbBGU+QxQPY7yjQWvTqO1Xn+CWcmztTF42hIJyGoHouOlSOvkL0Iq6UI61/ezlg=="],
+
+    "@girs/gtk-4.0": ["@girs/gtk-4.0@4.22.1-4.0.0-beta.44", "", { "dependencies": { "@girs/cairo-1.0": "1.0.0-4.0.0-beta.44", "@girs/freetype2-2.0": "2.0.0-4.0.0-beta.44", "@girs/gdk-4.0": "4.0.0-4.0.0-beta.44", "@girs/gdkpixbuf-2.0": "2.0.0-4.0.0-beta.44", "@girs/gio-2.0": "2.88.0-4.0.0-beta.44", "@girs/gjs": "4.0.0-beta.44", "@girs/glib-2.0": "2.88.0-4.0.0-beta.44", "@girs/gmodule-2.0": "2.0.0-4.0.0-beta.44", "@girs/gobject-2.0": "2.88.0-4.0.0-beta.44", "@girs/graphene-1.0": "1.0.0-4.0.0-beta.44", "@girs/gsk-4.0": "4.0.0-4.0.0-beta.44", "@girs/harfbuzz-0.0": "12.3.2-4.0.0-beta.44", "@girs/pango-1.0": "1.57.0-4.0.0-beta.44", "@girs/pangocairo-1.0": "1.0.0-4.0.0-beta.44" } }, "sha512-Im4/deI027H8yRCZCj0zZQuLkyva+mjEFPxN2mR+LaI9AM4PPrXO5d2JB7A0XBB1Mm2tomKq5Mn64mZmP5HbWQ=="],
+
+    "@girs/gvc-1.0": ["@girs/gvc-1.0@1.0.0-4.0.0-rc.3", "", { "dependencies": { "@girs/gio-2.0": "2.88.0-4.0.0-rc.3", "@girs/gjs": "4.0.0-rc.3", "@girs/glib-2.0": "2.88.0-4.0.0-rc.3", "@girs/gmodule-2.0": "2.0.0-4.0.0-rc.3", "@girs/gobject-2.0": "2.88.0-4.0.0-rc.3" } }, "sha512-v7w4NTS+LwSlzu9Nzes++J8pl0cap8b3uOchOaxi05CYGgk28gFWrL0UYNUAImeLEQ0Dx3+fdBBajcBHY/K8Pg=="],
+
+    "@girs/harfbuzz-0.0": ["@girs/harfbuzz-0.0@13.2.1-4.0.0-rc.3", "", { "dependencies": { "@girs/freetype2-2.0": "2.0.0-4.0.0-rc.3", "@girs/gjs": "4.0.0-rc.3", "@girs/glib-2.0": "2.88.0-4.0.0-rc.3", "@girs/gobject-2.0": "2.88.0-4.0.0-rc.3" } }, "sha512-B2EcirQd2bQqo1DEpxiacpN8tIhJbwGFD2rCFOw4LpLNuyWeRh16yevhntefc4Ub73/QfChO+CLCay/i6VhbZQ=="],
+
+    "@girs/meta-14": ["@girs/meta-14@14.0.0-4.0.0-beta.43", "", { "dependencies": { "@girs/atk-1.0": "2.60.0-4.0.0-beta.43", "@girs/cairo-1.0": "1.0.0-4.0.0-beta.43", "@girs/clutter-14": "14.0.0-4.0.0-beta.43", "@girs/cogl-14": "14.0.0-4.0.0-beta.43", "@girs/coglpango-14": "14.0.0-4.0.0-beta.43", "@girs/freetype2-2.0": "2.0.0-4.0.0-beta.43", "@girs/gdesktopenums-3.0": "3.0.0-4.0.0-beta.43", "@girs/gio-2.0": "2.88.0-4.0.0-beta.43", "@girs/gjs": "4.0.0-beta.43", "@girs/gl-1.0": "1.0.0-4.0.0-beta.43", "@girs/glib-2.0": "2.88.0-4.0.0-beta.43", "@girs/gmodule-2.0": "2.0.0-4.0.0-beta.43", "@girs/gobject-2.0": "2.88.0-4.0.0-beta.43", "@girs/graphene-1.0": "1.0.0-4.0.0-beta.43", "@girs/harfbuzz-0.0": "12.3.2-4.0.0-beta.43", "@girs/mtk-14": "14.0.0-4.0.0-beta.43", "@girs/pango-1.0": "1.57.0-4.0.0-beta.43", "@girs/pangocairo-1.0": "1.0.0-4.0.0-beta.43", "@girs/xfixes-4.0": "4.0.0-4.0.0-beta.43", "@girs/xlib-2.0": "2.0.0-4.0.0-beta.43" } }, "sha512-FIBb/PKJ5X05zObnncyfydS3ws2kOLGRmL8DtGWzuhbaOl53TVQiECfbK0jwDWBC0Xuv5w5IwV2JdyenJ8B+oQ=="],
+
+    "@girs/meta-16": ["@girs/meta-16@16.0.0-4.0.0-rc.3", "", { "dependencies": { "@girs/atk-1.0": "2.60.0-4.0.0-rc.3", "@girs/cairo-1.0": "1.0.0-4.0.0-rc.3", "@girs/clutter-16": "16.0.0-4.0.0-rc.3", "@girs/cogl-16": "16.0.0-4.0.0-rc.3", "@girs/freetype2-2.0": "2.0.0-4.0.0-rc.3", "@girs/gdesktopenums-3.0": "3.0.0-4.0.0-rc.3", "@girs/gio-2.0": "2.88.0-4.0.0-rc.3", "@girs/gjs": "4.0.0-rc.3", "@girs/gl-1.0": "1.0.0-4.0.0-rc.3", "@girs/glib-2.0": "2.88.0-4.0.0-rc.3", "@girs/gmodule-2.0": "2.0.0-4.0.0-rc.3", "@girs/gobject-2.0": "2.88.0-4.0.0-rc.3", "@girs/graphene-1.0": "1.0.0-4.0.0-rc.3", "@girs/harfbuzz-0.0": "13.2.1-4.0.0-rc.3", "@girs/mtk-16": "16.0.0-4.0.0-rc.3", "@girs/pango-1.0": "1.57.1-4.0.0-rc.3", "@girs/xfixes-4.0": "4.0.0-4.0.0-rc.3", "@girs/xlib-2.0": "2.0.0-4.0.0-rc.3" } }, "sha512-WYRQCyWjdoZ6wT4mCZmfhw7UVOOzHPULvHS9Guf8JR6LMmXQWzJB0PAZO9h5FTcym2tj2VnVfxokRyP9CQN57g=="],
+
+    "@girs/meta-17": ["@girs/meta-17@17.0.0-4.0.0-rc.3", "", { "dependencies": { "@girs/atk-1.0": "2.60.0-4.0.0-rc.3", "@girs/cairo-1.0": "1.0.0-4.0.0-rc.3", "@girs/clutter-17": "17.0.0-4.0.0-rc.3", "@girs/cogl-17": "17.0.0-4.0.0-rc.3", "@girs/freetype2-2.0": "2.0.0-4.0.0-rc.3", "@girs/gdesktopenums-3.0": "3.0.0-4.0.0-rc.3", "@girs/gio-2.0": "2.88.0-4.0.0-rc.3", "@girs/gjs": "4.0.0-rc.3", "@girs/gl-1.0": "1.0.0-4.0.0-rc.3", "@girs/glib-2.0": "2.88.0-4.0.0-rc.3", "@girs/gmodule-2.0": "2.0.0-4.0.0-rc.3", "@girs/gobject-2.0": "2.88.0-4.0.0-rc.3", "@girs/graphene-1.0": "1.0.0-4.0.0-rc.3", "@girs/harfbuzz-0.0": "13.2.1-4.0.0-rc.3", "@girs/mtk-17": "17.0.0-4.0.0-rc.3", "@girs/pango-1.0": "1.57.1-4.0.0-rc.3", "@girs/xfixes-4.0": "4.0.0-4.0.0-rc.3", "@girs/xlib-2.0": "2.0.0-4.0.0-rc.3" } }, "sha512-J0slhZW8g6VHUqh6EjQCZGTDlwinbPjBQF40sD3ZLDTyMbezDZ/Mes/Ee64e4N4q664beSL673foPpfMBbwC7g=="],
+
+    "@girs/mtk-14": ["@girs/mtk-14@14.0.0-4.0.0-beta.43", "", { "dependencies": { "@girs/gjs": "4.0.0-beta.43", "@girs/glib-2.0": "2.88.0-4.0.0-beta.43", "@girs/gobject-2.0": "2.88.0-4.0.0-beta.43", "@girs/graphene-1.0": "1.0.0-4.0.0-beta.43" } }, "sha512-HJMqmnKe4NWY7gyFo/LLlbwdkpIjMoPN/nkw7+a5kNJorNyJboU+KZAlfEHtG8/uydUIdsHqE7Mw9cANqbe4Wg=="],
+
+    "@girs/mtk-16": ["@girs/mtk-16@16.0.0-4.0.0-rc.3", "", { "dependencies": { "@girs/gjs": "4.0.0-rc.3", "@girs/glib-2.0": "2.88.0-4.0.0-rc.3", "@girs/gobject-2.0": "2.88.0-4.0.0-rc.3", "@girs/graphene-1.0": "1.0.0-4.0.0-rc.3" } }, "sha512-Yk8zwlk073bwXWGPMVZ8+I9MwUhJ+/L9i15RNj7/h1HbswpQM+ovBUlH0RyWuuV1xN92tPBayPNni8vsmAqNBA=="],
+
+    "@girs/mtk-17": ["@girs/mtk-17@17.0.0-4.0.0-rc.3", "", { "dependencies": { "@girs/gjs": "4.0.0-rc.3", "@girs/glib-2.0": "2.88.0-4.0.0-rc.3", "@girs/gobject-2.0": "2.88.0-4.0.0-rc.3", "@girs/graphene-1.0": "1.0.0-4.0.0-rc.3" } }, "sha512-PFCWRHEmGjYU52SzvI86g3ZMmc91/jdE1CKWza7j3mzwzO1CS2gbaBKtKG8FogUGKznANDHY4Z1Y1lRWmHdMvg=="],
+
+    "@girs/nm-1.0": ["@girs/nm-1.0@1.56.0-4.0.0-rc.3", "", { "dependencies": { "@girs/gio-2.0": "2.88.0-4.0.0-rc.3", "@girs/gjs": "4.0.0-rc.3", "@girs/glib-2.0": "2.88.0-4.0.0-rc.3", "@girs/gmodule-2.0": "2.0.0-4.0.0-rc.3", "@girs/gobject-2.0": "2.88.0-4.0.0-rc.3" } }, "sha512-8p5YnhmumbiaC8vJskyfDeV2bh8wBB9zcBCjX7HGrT9VkZXoMom0F3Fc17gurVw2FE22/TrO3j5USkosEllQ3Q=="],
+
+    "@girs/pango-1.0": ["@girs/pango-1.0@1.57.0-4.0.0-beta.44", "", { "dependencies": { "@girs/cairo-1.0": "1.0.0-4.0.0-beta.44", "@girs/freetype2-2.0": "2.0.0-4.0.0-beta.44", "@girs/gio-2.0": "2.88.0-4.0.0-beta.44", "@girs/gjs": "4.0.0-beta.44", "@girs/glib-2.0": "2.88.0-4.0.0-beta.44", "@girs/gmodule-2.0": "2.0.0-4.0.0-beta.44", "@girs/gobject-2.0": "2.88.0-4.0.0-beta.44", "@girs/harfbuzz-0.0": "12.3.2-4.0.0-beta.44" } }, "sha512-p+BPQ8fn5u+1x+UWPjyaeZcF0pb8DRZv+1rKtMQdqBGRIvPhhwJ8QO9D2RiNZXWuacNOuwKaKkX8V/J7kMjuoA=="],
+
+    "@girs/pangocairo-1.0": ["@girs/pangocairo-1.0@1.0.0-4.0.0-rc.3", "", { "dependencies": { "@girs/cairo-1.0": "1.0.0-4.0.0-rc.3", "@girs/freetype2-2.0": "2.0.0-4.0.0-rc.3", "@girs/gio-2.0": "2.88.0-4.0.0-rc.3", "@girs/gjs": "4.0.0-rc.3", "@girs/glib-2.0": "2.88.0-4.0.0-rc.3", "@girs/gmodule-2.0": "2.0.0-4.0.0-rc.3", "@girs/gobject-2.0": "2.88.0-4.0.0-rc.3", "@girs/harfbuzz-0.0": "13.2.1-4.0.0-rc.3", "@girs/pango-1.0": "1.57.1-4.0.0-rc.3" } }, "sha512-eBwLrJZHDJAEVMhlVwFARcjyw4rFcfUs6VyOsfmvzWas0yeLY5aa/u6VPTYzrE6TRtjWYoYJX0QG4qjT6QuZ5Q=="],
+
+    "@girs/polkit-1.0": ["@girs/polkit-1.0@1.0.0-4.0.0-rc.3", "", { "dependencies": { "@girs/gio-2.0": "2.88.0-4.0.0-rc.3", "@girs/gjs": "4.0.0-rc.3", "@girs/glib-2.0": "2.88.0-4.0.0-rc.3", "@girs/gmodule-2.0": "2.0.0-4.0.0-rc.3", "@girs/gobject-2.0": "2.88.0-4.0.0-rc.3" } }, "sha512-aOhsQEiUaP/7FFYDe8wSPn2Yz1BWUmboM9exnoAIuSL3mtiRzuf0dGzyBGiZaVvUxWLC42JDmjR6zVShh2CnCg=="],
+
+    "@girs/polkitagent-1.0": ["@girs/polkitagent-1.0@1.0.0-4.0.0-rc.3", "", { "dependencies": { "@girs/gio-2.0": "2.88.0-4.0.0-rc.3", "@girs/gjs": "4.0.0-rc.3", "@girs/glib-2.0": "2.88.0-4.0.0-rc.3", "@girs/gmodule-2.0": "2.0.0-4.0.0-rc.3", "@girs/gobject-2.0": "2.88.0-4.0.0-rc.3", "@girs/polkit-1.0": "1.0.0-4.0.0-rc.3" } }, "sha512-2C+wEJo9VGAX0Ip9quAJMk/T7bk+1vlNW7LxDurBYzkZktTkypjMmRFzTQQuj8nloz3WsEKCi1OB4mPec5invg=="],
+
+    "@girs/shell-17": ["@girs/shell-17@17.0.0-4.0.0-rc.3", "", { "dependencies": { "@girs/atk-1.0": "2.60.0-4.0.0-rc.3", "@girs/cairo-1.0": "1.0.0-4.0.0-rc.3", "@girs/clutter-17": "17.0.0-4.0.0-rc.3", "@girs/cogl-17": "17.0.0-4.0.0-rc.3", "@girs/freetype2-2.0": "2.0.0-4.0.0-rc.3", "@girs/gck-2": "4.4.0-4.0.0-rc.3", "@girs/gcr-4": "4.4.0-4.0.0-rc.3", "@girs/gdesktopenums-3.0": "3.0.0-4.0.0-rc.3", "@girs/gdkpixbuf-2.0": "2.0.0-4.0.0-rc.3", "@girs/gio-2.0": "2.88.0-4.0.0-rc.3", "@girs/giounix-2.0": "2.0.0-4.0.0-rc.3", "@girs/gjs": "4.0.0-rc.3", "@girs/gl-1.0": "1.0.0-4.0.0-rc.3", "@girs/glib-2.0": "2.88.0-4.0.0-rc.3", "@girs/gmodule-2.0": "2.0.0-4.0.0-rc.3", "@girs/gobject-2.0": "2.88.0-4.0.0-rc.3", "@girs/graphene-1.0": "1.0.0-4.0.0-rc.3", "@girs/gvc-1.0": "1.0.0-4.0.0-rc.3", "@girs/harfbuzz-0.0": "13.2.1-4.0.0-rc.3", "@girs/meta-17": "17.0.0-4.0.0-rc.3", "@girs/mtk-17": "17.0.0-4.0.0-rc.3", "@girs/nm-1.0": "1.56.0-4.0.0-rc.3", "@girs/pango-1.0": "1.57.1-4.0.0-rc.3", "@girs/polkit-1.0": "1.0.0-4.0.0-rc.3", "@girs/polkitagent-1.0": "1.0.0-4.0.0-rc.3", "@girs/st-17": "17.0.0-4.0.0-rc.3", "@girs/xfixes-4.0": "4.0.0-4.0.0-rc.3", "@girs/xlib-2.0": "2.0.0-4.0.0-rc.3" } }, "sha512-HJ1CyGT7KdaZtUEKRtp2b4JHaHXijuuw36gswjGvVwMkRJUsOOUZYp2HOxgvoa95HQux8yCtZqrCzlhUNaqfBw=="],
+
+    "@girs/shew-0": ["@girs/shew-0@0.0.0-4.0.0-rc.3", "", { "dependencies": { "@girs/cairo-1.0": "1.0.0-4.0.0-rc.3", "@girs/freetype2-2.0": "2.0.0-4.0.0-rc.3", "@girs/gdk-4.0": "4.0.0-4.0.0-rc.3", "@girs/gdkpixbuf-2.0": "2.0.0-4.0.0-rc.3", "@girs/gio-2.0": "2.88.0-4.0.0-rc.3", "@girs/gjs": "4.0.0-rc.3", "@girs/glib-2.0": "2.88.0-4.0.0-rc.3", "@girs/gmodule-2.0": "2.0.0-4.0.0-rc.3", "@girs/gobject-2.0": "2.88.0-4.0.0-rc.3", "@girs/graphene-1.0": "1.0.0-4.0.0-rc.3", "@girs/gsk-4.0": "4.0.0-4.0.0-rc.3", "@girs/gtk-4.0": "4.23.0-4.0.0-rc.3", "@girs/harfbuzz-0.0": "13.2.1-4.0.0-rc.3", "@girs/pango-1.0": "1.57.1-4.0.0-rc.3", "@girs/pangocairo-1.0": "1.0.0-4.0.0-rc.3" } }, "sha512-8XG4xpQwgVFBe0VPPQoP1AxwPwMMDebly37BmRnRfb4781Ii+ZO5uKBZR9481j7r+iK2NWtDsq8jfzgR/3DM3w=="],
+
+    "@girs/soup-2.4": ["@girs/soup-2.4@2.74.3-4.0.0-rc.3", "", { "dependencies": { "@girs/gio-2.0": "2.88.0-4.0.0-rc.3", "@girs/gjs": "4.0.0-rc.3", "@girs/glib-2.0": "2.88.0-4.0.0-rc.3", "@girs/gmodule-2.0": "2.0.0-4.0.0-rc.3", "@girs/gobject-2.0": "2.88.0-4.0.0-rc.3" } }, "sha512-voC2FEwH31uR0yLchr1XAbPC/sUwASeqZDWc7IZncVeLyENV5rVFAEdcHUZPVZwIZmZnRzJFRz68sJOmwIbhHA=="],
+
+    "@girs/st-16": ["@girs/st-16@16.0.0-4.0.0-rc.3", "", { "dependencies": { "@girs/atk-1.0": "2.60.0-4.0.0-rc.3", "@girs/cairo-1.0": "1.0.0-4.0.0-rc.3", "@girs/clutter-16": "16.0.0-4.0.0-rc.3", "@girs/cogl-16": "16.0.0-4.0.0-rc.3", "@girs/freetype2-2.0": "2.0.0-4.0.0-rc.3", "@girs/gdesktopenums-3.0": "3.0.0-4.0.0-rc.3", "@girs/gdkpixbuf-2.0": "2.0.0-4.0.0-rc.3", "@girs/gio-2.0": "2.88.0-4.0.0-rc.3", "@girs/gjs": "4.0.0-rc.3", "@girs/gl-1.0": "1.0.0-4.0.0-rc.3", "@girs/glib-2.0": "2.88.0-4.0.0-rc.3", "@girs/gmodule-2.0": "2.0.0-4.0.0-rc.3", "@girs/gobject-2.0": "2.88.0-4.0.0-rc.3", "@girs/graphene-1.0": "1.0.0-4.0.0-rc.3", "@girs/harfbuzz-0.0": "13.2.1-4.0.0-rc.3", "@girs/meta-16": "16.0.0-4.0.0-rc.3", "@girs/mtk-16": "16.0.0-4.0.0-rc.3", "@girs/pango-1.0": "1.57.1-4.0.0-rc.3", "@girs/xfixes-4.0": "4.0.0-4.0.0-rc.3", "@girs/xlib-2.0": "2.0.0-4.0.0-rc.3" } }, "sha512-sIknCAmDAbNaFPMzx7k8imRtadRrXNx0ipUQXPbKP2q8jjea4yOKq+L8ZmoIraOuzin5xE/nQeCzpMM0aaeJ6Q=="],
+
+    "@girs/st-17": ["@girs/st-17@17.0.0-4.0.0-rc.3", "", { "dependencies": { "@girs/atk-1.0": "2.60.0-4.0.0-rc.3", "@girs/cairo-1.0": "1.0.0-4.0.0-rc.3", "@girs/clutter-17": "17.0.0-4.0.0-rc.3", "@girs/cogl-17": "17.0.0-4.0.0-rc.3", "@girs/freetype2-2.0": "2.0.0-4.0.0-rc.3", "@girs/gdesktopenums-3.0": "3.0.0-4.0.0-rc.3", "@girs/gdkpixbuf-2.0": "2.0.0-4.0.0-rc.3", "@girs/gio-2.0": "2.88.0-4.0.0-rc.3", "@girs/gjs": "4.0.0-rc.3", "@girs/gl-1.0": "1.0.0-4.0.0-rc.3", "@girs/glib-2.0": "2.88.0-4.0.0-rc.3", "@girs/gmodule-2.0": "2.0.0-4.0.0-rc.3", "@girs/gobject-2.0": "2.88.0-4.0.0-rc.3", "@girs/graphene-1.0": "1.0.0-4.0.0-rc.3", "@girs/harfbuzz-0.0": "13.2.1-4.0.0-rc.3", "@girs/meta-17": "17.0.0-4.0.0-rc.3", "@girs/mtk-17": "17.0.0-4.0.0-rc.3", "@girs/pango-1.0": "1.57.1-4.0.0-rc.3", "@girs/xfixes-4.0": "4.0.0-4.0.0-rc.3", "@girs/xlib-2.0": "2.0.0-4.0.0-rc.3" } }, "sha512-GG5a6MulHKE7mWlp/J0s08mAWr3do9P6LVgW72PZiagkbnQ9Ik8EnLa402aiAl1mq4URAdlpPE2XBJOimlgUJw=="],
+
+    "@girs/upowerglib-1.0": ["@girs/upowerglib-1.0@0.99.1-4.0.0-beta.40", "", { "dependencies": { "@girs/gio-2.0": "2.86.4-4.0.0-beta.40", "@girs/gjs": "4.0.0-beta.40", "@girs/glib-2.0": "2.86.4-4.0.0-beta.40", "@girs/gmodule-2.0": "2.0.0-4.0.0-beta.40", "@girs/gobject-2.0": "2.86.4-4.0.0-beta.40" } }, "sha512-J4+XAEIg1ZsGOId49KcIpAW/8ARzBudbSbFyO4FVCavA+1YZC5ENfbL+QEP4w2T1BkRSvdtIM2161zB4nL1prQ=="],
+
+    "@girs/xfixes-4.0": ["@girs/xfixes-4.0@4.0.0-4.0.0-beta.43", "", { "dependencies": { "@girs/gjs": "4.0.0-beta.43", "@girs/gobject-2.0": "2.88.0-4.0.0-beta.43" } }, "sha512-V1ra9we8I9iOCvy3lGspst6W3CT7WjtdaCcMA1dyt3TkS0GUppIS5mDtW3njQyRk1X+0ZQXL5zZQdBvDjGM9mQ=="],
+
+    "@girs/xlib-2.0": ["@girs/xlib-2.0@2.0.0-4.0.0-beta.43", "", { "dependencies": { "@girs/gjs": "4.0.0-beta.43", "@girs/gobject-2.0": "2.88.0-4.0.0-beta.43" } }, "sha512-ukeuGJJoMdUyJkQb0rY2DzU6u1fBCuWPpw6qyi1SutXBwzWLel/Osdxn+07i5Ha4+0RQ6kCAOdMYzwinFjLaBA=="],
+
+    "@oxfmt/binding-android-arm-eabi": ["@oxfmt/binding-android-arm-eabi@0.43.0", "", { "os": "android", "cpu": "arm" }, "sha512-CgU2s+/9hHZgo0IxVxrbMPrMj+tJ6VM3mD7Mr/4oiz4FNTISLoCvRmB5nk4wAAle045RtRjd86m673jwPyb1OQ=="],
+
+    "@oxfmt/binding-android-arm64": ["@oxfmt/binding-android-arm64@0.43.0", "", { "os": "android", "cpu": "arm64" }, "sha512-T9OfRwjA/EdYxAqbvR7TtqLv5nIrwPXuCtTwOHtS7aR9uXyn74ZYgzgTo6/ZwvTq9DY4W+DsV09hB2EXgn9EbA=="],
+
+    "@oxfmt/binding-darwin-arm64": ["@oxfmt/binding-darwin-arm64@0.43.0", "", { "os": "darwin", "cpu": "arm64" }, "sha512-o3i49ZUSJWANzXMAAVY1wnqb65hn4JVzwlRQ5qfcwhRzIA8lGVaud31Q3by5ALHPrksp5QEaKCQF9aAS3TXpZA=="],
+
+    "@oxfmt/binding-darwin-x64": ["@oxfmt/binding-darwin-x64@0.43.0", "", { "os": "darwin", "cpu": "x64" }, "sha512-vWECzzCFkb0kK6jaHjbtC5sC3adiNWtqawFCxhpvsWlzVeKmv5bNvkB4nux+o4JKWTpHCM57NDK/MeXt44txmA=="],
+
+    "@oxfmt/binding-freebsd-x64": ["@oxfmt/binding-freebsd-x64@0.43.0", "", { "os": "freebsd", "cpu": "x64" }, "sha512-rgz8JpkKiI/umOf7fl9gwKyQasC8bs5SYHy6g7e4SunfLBY3+8ATcD5caIg8KLGEtKFm5ujKaH8EfjcmnhzTLg=="],
+
+    "@oxfmt/binding-linux-arm-gnueabihf": ["@oxfmt/binding-linux-arm-gnueabihf@0.43.0", "", { "os": "linux", "cpu": "arm" }, "sha512-nWYnF3vIFzT4OM1qL/HSf1Yuj96aBuKWSaObXHSWliwAk2rcj7AWd6Lf7jowEBQMo4wCZVnueIGw/7C4u0KTBQ=="],
+
+    "@oxfmt/binding-linux-arm-musleabihf": ["@oxfmt/binding-linux-arm-musleabihf@0.43.0", "", { "os": "linux", "cpu": "arm" }, "sha512-sFg+NWJbLfupYTF4WELHAPSnLPOn1jiDZ33Z1jfDnTaA+cC3iB35x0FMMZTFdFOz3icRIArncwCcemJFGXu6TQ=="],
+
+    "@oxfmt/binding-linux-arm64-gnu": ["@oxfmt/binding-linux-arm64-gnu@0.43.0", "", { "os": "linux", "cpu": "arm64" }, "sha512-MelWqv68tX6wZEILDrTc9yewiGXe7im62+5x0bNXlCYFOZdA+VnYiJfAihbROsZ5fm90p9C3haFrqjj43XnlAA=="],
+
+    "@oxfmt/binding-linux-arm64-musl": ["@oxfmt/binding-linux-arm64-musl@0.43.0", "", { "os": "linux", "cpu": "arm64" }, "sha512-ROaWfYh+6BSJ1Arwy5ujijTlwnZetxDxzBpDc1oBR4d7rfrPBqzeyjd5WOudowzQUgyavl2wEpzn1hw3jWcqLA=="],
+
+    "@oxfmt/binding-linux-ppc64-gnu": ["@oxfmt/binding-linux-ppc64-gnu@0.43.0", "", { "os": "linux", "cpu": "ppc64" }, "sha512-PJRs/uNxmFipJJ8+SyKHh7Y7VZIKQicqrrBzvfyM5CtKi8D7yZKTwUOZV3ffxmiC2e7l1SDJpkBEOyue5NAFsg=="],
+
+    "@oxfmt/binding-linux-riscv64-gnu": ["@oxfmt/binding-linux-riscv64-gnu@0.43.0", "", { "os": "linux", "cpu": "none" }, "sha512-j6biGAgzIhj+EtHXlbNumvwG7XqOIdiU4KgIWRXAEj/iUbHKukKW8eXa4MIwpQwW1YkxovduKtzEAPnjlnAhVQ=="],
+
+    "@oxfmt/binding-linux-riscv64-musl": ["@oxfmt/binding-linux-riscv64-musl@0.43.0", "", { "os": "linux", "cpu": "none" }, "sha512-RYWxAcslKxvy7yri24Xm9cmD0RiANaiEPs007EFG6l9h1ChM69Q5SOzACaCoz4Z9dEplnhhneeBaTWMEdpgIbA=="],
+
+    "@oxfmt/binding-linux-s390x-gnu": ["@oxfmt/binding-linux-s390x-gnu@0.43.0", "", { "os": "linux", "cpu": "s390x" }, "sha512-DT6Q8zfQQy3jxpezAsBACEHNUUixKSYTwdXeXojNHe4DQOoxjPdjr3Szu6BRNjxLykZM/xMNmp9ElOIyDppwtw=="],
+
+    "@oxfmt/binding-linux-x64-gnu": ["@oxfmt/binding-linux-x64-gnu@0.43.0", "", { "os": "linux", "cpu": "x64" }, "sha512-R8Yk7iYcuZORXmCfFZClqbDxRZgZ9/HEidUuBNdoX8Ptx07cMePnMVJ/woB84lFIDjh2ROHVaOP40Ds3rBXFqg=="],
+
+    "@oxfmt/binding-linux-x64-musl": ["@oxfmt/binding-linux-x64-musl@0.43.0", "", { "os": "linux", "cpu": "x64" }, "sha512-F2YYqyvnQNvi320RWZNAvsaWEHwmW3k4OwNJ1hZxRKXupY63expbBaNp6jAgvYs7y/g546vuQnGHQuCBhslhLQ=="],
+
+    "@oxfmt/binding-openharmony-arm64": ["@oxfmt/binding-openharmony-arm64@0.43.0", "", { "os": "none", "cpu": "arm64" }, "sha512-OE6TdietLXV3F6c7pNIhx/9YC1/2YFwjU9DPc/fbjxIX19hNIaP1rS0cFjCGJlGX+cVJwIKWe8Mos+LdQ1yAJw=="],
+
+    "@oxfmt/binding-win32-arm64-msvc": ["@oxfmt/binding-win32-arm64-msvc@0.43.0", "", { "os": "win32", "cpu": "arm64" }, "sha512-0nWK6a7pGkbdoypfVicmV9k/N1FwjPZENoqhlTU+5HhZnAhpIO3za30nEE33u6l6tuy9OVfpdXUqxUgZ+4lbZw=="],
+
+    "@oxfmt/binding-win32-ia32-msvc": ["@oxfmt/binding-win32-ia32-msvc@0.43.0", "", { "os": "win32", "cpu": "ia32" }, "sha512-9aokTR4Ft+tRdvgN/pKzSkVy2ksc4/dCpDm9L/xFrbIw0yhLtASLbvoG/5WOTUh/BRPPnfGTsWznEqv0dlOmhA=="],
+
+    "@oxfmt/binding-win32-x64-msvc": ["@oxfmt/binding-win32-x64-msvc@0.43.0", "", { "os": "win32", "cpu": "x64" }, "sha512-4bPgdQux2ZLWn3bf2TTXXMHcJB4lenmuxrLqygPmvCJ104Yqzj1UctxSRzR31TiJ4MLaG22RK8dUsVpJtrCz5g=="],
+
+    "@oxlint/binding-android-arm-eabi": ["@oxlint/binding-android-arm-eabi@1.60.0", "", { "os": "android", "cpu": "arm" }, "sha512-YdeJKaZckDQL1qa62a1aKq/goyq48aX3yOxaaWqWb4sau4Ee4IiLbamftNLU3zbePky6QsDj6thnSSzHRBjDfA=="],
+
+    "@oxlint/binding-android-arm64": ["@oxlint/binding-android-arm64@1.60.0", "", { "os": "android", "cpu": "arm64" }, "sha512-7ANS7PpXCfq84xZQ8E5WPs14gwcuPcl+/8TFNXfpSu0CQBXz3cUo2fDpHT8v8HJN+Ut02eacvMAzTnc9s6X4tw=="],
+
+    "@oxlint/binding-darwin-arm64": ["@oxlint/binding-darwin-arm64@1.60.0", "", { "os": "darwin", "cpu": "arm64" }, "sha512-pJsgd9AfplLGBm1fIr25V6V14vMrayhx4uIQvlfH7jWs2SZwSrvi3TfgfJySB8T+hvyEH8K2zXljQiUnkgUnfQ=="],
+
+    "@oxlint/binding-darwin-x64": ["@oxlint/binding-darwin-x64@1.60.0", "", { "os": "darwin", "cpu": "x64" }, "sha512-Ue1aXHX49ivwflKqGJc7zcd/LeLgbhaTcDCQStgx5x06AXgjEAZmvrlMuIkWd4AL4FHQe6QJ9f33z04Cg448VQ=="],
+
+    "@oxlint/binding-freebsd-x64": ["@oxlint/binding-freebsd-x64@1.60.0", "", { "os": "freebsd", "cpu": "x64" }, "sha512-YCyQzsQtusQw+gNRW9rRTifSO+Dt/+dtCl2NHoDMZqJlRTEZ/Oht9YnuporI9yiTx7+cB+eqzX3MtHHVHGIWhg=="],
+
+    "@oxlint/binding-linux-arm-gnueabihf": ["@oxlint/binding-linux-arm-gnueabihf@1.60.0", "", { "os": "linux", "cpu": "arm" }, "sha512-c7dxM2Zksa45Qw16i2iGY3Fti2NirJ38FrsBsKw+qcJ0OtqTsBgKJLF0xV+yLG56UH01Z8WRPgsw31e0MoRoGQ=="],
+
+    "@oxlint/binding-linux-arm-musleabihf": ["@oxlint/binding-linux-arm-musleabihf@1.60.0", "", { "os": "linux", "cpu": "arm" }, "sha512-ZWALoA42UYqBEP1Tbw9OWURgFGS1nWj2AAvLdY6ZcGx/Gj93qVCBKjcvwXMupZibYwFbi9s/rzqkZseb/6gVtQ=="],
+
+    "@oxlint/binding-linux-arm64-gnu": ["@oxlint/binding-linux-arm64-gnu@1.60.0", "", { "os": "linux", "cpu": "arm64" }, "sha512-tpy+1w4p9hN5CicMCxqNy6ymfRtV5ayE573vFNjp1k1TN/qhLFgflveZoE/0++RlkHikBz2vY545NWm/hp7big=="],
+
+    "@oxlint/binding-linux-arm64-musl": ["@oxlint/binding-linux-arm64-musl@1.60.0", "", { "os": "linux", "cpu": "arm64" }, "sha512-eDYDXZGhQAXyn6GwtwiX/qcLS0HlOLPJ/+iiIY8RYr+3P8oKBmgKxADLlniL6FtWfE7pPk7IGN9/xvDEvDvFeg=="],
+
+    "@oxlint/binding-linux-ppc64-gnu": ["@oxlint/binding-linux-ppc64-gnu@1.60.0", "", { "os": "linux", "cpu": "ppc64" }, "sha512-nxehly5XYBHUWI9VJX1bqCf9j/B43DaK/aS/T1fcxCpX3PA4Rm9BB54nPD1CKayT8xg6REN1ao+01hSRNgy8OA=="],
+
+    "@oxlint/binding-linux-riscv64-gnu": ["@oxlint/binding-linux-riscv64-gnu@1.60.0", "", { "os": "linux", "cpu": "none" }, "sha512-j1qf/NaUfOWQutjeoooNG1Q0zsK0XGmSu1uDLq3cctquRF3j7t9Hxqf/76ehCc5GEUAanth2W4Fa+XT1RFg/nw=="],
+
+    "@oxlint/binding-linux-riscv64-musl": ["@oxlint/binding-linux-riscv64-musl@1.60.0", "", { "os": "linux", "cpu": "none" }, "sha512-YELKPRefQ/q/h3RUmeRfPCUhh2wBvgV1RyZ/F9M9u8cDyXsQW2ojv1DeWQTt466yczDITjZnIOg/s05pk7Ve2A=="],
+
+    "@oxlint/binding-linux-s390x-gnu": ["@oxlint/binding-linux-s390x-gnu@1.60.0", "", { "os": "linux", "cpu": "s390x" }, "sha512-JkO3C6Gki7Y6h/MiIkFKvHFOz98/YWvQ4WYbK9DLXACMP2rjULzkeGyAzorJE5S1dzLQGFgeqvN779kSFwoV1g=="],
+
+    "@oxlint/binding-linux-x64-gnu": ["@oxlint/binding-linux-x64-gnu@1.60.0", "", { "os": "linux", "cpu": "x64" }, "sha512-XjKHdFVCpZZZSWBCKyyqCq65s2AKXykMXkjLoKYODrD+f5toLhlwsMESscu8FbgnJQ4Y/dpR/zdazsahmgBJIA=="],
+
+    "@oxlint/binding-linux-x64-musl": ["@oxlint/binding-linux-x64-musl@1.60.0", "", { "os": "linux", "cpu": "x64" }, "sha512-js29ZWIuPhNWzY8NC7KoffEMEeWG105vbmm+8EOJsC+T/jHBiKIJEUF78+F/IrgEWMMP9N0kRND4Pp75+xAhKg=="],
+
+    "@oxlint/binding-openharmony-arm64": ["@oxlint/binding-openharmony-arm64@1.60.0", "", { "os": "none", "cpu": "arm64" }, "sha512-H+PUITKHk04stFpWj3x3Kg08Afp/bcXSBi0EhasR5a0Vw7StXHTzdl655PUI0fB4qdh2Wsu6Dsi+3ACxPoyQnA=="],
+
+    "@oxlint/binding-win32-arm64-msvc": ["@oxlint/binding-win32-arm64-msvc@1.60.0", "", { "os": "win32", "cpu": "arm64" }, "sha512-WA/yc7f7ZfCefBXVzNHn1Ztulb1EFwNBb4jMZ6pjML0zz6pHujlF3Q3jySluz3XHl/GNeMTntG1seUBWVMlMag=="],
+
+    "@oxlint/binding-win32-ia32-msvc": ["@oxlint/binding-win32-ia32-msvc@1.60.0", "", { "os": "win32", "cpu": "ia32" }, "sha512-33YxL1sqwYNZXtn3MD/4dno6s0xeedXOJlT1WohkVD565WvohClZUr7vwKdAk954n4xiEWJkewiCr+zLeq7AeA=="],
+
+    "@oxlint/binding-win32-x64-msvc": ["@oxlint/binding-win32-x64-msvc@1.60.0", "", { "os": "win32", "cpu": "x64" }, "sha512-JOro4ZcfBLamJCyfURQmOQByoorgOdx3ZjAkSqnb/CyG/i+lN3KoV5LAgk5ZAW6DPq7/Cx7n23f8DuTWXTWgyQ=="],
+
+    "@types/node": ["@types/node@25.6.0", "", { "dependencies": { "undici-types": "~7.19.0" } }, "sha512-+qIYRKdNYJwY3vRCZMdJbPLJAtGjQBudzZzdzwQYkEPQd+PJGixUL5QfvCLDaULoLv+RhT3LDkwEfKaAkgSmNQ=="],
+
+    "oxfmt": ["oxfmt@0.43.0", "", { "dependencies": { "tinypool": "2.1.0" }, "optionalDependencies": { "@oxfmt/binding-android-arm-eabi": "0.43.0", "@oxfmt/binding-android-arm64": "0.43.0", "@oxfmt/binding-darwin-arm64": "0.43.0", "@oxfmt/binding-darwin-x64": "0.43.0", "@oxfmt/binding-freebsd-x64": "0.43.0", "@oxfmt/binding-linux-arm-gnueabihf": "0.43.0", "@oxfmt/binding-linux-arm-musleabihf": "0.43.0", "@oxfmt/binding-linux-arm64-gnu": "0.43.0", "@oxfmt/binding-linux-arm64-musl": "0.43.0", "@oxfmt/binding-linux-ppc64-gnu": "0.43.0", "@oxfmt/binding-linux-riscv64-gnu": "0.43.0", "@oxfmt/binding-linux-riscv64-musl": "0.43.0", "@oxfmt/binding-linux-s390x-gnu": "0.43.0", "@oxfmt/binding-linux-x64-gnu": "0.43.0", "@oxfmt/binding-linux-x64-musl": "0.43.0", "@oxfmt/binding-openharmony-arm64": "0.43.0", "@oxfmt/binding-win32-arm64-msvc": "0.43.0", "@oxfmt/binding-win32-ia32-msvc": "0.43.0", "@oxfmt/binding-win32-x64-msvc": "0.43.0" }, "bin": { "oxfmt": "bin/oxfmt" } }, "sha512-KTYNG5ISfHSdmeZ25Xzb3qgz9EmQvkaGAxgBY/p38+ZiAet3uZeu7FnMwcSQJg152Qwl0wnYAxDc+Z/H6cvrwA=="],
+
+    "oxlint": ["oxlint@1.60.0", "", { "optionalDependencies": { "@oxlint/binding-android-arm-eabi": "1.60.0", "@oxlint/binding-android-arm64": "1.60.0", "@oxlint/binding-darwin-arm64": "1.60.0", "@oxlint/binding-darwin-x64": "1.60.0", "@oxlint/binding-freebsd-x64": "1.60.0", "@oxlint/binding-linux-arm-gnueabihf": "1.60.0", "@oxlint/binding-linux-arm-musleabihf": "1.60.0", "@oxlint/binding-linux-arm64-gnu": "1.60.0", "@oxlint/binding-linux-arm64-musl": "1.60.0", "@oxlint/binding-linux-ppc64-gnu": "1.60.0", "@oxlint/binding-linux-riscv64-gnu": "1.60.0", "@oxlint/binding-linux-riscv64-musl": "1.60.0", "@oxlint/binding-linux-s390x-gnu": "1.60.0", "@oxlint/binding-linux-x64-gnu": "1.60.0", "@oxlint/binding-linux-x64-musl": "1.60.0", "@oxlint/binding-openharmony-arm64": "1.60.0", "@oxlint/binding-win32-arm64-msvc": "1.60.0", "@oxlint/binding-win32-ia32-msvc": "1.60.0", "@oxlint/binding-win32-x64-msvc": "1.60.0" }, "peerDependencies": { "oxlint-tsgolint": ">=0.18.0" }, "optionalPeers": ["oxlint-tsgolint"], "bin": { "oxlint": "bin/oxlint" } }, "sha512-tnRzTWiWJ9pg3ftRWnD0+Oqh78L6ZSwcEudvCZaER0PIqiAnNyXj5N1dPwjmNpDalkKS9m/WMLN1CTPUBPmsgw=="],
+
+    "tinypool": ["tinypool@2.1.0", "", {}, "sha512-Pugqs6M0m7Lv1I7FtxN4aoyToKg1C4tu+/381vH35y8oENM/Ai7f7C4StcoK4/+BSw9ebcS8jRiVrORFKCALLw=="],
+
+    "typescript": ["typescript@6.0.2", "", { "bin": { "tsc": "bin/tsc", "tsserver": "bin/tsserver" } }, "sha512-bGdAIrZ0wiGDo5l8c++HWtbaNCWTS4UTv7RaTH/ThVIgjkveJt83m74bBHMJkuCbslY8ixgLBVZJIOiQlQTjfQ=="],
+
+    "undici-types": ["undici-types@7.19.2", "", {}, "sha512-qYVnV5OEm2AW8cJMCpdV20CDyaN3g0AjDlOGf1OW4iaDEx8MwdtChUp4zu4H0VP3nDRF/8RKWH+IPp9uW0YGZg=="],
+
+    "@girs/accountsservice-1.0/@girs/gio-2.0": ["@girs/gio-2.0@2.86.0-4.0.0-beta.38", "", { "dependencies": { "@girs/gjs": "4.0.0-beta.38", "@girs/glib-2.0": "2.86.0-4.0.0-beta.38", "@girs/gmodule-2.0": "2.0.0-4.0.0-beta.38", "@girs/gobject-2.0": "2.86.0-4.0.0-beta.38" } }, "sha512-hKCyDEqSIgqcZeFf63KNrUnrYtAuJ0yfIypbdLgNEMbJBPQ/e3ZiwzWa7i3OPCh52Cnl9qYRdj8MSbZndpyZiQ=="],
+
+    "@girs/accountsservice-1.0/@girs/gjs": ["@girs/gjs@4.0.0-beta.38", "", { "dependencies": { "@girs/cairo-1.0": "1.0.0-4.0.0-beta.38", "@girs/gio-2.0": "2.86.0-4.0.0-beta.38", "@girs/glib-2.0": "2.86.0-4.0.0-beta.38", "@girs/gobject-2.0": "2.86.0-4.0.0-beta.38" } }, "sha512-eI/9lfI1mQpXN8RsKiNRFWJso6LgQe9Eb+YxLAdKarD5fccvIRx3chsyIyhw5tYH7VvgaZkqm1c4GX7pDDokBQ=="],
+
+    "@girs/accountsservice-1.0/@girs/glib-2.0": ["@girs/glib-2.0@2.86.0-4.0.0-beta.38", "", { "dependencies": { "@girs/gjs": "4.0.0-beta.38", "@girs/gobject-2.0": "2.86.0-4.0.0-beta.38" } }, "sha512-TFbrh5+Y3pb61synbhi37VrRzh0e+JQaRCzfGbe7oewUq0v7Sb8eSi2Fmj98r5tCizaRYptqgt6bxG7G5cFzVg=="],
+
+    "@girs/accountsservice-1.0/@girs/gmodule-2.0": ["@girs/gmodule-2.0@2.0.0-4.0.0-beta.38", "", { "dependencies": { "@girs/gjs": "4.0.0-beta.38", "@girs/glib-2.0": "2.86.0-4.0.0-beta.38", "@girs/gobject-2.0": "2.86.0-4.0.0-beta.38" } }, "sha512-BmspJtwdBSfCJRZQMxn3gx6H9FNcoqCebFXK2UKknq18DIo8U2q4iN/jQBWPoLh2siK9LhCdL2egoyXteTy1NA=="],
+
+    "@girs/accountsservice-1.0/@girs/gobject-2.0": ["@girs/gobject-2.0@2.86.0-4.0.0-beta.38", "", { "dependencies": { "@girs/gjs": "4.0.0-beta.38", "@girs/glib-2.0": "2.86.0-4.0.0-beta.38" } }, "sha512-oYrm6Gb/tCQosMkN8Beu5jqGRkJ7LED4O1H1dKYOI4SnP1Ojb66A9ECy78yTO8piBtMopsbRODV81yKniVtKKA=="],
+
+    "@girs/adw-1/@girs/gtk-4.0": ["@girs/gtk-4.0@4.23.0-4.0.0-rc.3", "", { "dependencies": { "@girs/cairo-1.0": "1.0.0-4.0.0-rc.3", "@girs/freetype2-2.0": "2.0.0-4.0.0-rc.3", "@girs/gdk-4.0": "4.0.0-4.0.0-rc.3", "@girs/gdkpixbuf-2.0": "2.0.0-4.0.0-rc.3", "@girs/gio-2.0": "2.88.0-4.0.0-rc.3", "@girs/gjs": "4.0.0-rc.3", "@girs/glib-2.0": "2.88.0-4.0.0-rc.3", "@girs/gmodule-2.0": "2.0.0-4.0.0-rc.3", "@girs/gobject-2.0": "2.88.0-4.0.0-rc.3", "@girs/graphene-1.0": "1.0.0-4.0.0-rc.3", "@girs/gsk-4.0": "4.0.0-4.0.0-rc.3", "@girs/harfbuzz-0.0": "13.2.1-4.0.0-rc.3", "@girs/pango-1.0": "1.57.1-4.0.0-rc.3", "@girs/pangocairo-1.0": "1.0.0-4.0.0-rc.3" } }, "sha512-Sxp2rrSUOOIfzjPIm2dyEf5/2fQQcQCclN7zqFKXdLYuCt/+sG+AE5JpZUunlgECqjfkd5s7i9cXJl3L93LWRA=="],
+
+    "@girs/adw-1/@girs/pango-1.0": ["@girs/pango-1.0@1.57.1-4.0.0-rc.3", "", { "dependencies": { "@girs/cairo-1.0": "1.0.0-4.0.0-rc.3", "@girs/freetype2-2.0": "2.0.0-4.0.0-rc.3", "@girs/gio-2.0": "2.88.0-4.0.0-rc.3", "@girs/gjs": "4.0.0-rc.3", "@girs/glib-2.0": "2.88.0-4.0.0-rc.3", "@girs/gmodule-2.0": "2.0.0-4.0.0-rc.3", "@girs/gobject-2.0": "2.88.0-4.0.0-rc.3", "@girs/harfbuzz-0.0": "13.2.1-4.0.0-rc.3" } }, "sha512-WVVtMGP63QgufQEvpfVwJPscMmomyqRSkg+Ax4V4xlF/TA3joBTgc688wZSrko0fDJnZ5MaQoZloA9PjAYMuhw=="],
+
+    "@girs/atk-1.0/@girs/gjs": ["@girs/gjs@4.0.0-beta.43", "", { "dependencies": { "@girs/cairo-1.0": "1.0.0-4.0.0-beta.43", "@girs/gio-2.0": "2.88.0-4.0.0-beta.43", "@girs/glib-2.0": "2.88.0-4.0.0-beta.43", "@girs/gobject-2.0": "2.88.0-4.0.0-beta.43" } }, "sha512-NyDT9tOziIcaWTezul3DJQYVsgLu5AilQ0fgAWtCuf7iCl5iXWN32Pvnqu3mY5UbFfHaLanmUrZwexIfXc9peQ=="],
+
+    "@girs/atk-1.0/@girs/glib-2.0": ["@girs/glib-2.0@2.88.0-4.0.0-beta.43", "", { "dependencies": { "@girs/gjs": "4.0.0-beta.43", "@girs/gobject-2.0": "2.88.0-4.0.0-beta.43" } }, "sha512-xxmwc6XhsX70m2A0Kf6+90fM09sjxhBHjZi61oWlJCKzjNndb4d2u23+Y0N/icniAaegR+t6EZg3gn+Qu7YIhQ=="],
+
+    "@girs/atk-1.0/@girs/gobject-2.0": ["@girs/gobject-2.0@2.88.0-4.0.0-beta.43", "", { "dependencies": { "@girs/gjs": "4.0.0-beta.43", "@girs/glib-2.0": "2.88.0-4.0.0-beta.43" } }, "sha512-8rL8FGgTSEb5cwX9X6GHJMkgm0B73UioQncxy4OpPVBpsC+V7vmYHkuUmsaioSM5VseHvptnSLNJ5tKyv0HNvg=="],
+
+    "@girs/clutter-14/@girs/cairo-1.0": ["@girs/cairo-1.0@1.0.0-4.0.0-beta.43", "", { "dependencies": { "@girs/gjs": "4.0.0-beta.43", "@girs/glib-2.0": "2.88.0-4.0.0-beta.43", "@girs/gobject-2.0": "2.88.0-4.0.0-beta.43" } }, "sha512-22hGstMdn+xnD6Ass0hJBB4P7GUdVDNyKzYOmFq5GoSdr8AwDoAopT8wyhAhTH1/ugsKQ4/XrMovnIxxTa8YZQ=="],
+
+    "@girs/clutter-14/@girs/freetype2-2.0": ["@girs/freetype2-2.0@2.0.0-4.0.0-beta.43", "", { "dependencies": { "@girs/gjs": "4.0.0-beta.43", "@girs/gobject-2.0": "2.88.0-4.0.0-beta.43" } }, "sha512-VD1rCTQnceYI1VzlykgUv57tg2q487w6JDAkGxQf465eh7zQFCoqAoQlOB1t8FwI58yUMMreJa58VYIfP0/XBw=="],
+
+    "@girs/clutter-14/@girs/gio-2.0": ["@girs/gio-2.0@2.88.0-4.0.0-beta.43", "", { "dependencies": { "@girs/gjs": "4.0.0-beta.43", "@girs/glib-2.0": "2.88.0-4.0.0-beta.43", "@girs/gmodule-2.0": "2.0.0-4.0.0-beta.43", "@girs/gobject-2.0": "2.88.0-4.0.0-beta.43" } }, "sha512-e8jZ15EBoOEdWGsxbd9OEoL0cYlL28lssuaEs8yq6UwUreOZjmmlrG+8l2VEuuf5R36q3BAxZEwCmShY+DMXXw=="],
+
+    "@girs/clutter-14/@girs/gjs": ["@girs/gjs@4.0.0-beta.43", "", { "dependencies": { "@girs/cairo-1.0": "1.0.0-4.0.0-beta.43", "@girs/gio-2.0": "2.88.0-4.0.0-beta.43", "@girs/glib-2.0": "2.88.0-4.0.0-beta.43", "@girs/gobject-2.0": "2.88.0-4.0.0-beta.43" } }, "sha512-NyDT9tOziIcaWTezul3DJQYVsgLu5AilQ0fgAWtCuf7iCl5iXWN32Pvnqu3mY5UbFfHaLanmUrZwexIfXc9peQ=="],
+
+    "@girs/clutter-14/@girs/glib-2.0": ["@girs/glib-2.0@2.88.0-4.0.0-beta.43", "", { "dependencies": { "@girs/gjs": "4.0.0-beta.43", "@girs/gobject-2.0": "2.88.0-4.0.0-beta.43" } }, "sha512-xxmwc6XhsX70m2A0Kf6+90fM09sjxhBHjZi61oWlJCKzjNndb4d2u23+Y0N/icniAaegR+t6EZg3gn+Qu7YIhQ=="],
+
+    "@girs/clutter-14/@girs/gmodule-2.0": ["@girs/gmodule-2.0@2.0.0-4.0.0-beta.43", "", { "dependencies": { "@girs/gjs": "4.0.0-beta.43", "@girs/glib-2.0": "2.88.0-4.0.0-beta.43", "@girs/gobject-2.0": "2.88.0-4.0.0-beta.43" } }, "sha512-j6txGltFeIiFWbK9LwceIsKoYj0cNsrvEGBf3C5rTb+1N27wHz4anRzd6yjiKfzwfTtQIoP6l0KnlFZ2QxMe7g=="],
+
+    "@girs/clutter-14/@girs/gobject-2.0": ["@girs/gobject-2.0@2.88.0-4.0.0-beta.43", "", { "dependencies": { "@girs/gjs": "4.0.0-beta.43", "@girs/glib-2.0": "2.88.0-4.0.0-beta.43" } }, "sha512-8rL8FGgTSEb5cwX9X6GHJMkgm0B73UioQncxy4OpPVBpsC+V7vmYHkuUmsaioSM5VseHvptnSLNJ5tKyv0HNvg=="],
+
+    "@girs/clutter-14/@girs/graphene-1.0": ["@girs/graphene-1.0@1.0.0-4.0.0-beta.43", "", { "dependencies": { "@girs/gjs": "4.0.0-beta.43", "@girs/glib-2.0": "2.88.0-4.0.0-beta.43", "@girs/gobject-2.0": "2.88.0-4.0.0-beta.43" } }, "sha512-lkpgoAFJiXHtHn/U7LERk/HbPQIYSdoCHMTonJnIims1bv0o57ncMpDWsbRtwdpSeJeiNS2eYSbVLZPCXkG/Dg=="],
+
+    "@girs/clutter-14/@girs/harfbuzz-0.0": ["@girs/harfbuzz-0.0@12.3.2-4.0.0-beta.43", "", { "dependencies": { "@girs/freetype2-2.0": "2.0.0-4.0.0-beta.43", "@girs/gjs": "4.0.0-beta.43", "@girs/glib-2.0": "2.88.0-4.0.0-beta.43", "@girs/gobject-2.0": "2.88.0-4.0.0-beta.43" } }, "sha512-IX6jhikoEQ+q+/AjOFEHMdnazO7o4V8jibaMENoyv0//4Qz040JgZ5uETpxPFd5sADEKfm/KrW8D2KLzAE7RuQ=="],
+
+    "@girs/clutter-14/@girs/pango-1.0": ["@girs/pango-1.0@1.57.0-4.0.0-beta.43", "", { "dependencies": { "@girs/cairo-1.0": "1.0.0-4.0.0-beta.43", "@girs/freetype2-2.0": "2.0.0-4.0.0-beta.43", "@girs/gio-2.0": "2.88.0-4.0.0-beta.43", "@girs/gjs": "4.0.0-beta.43", "@girs/glib-2.0": "2.88.0-4.0.0-beta.43", "@girs/gmodule-2.0": "2.0.0-4.0.0-beta.43", "@girs/gobject-2.0": "2.88.0-4.0.0-beta.43", "@girs/harfbuzz-0.0": "12.3.2-4.0.0-beta.43" } }, "sha512-FgvFu1cIgUVHQhT4nUUqRc7HBIB2K5PgmjbEv8DItH1sq/aT5CC2vce/EF/rWtnYIeZnZmJNk/t2387qEv3aIQ=="],
+
+    "@girs/clutter-14/@girs/pangocairo-1.0": ["@girs/pangocairo-1.0@1.0.0-4.0.0-beta.43", "", { "dependencies": { "@girs/cairo-1.0": "1.0.0-4.0.0-beta.43", "@girs/freetype2-2.0": "2.0.0-4.0.0-beta.43", "@girs/gio-2.0": "2.88.0-4.0.0-beta.43", "@girs/gjs": "4.0.0-beta.43", "@girs/glib-2.0": "2.88.0-4.0.0-beta.43", "@girs/gmodule-2.0": "2.0.0-4.0.0-beta.43", "@girs/gobject-2.0": "2.88.0-4.0.0-beta.43", "@girs/harfbuzz-0.0": "12.3.2-4.0.0-beta.43", "@girs/pango-1.0": "1.57.0-4.0.0-beta.43" } }, "sha512-BDx+31rLlgEW+xfKUUVLbl6afPZFVkgbcgs6RoAObUC27T2yYYBEsG9/Z8Pl8FriTTGEWIQ6C6Ye9F6y33px1Q=="],
+
+    "@girs/clutter-16/@girs/atk-1.0": ["@girs/atk-1.0@2.60.0-4.0.0-rc.3", "", { "dependencies": { "@girs/gjs": "4.0.0-rc.3", "@girs/glib-2.0": "2.88.0-4.0.0-rc.3", "@girs/gobject-2.0": "2.88.0-4.0.0-rc.3" } }, "sha512-g8EXt0PLh6CaqqBDHX/ojn1H44Dmw3GvCPqatmWr/WNTipHLHVdCet/+offyezDaiyn6T4UkyU8ugmYtrAifYA=="],
+
+    "@girs/clutter-16/@girs/gl-1.0": ["@girs/gl-1.0@1.0.0-4.0.0-rc.3", "", { "dependencies": { "@girs/gjs": "4.0.0-rc.3", "@girs/gobject-2.0": "2.88.0-4.0.0-rc.3" } }, "sha512-DnXV9g28exsLxGaA/uBLFxRoF4oT0axyIB+puYp83GqKxAZRlrlt1g+8h/J/1ffsmTd6aROsrvb99Gqk4I2ibg=="],
+
+    "@girs/clutter-16/@girs/pango-1.0": ["@girs/pango-1.0@1.57.1-4.0.0-rc.3", "", { "dependencies": { "@girs/cairo-1.0": "1.0.0-4.0.0-rc.3", "@girs/freetype2-2.0": "2.0.0-4.0.0-rc.3", "@girs/gio-2.0": "2.88.0-4.0.0-rc.3", "@girs/gjs": "4.0.0-rc.3", "@girs/glib-2.0": "2.88.0-4.0.0-rc.3", "@girs/gmodule-2.0": "2.0.0-4.0.0-rc.3", "@girs/gobject-2.0": "2.88.0-4.0.0-rc.3", "@girs/harfbuzz-0.0": "13.2.1-4.0.0-rc.3" } }, "sha512-WVVtMGP63QgufQEvpfVwJPscMmomyqRSkg+Ax4V4xlF/TA3joBTgc688wZSrko0fDJnZ5MaQoZloA9PjAYMuhw=="],
+
+    "@girs/clutter-16/@girs/xlib-2.0": ["@girs/xlib-2.0@2.0.0-4.0.0-rc.3", "", { "dependencies": { "@girs/gjs": "4.0.0-rc.3", "@girs/gobject-2.0": "2.88.0-4.0.0-rc.3" } }, "sha512-+PlY2raBlzsHX07FUavEXHOMqmzOFb+qh3Wxg0gCsMy5mRjV5k2qWvQ5AH1ZWfSkIxxJnfH3kedN2oz6E8kuEQ=="],
+
+    "@girs/clutter-17/@girs/atk-1.0": ["@girs/atk-1.0@2.60.0-4.0.0-rc.3", "", { "dependencies": { "@girs/gjs": "4.0.0-rc.3", "@girs/glib-2.0": "2.88.0-4.0.0-rc.3", "@girs/gobject-2.0": "2.88.0-4.0.0-rc.3" } }, "sha512-g8EXt0PLh6CaqqBDHX/ojn1H44Dmw3GvCPqatmWr/WNTipHLHVdCet/+offyezDaiyn6T4UkyU8ugmYtrAifYA=="],
+
+    "@girs/clutter-17/@girs/gl-1.0": ["@girs/gl-1.0@1.0.0-4.0.0-rc.3", "", { "dependencies": { "@girs/gjs": "4.0.0-rc.3", "@girs/gobject-2.0": "2.88.0-4.0.0-rc.3" } }, "sha512-DnXV9g28exsLxGaA/uBLFxRoF4oT0axyIB+puYp83GqKxAZRlrlt1g+8h/J/1ffsmTd6aROsrvb99Gqk4I2ibg=="],
+
+    "@girs/clutter-17/@girs/pango-1.0": ["@girs/pango-1.0@1.57.1-4.0.0-rc.3", "", { "dependencies": { "@girs/cairo-1.0": "1.0.0-4.0.0-rc.3", "@girs/freetype2-2.0": "2.0.0-4.0.0-rc.3", "@girs/gio-2.0": "2.88.0-4.0.0-rc.3", "@girs/gjs": "4.0.0-rc.3", "@girs/glib-2.0": "2.88.0-4.0.0-rc.3", "@girs/gmodule-2.0": "2.0.0-4.0.0-rc.3", "@girs/gobject-2.0": "2.88.0-4.0.0-rc.3", "@girs/harfbuzz-0.0": "13.2.1-4.0.0-rc.3" } }, "sha512-WVVtMGP63QgufQEvpfVwJPscMmomyqRSkg+Ax4V4xlF/TA3joBTgc688wZSrko0fDJnZ5MaQoZloA9PjAYMuhw=="],
+
+    "@girs/cogl-14/@girs/gjs": ["@girs/gjs@4.0.0-beta.43", "", { "dependencies": { "@girs/cairo-1.0": "1.0.0-4.0.0-beta.43", "@girs/gio-2.0": "2.88.0-4.0.0-beta.43", "@girs/glib-2.0": "2.88.0-4.0.0-beta.43", "@girs/gobject-2.0": "2.88.0-4.0.0-beta.43" } }, "sha512-NyDT9tOziIcaWTezul3DJQYVsgLu5AilQ0fgAWtCuf7iCl5iXWN32Pvnqu3mY5UbFfHaLanmUrZwexIfXc9peQ=="],
+
+    "@girs/cogl-14/@girs/glib-2.0": ["@girs/glib-2.0@2.88.0-4.0.0-beta.43", "", { "dependencies": { "@girs/gjs": "4.0.0-beta.43", "@girs/gobject-2.0": "2.88.0-4.0.0-beta.43" } }, "sha512-xxmwc6XhsX70m2A0Kf6+90fM09sjxhBHjZi61oWlJCKzjNndb4d2u23+Y0N/icniAaegR+t6EZg3gn+Qu7YIhQ=="],
+
+    "@girs/cogl-14/@girs/gobject-2.0": ["@girs/gobject-2.0@2.88.0-4.0.0-beta.43", "", { "dependencies": { "@girs/gjs": "4.0.0-beta.43", "@girs/glib-2.0": "2.88.0-4.0.0-beta.43" } }, "sha512-8rL8FGgTSEb5cwX9X6GHJMkgm0B73UioQncxy4OpPVBpsC+V7vmYHkuUmsaioSM5VseHvptnSLNJ5tKyv0HNvg=="],
+
+    "@girs/cogl-14/@girs/graphene-1.0": ["@girs/graphene-1.0@1.0.0-4.0.0-beta.43", "", { "dependencies": { "@girs/gjs": "4.0.0-beta.43", "@girs/glib-2.0": "2.88.0-4.0.0-beta.43", "@girs/gobject-2.0": "2.88.0-4.0.0-beta.43" } }, "sha512-lkpgoAFJiXHtHn/U7LERk/HbPQIYSdoCHMTonJnIims1bv0o57ncMpDWsbRtwdpSeJeiNS2eYSbVLZPCXkG/Dg=="],
+
+    "@girs/cogl-16/@girs/gl-1.0": ["@girs/gl-1.0@1.0.0-4.0.0-rc.3", "", { "dependencies": { "@girs/gjs": "4.0.0-rc.3", "@girs/gobject-2.0": "2.88.0-4.0.0-rc.3" } }, "sha512-DnXV9g28exsLxGaA/uBLFxRoF4oT0axyIB+puYp83GqKxAZRlrlt1g+8h/J/1ffsmTd6aROsrvb99Gqk4I2ibg=="],
+
+    "@girs/cogl-16/@girs/xlib-2.0": ["@girs/xlib-2.0@2.0.0-4.0.0-rc.3", "", { "dependencies": { "@girs/gjs": "4.0.0-rc.3", "@girs/gobject-2.0": "2.88.0-4.0.0-rc.3" } }, "sha512-+PlY2raBlzsHX07FUavEXHOMqmzOFb+qh3Wxg0gCsMy5mRjV5k2qWvQ5AH1ZWfSkIxxJnfH3kedN2oz6E8kuEQ=="],
+
+    "@girs/cogl-17/@girs/gl-1.0": ["@girs/gl-1.0@1.0.0-4.0.0-rc.3", "", { "dependencies": { "@girs/gjs": "4.0.0-rc.3", "@girs/gobject-2.0": "2.88.0-4.0.0-rc.3" } }, "sha512-DnXV9g28exsLxGaA/uBLFxRoF4oT0axyIB+puYp83GqKxAZRlrlt1g+8h/J/1ffsmTd6aROsrvb99Gqk4I2ibg=="],
+
+    "@girs/cogl-2.0/@girs/gl-1.0": ["@girs/gl-1.0@1.0.0-4.0.0-rc.3", "", { "dependencies": { "@girs/gjs": "4.0.0-rc.3", "@girs/gobject-2.0": "2.88.0-4.0.0-rc.3" } }, "sha512-DnXV9g28exsLxGaA/uBLFxRoF4oT0axyIB+puYp83GqKxAZRlrlt1g+8h/J/1ffsmTd6aROsrvb99Gqk4I2ibg=="],
+
+    "@girs/coglpango-14/@girs/cairo-1.0": ["@girs/cairo-1.0@1.0.0-4.0.0-beta.43", "", { "dependencies": { "@girs/gjs": "4.0.0-beta.43", "@girs/glib-2.0": "2.88.0-4.0.0-beta.43", "@girs/gobject-2.0": "2.88.0-4.0.0-beta.43" } }, "sha512-22hGstMdn+xnD6Ass0hJBB4P7GUdVDNyKzYOmFq5GoSdr8AwDoAopT8wyhAhTH1/ugsKQ4/XrMovnIxxTa8YZQ=="],
+
+    "@girs/coglpango-14/@girs/freetype2-2.0": ["@girs/freetype2-2.0@2.0.0-4.0.0-beta.43", "", { "dependencies": { "@girs/gjs": "4.0.0-beta.43", "@girs/gobject-2.0": "2.88.0-4.0.0-beta.43" } }, "sha512-VD1rCTQnceYI1VzlykgUv57tg2q487w6JDAkGxQf465eh7zQFCoqAoQlOB1t8FwI58yUMMreJa58VYIfP0/XBw=="],
+
+    "@girs/coglpango-14/@girs/gio-2.0": ["@girs/gio-2.0@2.88.0-4.0.0-beta.43", "", { "dependencies": { "@girs/gjs": "4.0.0-beta.43", "@girs/glib-2.0": "2.88.0-4.0.0-beta.43", "@girs/gmodule-2.0": "2.0.0-4.0.0-beta.43", "@girs/gobject-2.0": "2.88.0-4.0.0-beta.43" } }, "sha512-e8jZ15EBoOEdWGsxbd9OEoL0cYlL28lssuaEs8yq6UwUreOZjmmlrG+8l2VEuuf5R36q3BAxZEwCmShY+DMXXw=="],
+
+    "@girs/coglpango-14/@girs/gjs": ["@girs/gjs@4.0.0-beta.43", "", { "dependencies": { "@girs/cairo-1.0": "1.0.0-4.0.0-beta.43", "@girs/gio-2.0": "2.88.0-4.0.0-beta.43", "@girs/glib-2.0": "2.88.0-4.0.0-beta.43", "@girs/gobject-2.0": "2.88.0-4.0.0-beta.43" } }, "sha512-NyDT9tOziIcaWTezul3DJQYVsgLu5AilQ0fgAWtCuf7iCl5iXWN32Pvnqu3mY5UbFfHaLanmUrZwexIfXc9peQ=="],
+
+    "@girs/coglpango-14/@girs/glib-2.0": ["@girs/glib-2.0@2.88.0-4.0.0-beta.43", "", { "dependencies": { "@girs/gjs": "4.0.0-beta.43", "@girs/gobject-2.0": "2.88.0-4.0.0-beta.43" } }, "sha512-xxmwc6XhsX70m2A0Kf6+90fM09sjxhBHjZi61oWlJCKzjNndb4d2u23+Y0N/icniAaegR+t6EZg3gn+Qu7YIhQ=="],
+
+    "@girs/coglpango-14/@girs/gmodule-2.0": ["@girs/gmodule-2.0@2.0.0-4.0.0-beta.43", "", { "dependencies": { "@girs/gjs": "4.0.0-beta.43", "@girs/glib-2.0": "2.88.0-4.0.0-beta.43", "@girs/gobject-2.0": "2.88.0-4.0.0-beta.43" } }, "sha512-j6txGltFeIiFWbK9LwceIsKoYj0cNsrvEGBf3C5rTb+1N27wHz4anRzd6yjiKfzwfTtQIoP6l0KnlFZ2QxMe7g=="],
+
+    "@girs/coglpango-14/@girs/gobject-2.0": ["@girs/gobject-2.0@2.88.0-4.0.0-beta.43", "", { "dependencies": { "@girs/gjs": "4.0.0-beta.43", "@girs/glib-2.0": "2.88.0-4.0.0-beta.43" } }, "sha512-8rL8FGgTSEb5cwX9X6GHJMkgm0B73UioQncxy4OpPVBpsC+V7vmYHkuUmsaioSM5VseHvptnSLNJ5tKyv0HNvg=="],
+
+    "@girs/coglpango-14/@girs/graphene-1.0": ["@girs/graphene-1.0@1.0.0-4.0.0-beta.43", "", { "dependencies": { "@girs/gjs": "4.0.0-beta.43", "@girs/glib-2.0": "2.88.0-4.0.0-beta.43", "@girs/gobject-2.0": "2.88.0-4.0.0-beta.43" } }, "sha512-lkpgoAFJiXHtHn/U7LERk/HbPQIYSdoCHMTonJnIims1bv0o57ncMpDWsbRtwdpSeJeiNS2eYSbVLZPCXkG/Dg=="],
+
+    "@girs/coglpango-14/@girs/harfbuzz-0.0": ["@girs/harfbuzz-0.0@12.3.2-4.0.0-beta.43", "", { "dependencies": { "@girs/freetype2-2.0": "2.0.0-4.0.0-beta.43", "@girs/gjs": "4.0.0-beta.43", "@girs/glib-2.0": "2.88.0-4.0.0-beta.43", "@girs/gobject-2.0": "2.88.0-4.0.0-beta.43" } }, "sha512-IX6jhikoEQ+q+/AjOFEHMdnazO7o4V8jibaMENoyv0//4Qz040JgZ5uETpxPFd5sADEKfm/KrW8D2KLzAE7RuQ=="],
+
+    "@girs/coglpango-14/@girs/pango-1.0": ["@girs/pango-1.0@1.57.0-4.0.0-beta.43", "", { "dependencies": { "@girs/cairo-1.0": "1.0.0-4.0.0-beta.43", "@girs/freetype2-2.0": "2.0.0-4.0.0-beta.43", "@girs/gio-2.0": "2.88.0-4.0.0-beta.43", "@girs/gjs": "4.0.0-beta.43", "@girs/glib-2.0": "2.88.0-4.0.0-beta.43", "@girs/gmodule-2.0": "2.0.0-4.0.0-beta.43", "@girs/gobject-2.0": "2.88.0-4.0.0-beta.43", "@girs/harfbuzz-0.0": "12.3.2-4.0.0-beta.43" } }, "sha512-FgvFu1cIgUVHQhT4nUUqRc7HBIB2K5PgmjbEv8DItH1sq/aT5CC2vce/EF/rWtnYIeZnZmJNk/t2387qEv3aIQ=="],
+
+    "@girs/coglpango-14/@girs/pangocairo-1.0": ["@girs/pangocairo-1.0@1.0.0-4.0.0-beta.43", "", { "dependencies": { "@girs/cairo-1.0": "1.0.0-4.0.0-beta.43", "@girs/freetype2-2.0": "2.0.0-4.0.0-beta.43", "@girs/gio-2.0": "2.88.0-4.0.0-beta.43", "@girs/gjs": "4.0.0-beta.43", "@girs/glib-2.0": "2.88.0-4.0.0-beta.43", "@girs/gmodule-2.0": "2.0.0-4.0.0-beta.43", "@girs/gobject-2.0": "2.88.0-4.0.0-beta.43", "@girs/harfbuzz-0.0": "12.3.2-4.0.0-beta.43", "@girs/pango-1.0": "1.57.0-4.0.0-beta.43" } }, "sha512-BDx+31rLlgEW+xfKUUVLbl6afPZFVkgbcgs6RoAObUC27T2yYYBEsG9/Z8Pl8FriTTGEWIQ6C6Ye9F6y33px1Q=="],
+
+    "@girs/gdesktopenums-3.0/@girs/gjs": ["@girs/gjs@4.0.0-beta.43", "", { "dependencies": { "@girs/cairo-1.0": "1.0.0-4.0.0-beta.43", "@girs/gio-2.0": "2.88.0-4.0.0-beta.43", "@girs/glib-2.0": "2.88.0-4.0.0-beta.43", "@girs/gobject-2.0": "2.88.0-4.0.0-beta.43" } }, "sha512-NyDT9tOziIcaWTezul3DJQYVsgLu5AilQ0fgAWtCuf7iCl5iXWN32Pvnqu3mY5UbFfHaLanmUrZwexIfXc9peQ=="],
+
+    "@girs/gdesktopenums-3.0/@girs/gobject-2.0": ["@girs/gobject-2.0@2.88.0-4.0.0-beta.43", "", { "dependencies": { "@girs/gjs": "4.0.0-beta.43", "@girs/glib-2.0": "2.88.0-4.0.0-beta.43" } }, "sha512-8rL8FGgTSEb5cwX9X6GHJMkgm0B73UioQncxy4OpPVBpsC+V7vmYHkuUmsaioSM5VseHvptnSLNJ5tKyv0HNvg=="],
+
+    "@girs/gdk-4.0/@girs/pango-1.0": ["@girs/pango-1.0@1.57.1-4.0.0-rc.3", "", { "dependencies": { "@girs/cairo-1.0": "1.0.0-4.0.0-rc.3", "@girs/freetype2-2.0": "2.0.0-4.0.0-rc.3", "@girs/gio-2.0": "2.88.0-4.0.0-rc.3", "@girs/gjs": "4.0.0-rc.3", "@girs/glib-2.0": "2.88.0-4.0.0-rc.3", "@girs/gmodule-2.0": "2.0.0-4.0.0-rc.3", "@girs/gobject-2.0": "2.88.0-4.0.0-rc.3", "@girs/harfbuzz-0.0": "13.2.1-4.0.0-rc.3" } }, "sha512-WVVtMGP63QgufQEvpfVwJPscMmomyqRSkg+Ax4V4xlF/TA3joBTgc688wZSrko0fDJnZ5MaQoZloA9PjAYMuhw=="],
+
+    "@girs/gl-1.0/@girs/gjs": ["@girs/gjs@4.0.0-beta.43", "", { "dependencies": { "@girs/cairo-1.0": "1.0.0-4.0.0-beta.43", "@girs/gio-2.0": "2.88.0-4.0.0-beta.43", "@girs/glib-2.0": "2.88.0-4.0.0-beta.43", "@girs/gobject-2.0": "2.88.0-4.0.0-beta.43" } }, "sha512-NyDT9tOziIcaWTezul3DJQYVsgLu5AilQ0fgAWtCuf7iCl5iXWN32Pvnqu3mY5UbFfHaLanmUrZwexIfXc9peQ=="],
+
+    "@girs/gl-1.0/@girs/gobject-2.0": ["@girs/gobject-2.0@2.88.0-4.0.0-beta.43", "", { "dependencies": { "@girs/gjs": "4.0.0-beta.43", "@girs/glib-2.0": "2.88.0-4.0.0-beta.43" } }, "sha512-8rL8FGgTSEb5cwX9X6GHJMkgm0B73UioQncxy4OpPVBpsC+V7vmYHkuUmsaioSM5VseHvptnSLNJ5tKyv0HNvg=="],
+
+    "@girs/gnome-shell/@girs/adw-1": ["@girs/adw-1@1.9.0-4.0.0-beta.40", "", { "dependencies": { "@girs/cairo-1.0": "1.0.0-4.0.0-beta.40", "@girs/freetype2-2.0": "2.0.0-4.0.0-beta.40", "@girs/gdk-4.0": "4.0.0-4.0.0-beta.40", "@girs/gdkpixbuf-2.0": "2.0.0-4.0.0-beta.40", "@girs/gio-2.0": "2.86.4-4.0.0-beta.40", "@girs/gjs": "4.0.0-beta.40", "@girs/glib-2.0": "2.86.4-4.0.0-beta.40", "@girs/gmodule-2.0": "2.0.0-4.0.0-beta.40", "@girs/gobject-2.0": "2.86.4-4.0.0-beta.40", "@girs/graphene-1.0": "1.0.0-4.0.0-beta.40", "@girs/gsk-4.0": "4.0.0-4.0.0-beta.40", "@girs/gtk-4.0": "4.20.3-4.0.0-beta.40", "@girs/harfbuzz-0.0": "11.5.1-4.0.0-beta.40", "@girs/pango-1.0": "1.57.0-4.0.0-beta.40", "@girs/pangocairo-1.0": "1.0.0-4.0.0-beta.40" } }, "sha512-AaP8nDnUQkB7AUiOvOXXyXbjFC/L8Uh8MwqDD/NZKpIGKYwgE8hfuLyPW1d/K10wabLq4pgO19QJiTpr6hKyhg=="],
+
+    "@girs/gnome-shell/@girs/atk-1.0": ["@girs/atk-1.0@2.58.0-4.0.0-beta.38", "", { "dependencies": { "@girs/gjs": "4.0.0-beta.38", "@girs/glib-2.0": "2.86.0-4.0.0-beta.38", "@girs/gobject-2.0": "2.86.0-4.0.0-beta.38" } }, "sha512-rfLlLlAecHE1uAqK81DHZT27E1nVwN/pAHtgbgDUcu70UdHoCYAsQymLjk/tuDcTX0Lwp6U9x6w+GHG1sbYlQA=="],
+
+    "@girs/gnome-shell/@girs/gio-2.0": ["@girs/gio-2.0@2.86.0-4.0.0-beta.38", "", { "dependencies": { "@girs/gjs": "4.0.0-beta.38", "@girs/glib-2.0": "2.86.0-4.0.0-beta.38", "@girs/gmodule-2.0": "2.0.0-4.0.0-beta.38", "@girs/gobject-2.0": "2.86.0-4.0.0-beta.38" } }, "sha512-hKCyDEqSIgqcZeFf63KNrUnrYtAuJ0yfIypbdLgNEMbJBPQ/e3ZiwzWa7i3OPCh52Cnl9qYRdj8MSbZndpyZiQ=="],
+
+    "@girs/gnome-shell/@girs/glib-2.0": ["@girs/glib-2.0@2.86.0-4.0.0-beta.38", "", { "dependencies": { "@girs/gjs": "4.0.0-beta.38", "@girs/gobject-2.0": "2.86.0-4.0.0-beta.38" } }, "sha512-TFbrh5+Y3pb61synbhi37VrRzh0e+JQaRCzfGbe7oewUq0v7Sb8eSi2Fmj98r5tCizaRYptqgt6bxG7G5cFzVg=="],
+
+    "@girs/gnome-shell/@girs/gobject-2.0": ["@girs/gobject-2.0@2.86.0-4.0.0-beta.38", "", { "dependencies": { "@girs/gjs": "4.0.0-beta.38", "@girs/glib-2.0": "2.86.0-4.0.0-beta.38" } }, "sha512-oYrm6Gb/tCQosMkN8Beu5jqGRkJ7LED4O1H1dKYOI4SnP1Ojb66A9ECy78yTO8piBtMopsbRODV81yKniVtKKA=="],
+
+    "@girs/gnome-shell/@girs/gtk-4.0": ["@girs/gtk-4.0@4.20.1-4.0.0-beta.38", "", { "dependencies": { "@girs/cairo-1.0": "1.0.0-4.0.0-beta.38", "@girs/freetype2-2.0": "2.0.0-4.0.0-beta.38", "@girs/gdk-4.0": "4.0.0-4.0.0-beta.38", "@girs/gdkpixbuf-2.0": "2.0.0-4.0.0-beta.38", "@girs/gio-2.0": "2.86.0-4.0.0-beta.38", "@girs/gjs": "4.0.0-beta.38", "@girs/glib-2.0": "2.86.0-4.0.0-beta.38", "@girs/gmodule-2.0": "2.0.0-4.0.0-beta.38", "@girs/gobject-2.0": "2.86.0-4.0.0-beta.38", "@girs/graphene-1.0": "1.0.0-4.0.0-beta.38", "@girs/gsk-4.0": "4.0.0-4.0.0-beta.38", "@girs/harfbuzz-0.0": "11.5.0-4.0.0-beta.38", "@girs/pango-1.0": "1.57.0-4.0.0-beta.38", "@girs/pangocairo-1.0": "1.0.0-4.0.0-beta.38" } }, "sha512-lNujJDta1YK3/9Inp5HrtF/JOMN5EmD+3U7diRTyWNzc2KdaN2jO2mk90taaGK28xhoCC+VESkFkQAgFTwZXWw=="],
+
+    "@girs/gnomebg-4.0/@girs/gdesktopenums-3.0": ["@girs/gdesktopenums-3.0@3.0.0-4.0.0-rc.3", "", { "dependencies": { "@girs/gjs": "4.0.0-rc.3", "@girs/gobject-2.0": "2.88.0-4.0.0-rc.3" } }, "sha512-2ZVxa0j8M8HRjQHLUa8gdAIngrDSHdk9giKFZBkcn5MZ3OgwfDAyTVSzJ+fyavKJVjSwxeJUJOEyZyaErAlr3Q=="],
+
+    "@girs/gnomebg-4.0/@girs/pango-1.0": ["@girs/pango-1.0@1.57.1-4.0.0-rc.3", "", { "dependencies": { "@girs/cairo-1.0": "1.0.0-4.0.0-rc.3", "@girs/freetype2-2.0": "2.0.0-4.0.0-rc.3", "@girs/gio-2.0": "2.88.0-4.0.0-rc.3", "@girs/gjs": "4.0.0-rc.3", "@girs/glib-2.0": "2.88.0-4.0.0-rc.3", "@girs/gmodule-2.0": "2.0.0-4.0.0-rc.3", "@girs/gobject-2.0": "2.88.0-4.0.0-rc.3", "@girs/harfbuzz-0.0": "13.2.1-4.0.0-rc.3" } }, "sha512-WVVtMGP63QgufQEvpfVwJPscMmomyqRSkg+Ax4V4xlF/TA3joBTgc688wZSrko0fDJnZ5MaQoZloA9PjAYMuhw=="],
+
+    "@girs/gnomedesktop-4.0/@girs/gdesktopenums-3.0": ["@girs/gdesktopenums-3.0@3.0.0-4.0.0-rc.3", "", { "dependencies": { "@girs/gjs": "4.0.0-rc.3", "@girs/gobject-2.0": "2.88.0-4.0.0-rc.3" } }, "sha512-2ZVxa0j8M8HRjQHLUa8gdAIngrDSHdk9giKFZBkcn5MZ3OgwfDAyTVSzJ+fyavKJVjSwxeJUJOEyZyaErAlr3Q=="],
+
+    "@girs/gsk-4.0/@girs/pango-1.0": ["@girs/pango-1.0@1.57.1-4.0.0-rc.3", "", { "dependencies": { "@girs/cairo-1.0": "1.0.0-4.0.0-rc.3", "@girs/freetype2-2.0": "2.0.0-4.0.0-rc.3", "@girs/gio-2.0": "2.88.0-4.0.0-rc.3", "@girs/gjs": "4.0.0-rc.3", "@girs/glib-2.0": "2.88.0-4.0.0-rc.3", "@girs/gmodule-2.0": "2.0.0-4.0.0-rc.3", "@girs/gobject-2.0": "2.88.0-4.0.0-rc.3", "@girs/harfbuzz-0.0": "13.2.1-4.0.0-rc.3" } }, "sha512-WVVtMGP63QgufQEvpfVwJPscMmomyqRSkg+Ax4V4xlF/TA3joBTgc688wZSrko0fDJnZ5MaQoZloA9PjAYMuhw=="],
+
+    "@girs/gtk-4.0/@girs/cairo-1.0": ["@girs/cairo-1.0@1.0.0-4.0.0-beta.44", "", { "dependencies": { "@girs/gjs": "4.0.0-beta.44", "@girs/glib-2.0": "2.88.0-4.0.0-beta.44", "@girs/gobject-2.0": "2.88.0-4.0.0-beta.44" } }, "sha512-mzBnBLJjDyGxNvSJkKu2CCrQ3GfyeXuwgAaPBcGvf2FqCSeIHlFdaGCqijWHMd86Th7XpL6k3/lpzKVewuo3iw=="],
+
+    "@girs/gtk-4.0/@girs/freetype2-2.0": ["@girs/freetype2-2.0@2.0.0-4.0.0-beta.44", "", { "dependencies": { "@girs/gjs": "4.0.0-beta.44", "@girs/gobject-2.0": "2.88.0-4.0.0-beta.44" } }, "sha512-AqKiyZAmFxIyrpw4bz1q+dqMM1INlmi4mTldrCV4riQhxS/MksgygQ0YatXw9gwW8N/jR2B1GK7y8L1hLvzC+Q=="],
+
+    "@girs/gtk-4.0/@girs/gdk-4.0": ["@girs/gdk-4.0@4.0.0-4.0.0-beta.44", "", { "dependencies": { "@girs/cairo-1.0": "1.0.0-4.0.0-beta.44", "@girs/freetype2-2.0": "2.0.0-4.0.0-beta.44", "@girs/gdkpixbuf-2.0": "2.0.0-4.0.0-beta.44", "@girs/gio-2.0": "2.88.0-4.0.0-beta.44", "@girs/gjs": "4.0.0-beta.44", "@girs/glib-2.0": "2.88.0-4.0.0-beta.44", "@girs/gmodule-2.0": "2.0.0-4.0.0-beta.44", "@girs/gobject-2.0": "2.88.0-4.0.0-beta.44", "@girs/harfbuzz-0.0": "12.3.2-4.0.0-beta.44", "@girs/pango-1.0": "1.57.0-4.0.0-beta.44", "@girs/pangocairo-1.0": "1.0.0-4.0.0-beta.44" } }, "sha512-CDovRK3h3dGUZB4ESflx35GthhgRSThD9ob4ywSjVf0SuuQBdPMgZtcpO+gGIn+tIBhikTXOp3snUeaRPhnFFw=="],
+
+    "@girs/gtk-4.0/@girs/gdkpixbuf-2.0": ["@girs/gdkpixbuf-2.0@2.0.0-4.0.0-beta.44", "", { "dependencies": { "@girs/gio-2.0": "2.88.0-4.0.0-beta.44", "@girs/gjs": "4.0.0-beta.44", "@girs/glib-2.0": "2.88.0-4.0.0-beta.44", "@girs/gmodule-2.0": "2.0.0-4.0.0-beta.44", "@girs/gobject-2.0": "2.88.0-4.0.0-beta.44" } }, "sha512-NkOf4Iny7VxfPFo2kHWf5l7DoMrHH5upqK+3Z+E9yXWyWJdPx6bBvScjMpm9lWPFOGhivSewCaKRP7JikHU/aA=="],
+
+    "@girs/gtk-4.0/@girs/gio-2.0": ["@girs/gio-2.0@2.88.0-4.0.0-beta.44", "", { "dependencies": { "@girs/gjs": "4.0.0-beta.44", "@girs/glib-2.0": "2.88.0-4.0.0-beta.44", "@girs/gmodule-2.0": "2.0.0-4.0.0-beta.44", "@girs/gobject-2.0": "2.88.0-4.0.0-beta.44" } }, "sha512-NQGN7Zjy42GcHjhn6qfUHweG+pAZnfoRvsSEtWnU7mH/8LAwC/4/yVE00L6M4M6r4wApwclxfQVkhSn4vvz8qg=="],
+
+    "@girs/gtk-4.0/@girs/gjs": ["@girs/gjs@4.0.0-beta.44", "", { "dependencies": { "@girs/cairo-1.0": "1.0.0-4.0.0-beta.44", "@girs/gio-2.0": "2.88.0-4.0.0-beta.44", "@girs/glib-2.0": "2.88.0-4.0.0-beta.44", "@girs/gobject-2.0": "2.88.0-4.0.0-beta.44" } }, "sha512-VS+EeClZWYmplqNzDK9Ta5Je+sFOL6iFirYzDylWxQGeW8fdHcWGZX7RlXjuuTSkCNsRaAjWfd5DG/Yo5UkVGg=="],
+
+    "@girs/gtk-4.0/@girs/glib-2.0": ["@girs/glib-2.0@2.88.0-4.0.0-beta.44", "", { "dependencies": { "@girs/gjs": "4.0.0-beta.44", "@girs/gobject-2.0": "2.88.0-4.0.0-beta.44" } }, "sha512-mXOLTuC4P1DlYlzRPnLG+N6VAv8z3OgGbnSEP4r8U/+gA9nLCIrEuVlkqBdcBLiKyGfFz4diFYJVhHTGt7HQIQ=="],
+
+    "@girs/gtk-4.0/@girs/gmodule-2.0": ["@girs/gmodule-2.0@2.0.0-4.0.0-beta.44", "", { "dependencies": { "@girs/gjs": "4.0.0-beta.44", "@girs/glib-2.0": "2.88.0-4.0.0-beta.44", "@girs/gobject-2.0": "2.88.0-4.0.0-beta.44" } }, "sha512-ueMUwA8M/pCo8bdX+UUtzOUm5DaRkv7yvkg4624XGnlKUgJ15TgjIHages9ZcUtnCXNMLkSj2mJHPZbEtU5XpA=="],
+
+    "@girs/gtk-4.0/@girs/gobject-2.0": ["@girs/gobject-2.0@2.88.0-4.0.0-beta.44", "", { "dependencies": { "@girs/gjs": "4.0.0-beta.44", "@girs/glib-2.0": "2.88.0-4.0.0-beta.44" } }, "sha512-mG7uCfw4QB+gi9WXGYZ6y5x+lKeGJTnPeM+hWiCkZBgRMpIrMH1LsyVqYJ5tX/a75w6x2zDj/OTI85igDhwpyg=="],
+
+    "@girs/gtk-4.0/@girs/graphene-1.0": ["@girs/graphene-1.0@1.0.0-4.0.0-beta.44", "", { "dependencies": { "@girs/gjs": "4.0.0-beta.44", "@girs/glib-2.0": "2.88.0-4.0.0-beta.44", "@girs/gobject-2.0": "2.88.0-4.0.0-beta.44" } }, "sha512-jnI+LYVF1ciX45x8fEu30gSV3zf0JaVOz3hutRm9h2cwomNtqzhUVC7r68zIDiA3faP7VT7cQR0ghWHzWOnoIA=="],
+
+    "@girs/gtk-4.0/@girs/gsk-4.0": ["@girs/gsk-4.0@4.0.0-4.0.0-beta.44", "", { "dependencies": { "@girs/cairo-1.0": "1.0.0-4.0.0-beta.44", "@girs/freetype2-2.0": "2.0.0-4.0.0-beta.44", "@girs/gdk-4.0": "4.0.0-4.0.0-beta.44", "@girs/gdkpixbuf-2.0": "2.0.0-4.0.0-beta.44", "@girs/gio-2.0": "2.88.0-4.0.0-beta.44", "@girs/gjs": "4.0.0-beta.44", "@girs/glib-2.0": "2.88.0-4.0.0-beta.44", "@girs/gmodule-2.0": "2.0.0-4.0.0-beta.44", "@girs/gobject-2.0": "2.88.0-4.0.0-beta.44", "@girs/graphene-1.0": "1.0.0-4.0.0-beta.44", "@girs/harfbuzz-0.0": "12.3.2-4.0.0-beta.44", "@girs/pango-1.0": "1.57.0-4.0.0-beta.44", "@girs/pangocairo-1.0": "1.0.0-4.0.0-beta.44" } }, "sha512-WPvdP3K7Km63trbbTkvkX7VNFQdkRq47smjpGPWmDz/g4qNyP298szsq1UTuNwQfVvACBbbKqBjXIwLCakbCAw=="],
+
+    "@girs/gtk-4.0/@girs/harfbuzz-0.0": ["@girs/harfbuzz-0.0@12.3.2-4.0.0-beta.44", "", { "dependencies": { "@girs/freetype2-2.0": "2.0.0-4.0.0-beta.44", "@girs/gjs": "4.0.0-beta.44", "@girs/glib-2.0": "2.88.0-4.0.0-beta.44", "@girs/gobject-2.0": "2.88.0-4.0.0-beta.44" } }, "sha512-5x2h5ETvS4mdz1XrS2hwRC/jw8oaCm28fpE4NcM3hSZ1iXQetJDkdhG0xHsID/Sk8cjBlcmT3+rV4kSvrHooMg=="],
+
+    "@girs/gtk-4.0/@girs/pangocairo-1.0": ["@girs/pangocairo-1.0@1.0.0-4.0.0-beta.44", "", { "dependencies": { "@girs/cairo-1.0": "1.0.0-4.0.0-beta.44", "@girs/freetype2-2.0": "2.0.0-4.0.0-beta.44", "@girs/gio-2.0": "2.88.0-4.0.0-beta.44", "@girs/gjs": "4.0.0-beta.44", "@girs/glib-2.0": "2.88.0-4.0.0-beta.44", "@girs/gmodule-2.0": "2.0.0-4.0.0-beta.44", "@girs/gobject-2.0": "2.88.0-4.0.0-beta.44", "@girs/harfbuzz-0.0": "12.3.2-4.0.0-beta.44", "@girs/pango-1.0": "1.57.0-4.0.0-beta.44" } }, "sha512-jGZ+055hClZO36YJ+u+NzwmHNFtPrMaoaOroKC0ZWf5hzacN1kYH4fA2lu0IkiTx4VB/GWQxNddXJy8oXjrx6g=="],
+
+    "@girs/meta-14/@girs/cairo-1.0": ["@girs/cairo-1.0@1.0.0-4.0.0-beta.43", "", { "dependencies": { "@girs/gjs": "4.0.0-beta.43", "@girs/glib-2.0": "2.88.0-4.0.0-beta.43", "@girs/gobject-2.0": "2.88.0-4.0.0-beta.43" } }, "sha512-22hGstMdn+xnD6Ass0hJBB4P7GUdVDNyKzYOmFq5GoSdr8AwDoAopT8wyhAhTH1/ugsKQ4/XrMovnIxxTa8YZQ=="],
+
+    "@girs/meta-14/@girs/freetype2-2.0": ["@girs/freetype2-2.0@2.0.0-4.0.0-beta.43", "", { "dependencies": { "@girs/gjs": "4.0.0-beta.43", "@girs/gobject-2.0": "2.88.0-4.0.0-beta.43" } }, "sha512-VD1rCTQnceYI1VzlykgUv57tg2q487w6JDAkGxQf465eh7zQFCoqAoQlOB1t8FwI58yUMMreJa58VYIfP0/XBw=="],
+
+    "@girs/meta-14/@girs/gio-2.0": ["@girs/gio-2.0@2.88.0-4.0.0-beta.43", "", { "dependencies": { "@girs/gjs": "4.0.0-beta.43", "@girs/glib-2.0": "2.88.0-4.0.0-beta.43", "@girs/gmodule-2.0": "2.0.0-4.0.0-beta.43", "@girs/gobject-2.0": "2.88.0-4.0.0-beta.43" } }, "sha512-e8jZ15EBoOEdWGsxbd9OEoL0cYlL28lssuaEs8yq6UwUreOZjmmlrG+8l2VEuuf5R36q3BAxZEwCmShY+DMXXw=="],
+
+    "@girs/meta-14/@girs/gjs": ["@girs/gjs@4.0.0-beta.43", "", { "dependencies": { "@girs/cairo-1.0": "1.0.0-4.0.0-beta.43", "@girs/gio-2.0": "2.88.0-4.0.0-beta.43", "@girs/glib-2.0": "2.88.0-4.0.0-beta.43", "@girs/gobject-2.0": "2.88.0-4.0.0-beta.43" } }, "sha512-NyDT9tOziIcaWTezul3DJQYVsgLu5AilQ0fgAWtCuf7iCl5iXWN32Pvnqu3mY5UbFfHaLanmUrZwexIfXc9peQ=="],
+
+    "@girs/meta-14/@girs/glib-2.0": ["@girs/glib-2.0@2.88.0-4.0.0-beta.43", "", { "dependencies": { "@girs/gjs": "4.0.0-beta.43", "@girs/gobject-2.0": "2.88.0-4.0.0-beta.43" } }, "sha512-xxmwc6XhsX70m2A0Kf6+90fM09sjxhBHjZi61oWlJCKzjNndb4d2u23+Y0N/icniAaegR+t6EZg3gn+Qu7YIhQ=="],
+
+    "@girs/meta-14/@girs/gmodule-2.0": ["@girs/gmodule-2.0@2.0.0-4.0.0-beta.43", "", { "dependencies": { "@girs/gjs": "4.0.0-beta.43", "@girs/glib-2.0": "2.88.0-4.0.0-beta.43", "@girs/gobject-2.0": "2.88.0-4.0.0-beta.43" } }, "sha512-j6txGltFeIiFWbK9LwceIsKoYj0cNsrvEGBf3C5rTb+1N27wHz4anRzd6yjiKfzwfTtQIoP6l0KnlFZ2QxMe7g=="],
+
+    "@girs/meta-14/@girs/gobject-2.0": ["@girs/gobject-2.0@2.88.0-4.0.0-beta.43", "", { "dependencies": { "@girs/gjs": "4.0.0-beta.43", "@girs/glib-2.0": "2.88.0-4.0.0-beta.43" } }, "sha512-8rL8FGgTSEb5cwX9X6GHJMkgm0B73UioQncxy4OpPVBpsC+V7vmYHkuUmsaioSM5VseHvptnSLNJ5tKyv0HNvg=="],
+
+    "@girs/meta-14/@girs/graphene-1.0": ["@girs/graphene-1.0@1.0.0-4.0.0-beta.43", "", { "dependencies": { "@girs/gjs": "4.0.0-beta.43", "@girs/glib-2.0": "2.88.0-4.0.0-beta.43", "@girs/gobject-2.0": "2.88.0-4.0.0-beta.43" } }, "sha512-lkpgoAFJiXHtHn/U7LERk/HbPQIYSdoCHMTonJnIims1bv0o57ncMpDWsbRtwdpSeJeiNS2eYSbVLZPCXkG/Dg=="],
+
+    "@girs/meta-14/@girs/harfbuzz-0.0": ["@girs/harfbuzz-0.0@12.3.2-4.0.0-beta.43", "", { "dependencies": { "@girs/freetype2-2.0": "2.0.0-4.0.0-beta.43", "@girs/gjs": "4.0.0-beta.43", "@girs/glib-2.0": "2.88.0-4.0.0-beta.43", "@girs/gobject-2.0": "2.88.0-4.0.0-beta.43" } }, "sha512-IX6jhikoEQ+q+/AjOFEHMdnazO7o4V8jibaMENoyv0//4Qz040JgZ5uETpxPFd5sADEKfm/KrW8D2KLzAE7RuQ=="],
+
+    "@girs/meta-14/@girs/pango-1.0": ["@girs/pango-1.0@1.57.0-4.0.0-beta.43", "", { "dependencies": { "@girs/cairo-1.0": "1.0.0-4.0.0-beta.43", "@girs/freetype2-2.0": "2.0.0-4.0.0-beta.43", "@girs/gio-2.0": "2.88.0-4.0.0-beta.43", "@girs/gjs": "4.0.0-beta.43", "@girs/glib-2.0": "2.88.0-4.0.0-beta.43", "@girs/gmodule-2.0": "2.0.0-4.0.0-beta.43", "@girs/gobject-2.0": "2.88.0-4.0.0-beta.43", "@girs/harfbuzz-0.0": "12.3.2-4.0.0-beta.43" } }, "sha512-FgvFu1cIgUVHQhT4nUUqRc7HBIB2K5PgmjbEv8DItH1sq/aT5CC2vce/EF/rWtnYIeZnZmJNk/t2387qEv3aIQ=="],
+
+    "@girs/meta-14/@girs/pangocairo-1.0": ["@girs/pangocairo-1.0@1.0.0-4.0.0-beta.43", "", { "dependencies": { "@girs/cairo-1.0": "1.0.0-4.0.0-beta.43", "@girs/freetype2-2.0": "2.0.0-4.0.0-beta.43", "@girs/gio-2.0": "2.88.0-4.0.0-beta.43", "@girs/gjs": "4.0.0-beta.43", "@girs/glib-2.0": "2.88.0-4.0.0-beta.43", "@girs/gmodule-2.0": "2.0.0-4.0.0-beta.43", "@girs/gobject-2.0": "2.88.0-4.0.0-beta.43", "@girs/harfbuzz-0.0": "12.3.2-4.0.0-beta.43", "@girs/pango-1.0": "1.57.0-4.0.0-beta.43" } }, "sha512-BDx+31rLlgEW+xfKUUVLbl6afPZFVkgbcgs6RoAObUC27T2yYYBEsG9/Z8Pl8FriTTGEWIQ6C6Ye9F6y33px1Q=="],
+
+    "@girs/meta-16/@girs/atk-1.0": ["@girs/atk-1.0@2.60.0-4.0.0-rc.3", "", { "dependencies": { "@girs/gjs": "4.0.0-rc.3", "@girs/glib-2.0": "2.88.0-4.0.0-rc.3", "@girs/gobject-2.0": "2.88.0-4.0.0-rc.3" } }, "sha512-g8EXt0PLh6CaqqBDHX/ojn1H44Dmw3GvCPqatmWr/WNTipHLHVdCet/+offyezDaiyn6T4UkyU8ugmYtrAifYA=="],
+
+    "@girs/meta-16/@girs/gdesktopenums-3.0": ["@girs/gdesktopenums-3.0@3.0.0-4.0.0-rc.3", "", { "dependencies": { "@girs/gjs": "4.0.0-rc.3", "@girs/gobject-2.0": "2.88.0-4.0.0-rc.3" } }, "sha512-2ZVxa0j8M8HRjQHLUa8gdAIngrDSHdk9giKFZBkcn5MZ3OgwfDAyTVSzJ+fyavKJVjSwxeJUJOEyZyaErAlr3Q=="],
+
+    "@girs/meta-16/@girs/gl-1.0": ["@girs/gl-1.0@1.0.0-4.0.0-rc.3", "", { "dependencies": { "@girs/gjs": "4.0.0-rc.3", "@girs/gobject-2.0": "2.88.0-4.0.0-rc.3" } }, "sha512-DnXV9g28exsLxGaA/uBLFxRoF4oT0axyIB+puYp83GqKxAZRlrlt1g+8h/J/1ffsmTd6aROsrvb99Gqk4I2ibg=="],
+
+    "@girs/meta-16/@girs/pango-1.0": ["@girs/pango-1.0@1.57.1-4.0.0-rc.3", "", { "dependencies": { "@girs/cairo-1.0": "1.0.0-4.0.0-rc.3", "@girs/freetype2-2.0": "2.0.0-4.0.0-rc.3", "@girs/gio-2.0": "2.88.0-4.0.0-rc.3", "@girs/gjs": "4.0.0-rc.3", "@girs/glib-2.0": "2.88.0-4.0.0-rc.3", "@girs/gmodule-2.0": "2.0.0-4.0.0-rc.3", "@girs/gobject-2.0": "2.88.0-4.0.0-rc.3", "@girs/harfbuzz-0.0": "13.2.1-4.0.0-rc.3" } }, "sha512-WVVtMGP63QgufQEvpfVwJPscMmomyqRSkg+Ax4V4xlF/TA3joBTgc688wZSrko0fDJnZ5MaQoZloA9PjAYMuhw=="],
+
+    "@girs/meta-16/@girs/xfixes-4.0": ["@girs/xfixes-4.0@4.0.0-4.0.0-rc.3", "", { "dependencies": { "@girs/gjs": "4.0.0-rc.3", "@girs/gobject-2.0": "2.88.0-4.0.0-rc.3" } }, "sha512-RTUKAlFHEryYZNnFe7h6RNJc8YVm2XaEGKDt5dKk7JXqN50VimT/4ian4Lk5XIzIWJdbQ+sfwMG9aqXYllsvig=="],
+
+    "@girs/meta-16/@girs/xlib-2.0": ["@girs/xlib-2.0@2.0.0-4.0.0-rc.3", "", { "dependencies": { "@girs/gjs": "4.0.0-rc.3", "@girs/gobject-2.0": "2.88.0-4.0.0-rc.3" } }, "sha512-+PlY2raBlzsHX07FUavEXHOMqmzOFb+qh3Wxg0gCsMy5mRjV5k2qWvQ5AH1ZWfSkIxxJnfH3kedN2oz6E8kuEQ=="],
+
+    "@girs/meta-17/@girs/atk-1.0": ["@girs/atk-1.0@2.60.0-4.0.0-rc.3", "", { "dependencies": { "@girs/gjs": "4.0.0-rc.3", "@girs/glib-2.0": "2.88.0-4.0.0-rc.3", "@girs/gobject-2.0": "2.88.0-4.0.0-rc.3" } }, "sha512-g8EXt0PLh6CaqqBDHX/ojn1H44Dmw3GvCPqatmWr/WNTipHLHVdCet/+offyezDaiyn6T4UkyU8ugmYtrAifYA=="],
+
+    "@girs/meta-17/@girs/gdesktopenums-3.0": ["@girs/gdesktopenums-3.0@3.0.0-4.0.0-rc.3", "", { "dependencies": { "@girs/gjs": "4.0.0-rc.3", "@girs/gobject-2.0": "2.88.0-4.0.0-rc.3" } }, "sha512-2ZVxa0j8M8HRjQHLUa8gdAIngrDSHdk9giKFZBkcn5MZ3OgwfDAyTVSzJ+fyavKJVjSwxeJUJOEyZyaErAlr3Q=="],
+
+    "@girs/meta-17/@girs/gl-1.0": ["@girs/gl-1.0@1.0.0-4.0.0-rc.3", "", { "dependencies": { "@girs/gjs": "4.0.0-rc.3", "@girs/gobject-2.0": "2.88.0-4.0.0-rc.3" } }, "sha512-DnXV9g28exsLxGaA/uBLFxRoF4oT0axyIB+puYp83GqKxAZRlrlt1g+8h/J/1ffsmTd6aROsrvb99Gqk4I2ibg=="],
+
+    "@girs/meta-17/@girs/pango-1.0": ["@girs/pango-1.0@1.57.1-4.0.0-rc.3", "", { "dependencies": { "@girs/cairo-1.0": "1.0.0-4.0.0-rc.3", "@girs/freetype2-2.0": "2.0.0-4.0.0-rc.3", "@girs/gio-2.0": "2.88.0-4.0.0-rc.3", "@girs/gjs": "4.0.0-rc.3", "@girs/glib-2.0": "2.88.0-4.0.0-rc.3", "@girs/gmodule-2.0": "2.0.0-4.0.0-rc.3", "@girs/gobject-2.0": "2.88.0-4.0.0-rc.3", "@girs/harfbuzz-0.0": "13.2.1-4.0.0-rc.3" } }, "sha512-WVVtMGP63QgufQEvpfVwJPscMmomyqRSkg+Ax4V4xlF/TA3joBTgc688wZSrko0fDJnZ5MaQoZloA9PjAYMuhw=="],
+
+    "@girs/meta-17/@girs/xfixes-4.0": ["@girs/xfixes-4.0@4.0.0-4.0.0-rc.3", "", { "dependencies": { "@girs/gjs": "4.0.0-rc.3", "@girs/gobject-2.0": "2.88.0-4.0.0-rc.3" } }, "sha512-RTUKAlFHEryYZNnFe7h6RNJc8YVm2XaEGKDt5dKk7JXqN50VimT/4ian4Lk5XIzIWJdbQ+sfwMG9aqXYllsvig=="],
+
+    "@girs/meta-17/@girs/xlib-2.0": ["@girs/xlib-2.0@2.0.0-4.0.0-rc.3", "", { "dependencies": { "@girs/gjs": "4.0.0-rc.3", "@girs/gobject-2.0": "2.88.0-4.0.0-rc.3" } }, "sha512-+PlY2raBlzsHX07FUavEXHOMqmzOFb+qh3Wxg0gCsMy5mRjV5k2qWvQ5AH1ZWfSkIxxJnfH3kedN2oz6E8kuEQ=="],
+
+    "@girs/mtk-14/@girs/gjs": ["@girs/gjs@4.0.0-beta.43", "", { "dependencies": { "@girs/cairo-1.0": "1.0.0-4.0.0-beta.43", "@girs/gio-2.0": "2.88.0-4.0.0-beta.43", "@girs/glib-2.0": "2.88.0-4.0.0-beta.43", "@girs/gobject-2.0": "2.88.0-4.0.0-beta.43" } }, "sha512-NyDT9tOziIcaWTezul3DJQYVsgLu5AilQ0fgAWtCuf7iCl5iXWN32Pvnqu3mY5UbFfHaLanmUrZwexIfXc9peQ=="],
+
+    "@girs/mtk-14/@girs/glib-2.0": ["@girs/glib-2.0@2.88.0-4.0.0-beta.43", "", { "dependencies": { "@girs/gjs": "4.0.0-beta.43", "@girs/gobject-2.0": "2.88.0-4.0.0-beta.43" } }, "sha512-xxmwc6XhsX70m2A0Kf6+90fM09sjxhBHjZi61oWlJCKzjNndb4d2u23+Y0N/icniAaegR+t6EZg3gn+Qu7YIhQ=="],
+
+    "@girs/mtk-14/@girs/gobject-2.0": ["@girs/gobject-2.0@2.88.0-4.0.0-beta.43", "", { "dependencies": { "@girs/gjs": "4.0.0-beta.43", "@girs/glib-2.0": "2.88.0-4.0.0-beta.43" } }, "sha512-8rL8FGgTSEb5cwX9X6GHJMkgm0B73UioQncxy4OpPVBpsC+V7vmYHkuUmsaioSM5VseHvptnSLNJ5tKyv0HNvg=="],
+
+    "@girs/mtk-14/@girs/graphene-1.0": ["@girs/graphene-1.0@1.0.0-4.0.0-beta.43", "", { "dependencies": { "@girs/gjs": "4.0.0-beta.43", "@girs/glib-2.0": "2.88.0-4.0.0-beta.43", "@girs/gobject-2.0": "2.88.0-4.0.0-beta.43" } }, "sha512-lkpgoAFJiXHtHn/U7LERk/HbPQIYSdoCHMTonJnIims1bv0o57ncMpDWsbRtwdpSeJeiNS2eYSbVLZPCXkG/Dg=="],
+
+    "@girs/pango-1.0/@girs/cairo-1.0": ["@girs/cairo-1.0@1.0.0-4.0.0-beta.44", "", { "dependencies": { "@girs/gjs": "4.0.0-beta.44", "@girs/glib-2.0": "2.88.0-4.0.0-beta.44", "@girs/gobject-2.0": "2.88.0-4.0.0-beta.44" } }, "sha512-mzBnBLJjDyGxNvSJkKu2CCrQ3GfyeXuwgAaPBcGvf2FqCSeIHlFdaGCqijWHMd86Th7XpL6k3/lpzKVewuo3iw=="],
+
+    "@girs/pango-1.0/@girs/freetype2-2.0": ["@girs/freetype2-2.0@2.0.0-4.0.0-beta.44", "", { "dependencies": { "@girs/gjs": "4.0.0-beta.44", "@girs/gobject-2.0": "2.88.0-4.0.0-beta.44" } }, "sha512-AqKiyZAmFxIyrpw4bz1q+dqMM1INlmi4mTldrCV4riQhxS/MksgygQ0YatXw9gwW8N/jR2B1GK7y8L1hLvzC+Q=="],
+
+    "@girs/pango-1.0/@girs/gio-2.0": ["@girs/gio-2.0@2.88.0-4.0.0-beta.44", "", { "dependencies": { "@girs/gjs": "4.0.0-beta.44", "@girs/glib-2.0": "2.88.0-4.0.0-beta.44", "@girs/gmodule-2.0": "2.0.0-4.0.0-beta.44", "@girs/gobject-2.0": "2.88.0-4.0.0-beta.44" } }, "sha512-NQGN7Zjy42GcHjhn6qfUHweG+pAZnfoRvsSEtWnU7mH/8LAwC/4/yVE00L6M4M6r4wApwclxfQVkhSn4vvz8qg=="],
+
+    "@girs/pango-1.0/@girs/gjs": ["@girs/gjs@4.0.0-beta.44", "", { "dependencies": { "@girs/cairo-1.0": "1.0.0-4.0.0-beta.44", "@girs/gio-2.0": "2.88.0-4.0.0-beta.44", "@girs/glib-2.0": "2.88.0-4.0.0-beta.44", "@girs/gobject-2.0": "2.88.0-4.0.0-beta.44" } }, "sha512-VS+EeClZWYmplqNzDK9Ta5Je+sFOL6iFirYzDylWxQGeW8fdHcWGZX7RlXjuuTSkCNsRaAjWfd5DG/Yo5UkVGg=="],
+
+    "@girs/pango-1.0/@girs/glib-2.0": ["@girs/glib-2.0@2.88.0-4.0.0-beta.44", "", { "dependencies": { "@girs/gjs": "4.0.0-beta.44", "@girs/gobject-2.0": "2.88.0-4.0.0-beta.44" } }, "sha512-mXOLTuC4P1DlYlzRPnLG+N6VAv8z3OgGbnSEP4r8U/+gA9nLCIrEuVlkqBdcBLiKyGfFz4diFYJVhHTGt7HQIQ=="],
+
+    "@girs/pango-1.0/@girs/gmodule-2.0": ["@girs/gmodule-2.0@2.0.0-4.0.0-beta.44", "", { "dependencies": { "@girs/gjs": "4.0.0-beta.44", "@girs/glib-2.0": "2.88.0-4.0.0-beta.44", "@girs/gobject-2.0": "2.88.0-4.0.0-beta.44" } }, "sha512-ueMUwA8M/pCo8bdX+UUtzOUm5DaRkv7yvkg4624XGnlKUgJ15TgjIHages9ZcUtnCXNMLkSj2mJHPZbEtU5XpA=="],
+
+    "@girs/pango-1.0/@girs/gobject-2.0": ["@girs/gobject-2.0@2.88.0-4.0.0-beta.44", "", { "dependencies": { "@girs/gjs": "4.0.0-beta.44", "@girs/glib-2.0": "2.88.0-4.0.0-beta.44" } }, "sha512-mG7uCfw4QB+gi9WXGYZ6y5x+lKeGJTnPeM+hWiCkZBgRMpIrMH1LsyVqYJ5tX/a75w6x2zDj/OTI85igDhwpyg=="],
+
+    "@girs/pango-1.0/@girs/harfbuzz-0.0": ["@girs/harfbuzz-0.0@12.3.2-4.0.0-beta.44", "", { "dependencies": { "@girs/freetype2-2.0": "2.0.0-4.0.0-beta.44", "@girs/gjs": "4.0.0-beta.44", "@girs/glib-2.0": "2.88.0-4.0.0-beta.44", "@girs/gobject-2.0": "2.88.0-4.0.0-beta.44" } }, "sha512-5x2h5ETvS4mdz1XrS2hwRC/jw8oaCm28fpE4NcM3hSZ1iXQetJDkdhG0xHsID/Sk8cjBlcmT3+rV4kSvrHooMg=="],
+
+    "@girs/pangocairo-1.0/@girs/pango-1.0": ["@girs/pango-1.0@1.57.1-4.0.0-rc.3", "", { "dependencies": { "@girs/cairo-1.0": "1.0.0-4.0.0-rc.3", "@girs/freetype2-2.0": "2.0.0-4.0.0-rc.3", "@girs/gio-2.0": "2.88.0-4.0.0-rc.3", "@girs/gjs": "4.0.0-rc.3", "@girs/glib-2.0": "2.88.0-4.0.0-rc.3", "@girs/gmodule-2.0": "2.0.0-4.0.0-rc.3", "@girs/gobject-2.0": "2.88.0-4.0.0-rc.3", "@girs/harfbuzz-0.0": "13.2.1-4.0.0-rc.3" } }, "sha512-WVVtMGP63QgufQEvpfVwJPscMmomyqRSkg+Ax4V4xlF/TA3joBTgc688wZSrko0fDJnZ5MaQoZloA9PjAYMuhw=="],
+
+    "@girs/shell-17/@girs/atk-1.0": ["@girs/atk-1.0@2.60.0-4.0.0-rc.3", "", { "dependencies": { "@girs/gjs": "4.0.0-rc.3", "@girs/glib-2.0": "2.88.0-4.0.0-rc.3", "@girs/gobject-2.0": "2.88.0-4.0.0-rc.3" } }, "sha512-g8EXt0PLh6CaqqBDHX/ojn1H44Dmw3GvCPqatmWr/WNTipHLHVdCet/+offyezDaiyn6T4UkyU8ugmYtrAifYA=="],
+
+    "@girs/shell-17/@girs/gdesktopenums-3.0": ["@girs/gdesktopenums-3.0@3.0.0-4.0.0-rc.3", "", { "dependencies": { "@girs/gjs": "4.0.0-rc.3", "@girs/gobject-2.0": "2.88.0-4.0.0-rc.3" } }, "sha512-2ZVxa0j8M8HRjQHLUa8gdAIngrDSHdk9giKFZBkcn5MZ3OgwfDAyTVSzJ+fyavKJVjSwxeJUJOEyZyaErAlr3Q=="],
+
+    "@girs/shell-17/@girs/gl-1.0": ["@girs/gl-1.0@1.0.0-4.0.0-rc.3", "", { "dependencies": { "@girs/gjs": "4.0.0-rc.3", "@girs/gobject-2.0": "2.88.0-4.0.0-rc.3" } }, "sha512-DnXV9g28exsLxGaA/uBLFxRoF4oT0axyIB+puYp83GqKxAZRlrlt1g+8h/J/1ffsmTd6aROsrvb99Gqk4I2ibg=="],
+
+    "@girs/shell-17/@girs/pango-1.0": ["@girs/pango-1.0@1.57.1-4.0.0-rc.3", "", { "dependencies": { "@girs/cairo-1.0": "1.0.0-4.0.0-rc.3", "@girs/freetype2-2.0": "2.0.0-4.0.0-rc.3", "@girs/gio-2.0": "2.88.0-4.0.0-rc.3", "@girs/gjs": "4.0.0-rc.3", "@girs/glib-2.0": "2.88.0-4.0.0-rc.3", "@girs/gmodule-2.0": "2.0.0-4.0.0-rc.3", "@girs/gobject-2.0": "2.88.0-4.0.0-rc.3", "@girs/harfbuzz-0.0": "13.2.1-4.0.0-rc.3" } }, "sha512-WVVtMGP63QgufQEvpfVwJPscMmomyqRSkg+Ax4V4xlF/TA3joBTgc688wZSrko0fDJnZ5MaQoZloA9PjAYMuhw=="],
+
+    "@girs/shell-17/@girs/xfixes-4.0": ["@girs/xfixes-4.0@4.0.0-4.0.0-rc.3", "", { "dependencies": { "@girs/gjs": "4.0.0-rc.3", "@girs/gobject-2.0": "2.88.0-4.0.0-rc.3" } }, "sha512-RTUKAlFHEryYZNnFe7h6RNJc8YVm2XaEGKDt5dKk7JXqN50VimT/4ian4Lk5XIzIWJdbQ+sfwMG9aqXYllsvig=="],
+
+    "@girs/shell-17/@girs/xlib-2.0": ["@girs/xlib-2.0@2.0.0-4.0.0-rc.3", "", { "dependencies": { "@girs/gjs": "4.0.0-rc.3", "@girs/gobject-2.0": "2.88.0-4.0.0-rc.3" } }, "sha512-+PlY2raBlzsHX07FUavEXHOMqmzOFb+qh3Wxg0gCsMy5mRjV5k2qWvQ5AH1ZWfSkIxxJnfH3kedN2oz6E8kuEQ=="],
+
+    "@girs/shew-0/@girs/gtk-4.0": ["@girs/gtk-4.0@4.23.0-4.0.0-rc.3", "", { "dependencies": { "@girs/cairo-1.0": "1.0.0-4.0.0-rc.3", "@girs/freetype2-2.0": "2.0.0-4.0.0-rc.3", "@girs/gdk-4.0": "4.0.0-4.0.0-rc.3", "@girs/gdkpixbuf-2.0": "2.0.0-4.0.0-rc.3", "@girs/gio-2.0": "2.88.0-4.0.0-rc.3", "@girs/gjs": "4.0.0-rc.3", "@girs/glib-2.0": "2.88.0-4.0.0-rc.3", "@girs/gmodule-2.0": "2.0.0-4.0.0-rc.3", "@girs/gobject-2.0": "2.88.0-4.0.0-rc.3", "@girs/graphene-1.0": "1.0.0-4.0.0-rc.3", "@girs/gsk-4.0": "4.0.0-4.0.0-rc.3", "@girs/harfbuzz-0.0": "13.2.1-4.0.0-rc.3", "@girs/pango-1.0": "1.57.1-4.0.0-rc.3", "@girs/pangocairo-1.0": "1.0.0-4.0.0-rc.3" } }, "sha512-Sxp2rrSUOOIfzjPIm2dyEf5/2fQQcQCclN7zqFKXdLYuCt/+sG+AE5JpZUunlgECqjfkd5s7i9cXJl3L93LWRA=="],
+
+    "@girs/shew-0/@girs/pango-1.0": ["@girs/pango-1.0@1.57.1-4.0.0-rc.3", "", { "dependencies": { "@girs/cairo-1.0": "1.0.0-4.0.0-rc.3", "@girs/freetype2-2.0": "2.0.0-4.0.0-rc.3", "@girs/gio-2.0": "2.88.0-4.0.0-rc.3", "@girs/gjs": "4.0.0-rc.3", "@girs/glib-2.0": "2.88.0-4.0.0-rc.3", "@girs/gmodule-2.0": "2.0.0-4.0.0-rc.3", "@girs/gobject-2.0": "2.88.0-4.0.0-rc.3", "@girs/harfbuzz-0.0": "13.2.1-4.0.0-rc.3" } }, "sha512-WVVtMGP63QgufQEvpfVwJPscMmomyqRSkg+Ax4V4xlF/TA3joBTgc688wZSrko0fDJnZ5MaQoZloA9PjAYMuhw=="],
+
+    "@girs/st-16/@girs/atk-1.0": ["@girs/atk-1.0@2.60.0-4.0.0-rc.3", "", { "dependencies": { "@girs/gjs": "4.0.0-rc.3", "@girs/glib-2.0": "2.88.0-4.0.0-rc.3", "@girs/gobject-2.0": "2.88.0-4.0.0-rc.3" } }, "sha512-g8EXt0PLh6CaqqBDHX/ojn1H44Dmw3GvCPqatmWr/WNTipHLHVdCet/+offyezDaiyn6T4UkyU8ugmYtrAifYA=="],
+
+    "@girs/st-16/@girs/gdesktopenums-3.0": ["@girs/gdesktopenums-3.0@3.0.0-4.0.0-rc.3", "", { "dependencies": { "@girs/gjs": "4.0.0-rc.3", "@girs/gobject-2.0": "2.88.0-4.0.0-rc.3" } }, "sha512-2ZVxa0j8M8HRjQHLUa8gdAIngrDSHdk9giKFZBkcn5MZ3OgwfDAyTVSzJ+fyavKJVjSwxeJUJOEyZyaErAlr3Q=="],
+
+    "@girs/st-16/@girs/gl-1.0": ["@girs/gl-1.0@1.0.0-4.0.0-rc.3", "", { "dependencies": { "@girs/gjs": "4.0.0-rc.3", "@girs/gobject-2.0": "2.88.0-4.0.0-rc.3" } }, "sha512-DnXV9g28exsLxGaA/uBLFxRoF4oT0axyIB+puYp83GqKxAZRlrlt1g+8h/J/1ffsmTd6aROsrvb99Gqk4I2ibg=="],
+
+    "@girs/st-16/@girs/pango-1.0": ["@girs/pango-1.0@1.57.1-4.0.0-rc.3", "", { "dependencies": { "@girs/cairo-1.0": "1.0.0-4.0.0-rc.3", "@girs/freetype2-2.0": "2.0.0-4.0.0-rc.3", "@girs/gio-2.0": "2.88.0-4.0.0-rc.3", "@girs/gjs": "4.0.0-rc.3", "@girs/glib-2.0": "2.88.0-4.0.0-rc.3", "@girs/gmodule-2.0": "2.0.0-4.0.0-rc.3", "@girs/gobject-2.0": "2.88.0-4.0.0-rc.3", "@girs/harfbuzz-0.0": "13.2.1-4.0.0-rc.3" } }, "sha512-WVVtMGP63QgufQEvpfVwJPscMmomyqRSkg+Ax4V4xlF/TA3joBTgc688wZSrko0fDJnZ5MaQoZloA9PjAYMuhw=="],
+
+    "@girs/st-16/@girs/xfixes-4.0": ["@girs/xfixes-4.0@4.0.0-4.0.0-rc.3", "", { "dependencies": { "@girs/gjs": "4.0.0-rc.3", "@girs/gobject-2.0": "2.88.0-4.0.0-rc.3" } }, "sha512-RTUKAlFHEryYZNnFe7h6RNJc8YVm2XaEGKDt5dKk7JXqN50VimT/4ian4Lk5XIzIWJdbQ+sfwMG9aqXYllsvig=="],
+
+    "@girs/st-16/@girs/xlib-2.0": ["@girs/xlib-2.0@2.0.0-4.0.0-rc.3", "", { "dependencies": { "@girs/gjs": "4.0.0-rc.3", "@girs/gobject-2.0": "2.88.0-4.0.0-rc.3" } }, "sha512-+PlY2raBlzsHX07FUavEXHOMqmzOFb+qh3Wxg0gCsMy5mRjV5k2qWvQ5AH1ZWfSkIxxJnfH3kedN2oz6E8kuEQ=="],
+
+    "@girs/st-17/@girs/atk-1.0": ["@girs/atk-1.0@2.60.0-4.0.0-rc.3", "", { "dependencies": { "@girs/gjs": "4.0.0-rc.3", "@girs/glib-2.0": "2.88.0-4.0.0-rc.3", "@girs/gobject-2.0": "2.88.0-4.0.0-rc.3" } }, "sha512-g8EXt0PLh6CaqqBDHX/ojn1H44Dmw3GvCPqatmWr/WNTipHLHVdCet/+offyezDaiyn6T4UkyU8ugmYtrAifYA=="],
+
+    "@girs/st-17/@girs/gdesktopenums-3.0": ["@girs/gdesktopenums-3.0@3.0.0-4.0.0-rc.3", "", { "dependencies": { "@girs/gjs": "4.0.0-rc.3", "@girs/gobject-2.0": "2.88.0-4.0.0-rc.3" } }, "sha512-2ZVxa0j8M8HRjQHLUa8gdAIngrDSHdk9giKFZBkcn5MZ3OgwfDAyTVSzJ+fyavKJVjSwxeJUJOEyZyaErAlr3Q=="],
+
+    "@girs/st-17/@girs/gl-1.0": ["@girs/gl-1.0@1.0.0-4.0.0-rc.3", "", { "dependencies": { "@girs/gjs": "4.0.0-rc.3", "@girs/gobject-2.0": "2.88.0-4.0.0-rc.3" } }, "sha512-DnXV9g28exsLxGaA/uBLFxRoF4oT0axyIB+puYp83GqKxAZRlrlt1g+8h/J/1ffsmTd6aROsrvb99Gqk4I2ibg=="],
+
+    "@girs/st-17/@girs/pango-1.0": ["@girs/pango-1.0@1.57.1-4.0.0-rc.3", "", { "dependencies": { "@girs/cairo-1.0": "1.0.0-4.0.0-rc.3", "@girs/freetype2-2.0": "2.0.0-4.0.0-rc.3", "@girs/gio-2.0": "2.88.0-4.0.0-rc.3", "@girs/gjs": "4.0.0-rc.3", "@girs/glib-2.0": "2.88.0-4.0.0-rc.3", "@girs/gmodule-2.0": "2.0.0-4.0.0-rc.3", "@girs/gobject-2.0": "2.88.0-4.0.0-rc.3", "@girs/harfbuzz-0.0": "13.2.1-4.0.0-rc.3" } }, "sha512-WVVtMGP63QgufQEvpfVwJPscMmomyqRSkg+Ax4V4xlF/TA3joBTgc688wZSrko0fDJnZ5MaQoZloA9PjAYMuhw=="],
+
+    "@girs/st-17/@girs/xfixes-4.0": ["@girs/xfixes-4.0@4.0.0-4.0.0-rc.3", "", { "dependencies": { "@girs/gjs": "4.0.0-rc.3", "@girs/gobject-2.0": "2.88.0-4.0.0-rc.3" } }, "sha512-RTUKAlFHEryYZNnFe7h6RNJc8YVm2XaEGKDt5dKk7JXqN50VimT/4ian4Lk5XIzIWJdbQ+sfwMG9aqXYllsvig=="],
+
+    "@girs/st-17/@girs/xlib-2.0": ["@girs/xlib-2.0@2.0.0-4.0.0-rc.3", "", { "dependencies": { "@girs/gjs": "4.0.0-rc.3", "@girs/gobject-2.0": "2.88.0-4.0.0-rc.3" } }, "sha512-+PlY2raBlzsHX07FUavEXHOMqmzOFb+qh3Wxg0gCsMy5mRjV5k2qWvQ5AH1ZWfSkIxxJnfH3kedN2oz6E8kuEQ=="],
+
+    "@girs/upowerglib-1.0/@girs/gio-2.0": ["@girs/gio-2.0@2.86.4-4.0.0-beta.40", "", { "dependencies": { "@girs/gjs": "4.0.0-beta.40", "@girs/glib-2.0": "2.86.4-4.0.0-beta.40", "@girs/gmodule-2.0": "2.0.0-4.0.0-beta.40", "@girs/gobject-2.0": "2.86.4-4.0.0-beta.40" } }, "sha512-TTAEE/2nCAkx01hID4n8f0ByiFJ0QwGJcY8QYmom19QXmlIWCLF/GWLeXi/7ZyKJOtChSFk8IJglS0O6zC1spw=="],
+
+    "@girs/upowerglib-1.0/@girs/gjs": ["@girs/gjs@4.0.0-beta.40", "", { "dependencies": { "@girs/cairo-1.0": "1.0.0-4.0.0-beta.40", "@girs/gio-2.0": "2.86.4-4.0.0-beta.40", "@girs/glib-2.0": "2.86.4-4.0.0-beta.40", "@girs/gobject-2.0": "2.86.4-4.0.0-beta.40" } }, "sha512-+gHGA5PJvEExpiPkpc3+DSjhWGmxHDb482h52FO64eo2EmHuLoeOKCoUJIY0PS80xOJWFRSO2dNFxZdD1bV6XA=="],
+
+    "@girs/upowerglib-1.0/@girs/glib-2.0": ["@girs/glib-2.0@2.86.4-4.0.0-beta.40", "", { "dependencies": { "@girs/gjs": "4.0.0-beta.40", "@girs/gobject-2.0": "2.86.4-4.0.0-beta.40" } }, "sha512-DTvRmZlTVpYW+JI0zMN/dybhzoqJ/I3bx3txftSQgcxXl3mKnrSI6Qzv15VTyxQSpcnD3CBxpnfYT/+QrzU9QQ=="],
+
+    "@girs/upowerglib-1.0/@girs/gmodule-2.0": ["@girs/gmodule-2.0@2.0.0-4.0.0-beta.40", "", { "dependencies": { "@girs/gjs": "4.0.0-beta.40", "@girs/glib-2.0": "2.86.4-4.0.0-beta.40", "@girs/gobject-2.0": "2.86.4-4.0.0-beta.40" } }, "sha512-srPSbc/uespMNHR2o2Gg6OYeCprW42gADIXCujpMMWl5OfJzKU0mA+R8Z/D713tDq0xp1Lz2P7hprVznf1uF3A=="],
+
+    "@girs/upowerglib-1.0/@girs/gobject-2.0": ["@girs/gobject-2.0@2.86.4-4.0.0-beta.40", "", { "dependencies": { "@girs/gjs": "4.0.0-beta.40", "@girs/glib-2.0": "2.86.4-4.0.0-beta.40" } }, "sha512-coS5607duUekhRfl2GDC9Gt3WcgAtTNEDL0efrRBBOuORjvBrIGiGJJXB9cX4jYQ7c9FITUMVLTd+a0MMRAaXA=="],
+
+    "@girs/xfixes-4.0/@girs/gjs": ["@girs/gjs@4.0.0-beta.43", "", { "dependencies": { "@girs/cairo-1.0": "1.0.0-4.0.0-beta.43", "@girs/gio-2.0": "2.88.0-4.0.0-beta.43", "@girs/glib-2.0": "2.88.0-4.0.0-beta.43", "@girs/gobject-2.0": "2.88.0-4.0.0-beta.43" } }, "sha512-NyDT9tOziIcaWTezul3DJQYVsgLu5AilQ0fgAWtCuf7iCl5iXWN32Pvnqu3mY5UbFfHaLanmUrZwexIfXc9peQ=="],
+
+    "@girs/xfixes-4.0/@girs/gobject-2.0": ["@girs/gobject-2.0@2.88.0-4.0.0-beta.43", "", { "dependencies": { "@girs/gjs": "4.0.0-beta.43", "@girs/glib-2.0": "2.88.0-4.0.0-beta.43" } }, "sha512-8rL8FGgTSEb5cwX9X6GHJMkgm0B73UioQncxy4OpPVBpsC+V7vmYHkuUmsaioSM5VseHvptnSLNJ5tKyv0HNvg=="],
+
+    "@girs/xlib-2.0/@girs/gjs": ["@girs/gjs@4.0.0-beta.43", "", { "dependencies": { "@girs/cairo-1.0": "1.0.0-4.0.0-beta.43", "@girs/gio-2.0": "2.88.0-4.0.0-beta.43", "@girs/glib-2.0": "2.88.0-4.0.0-beta.43", "@girs/gobject-2.0": "2.88.0-4.0.0-beta.43" } }, "sha512-NyDT9tOziIcaWTezul3DJQYVsgLu5AilQ0fgAWtCuf7iCl5iXWN32Pvnqu3mY5UbFfHaLanmUrZwexIfXc9peQ=="],
+
+    "@girs/xlib-2.0/@girs/gobject-2.0": ["@girs/gobject-2.0@2.88.0-4.0.0-beta.43", "", { "dependencies": { "@girs/gjs": "4.0.0-beta.43", "@girs/glib-2.0": "2.88.0-4.0.0-beta.43" } }, "sha512-8rL8FGgTSEb5cwX9X6GHJMkgm0B73UioQncxy4OpPVBpsC+V7vmYHkuUmsaioSM5VseHvptnSLNJ5tKyv0HNvg=="],
+
+    "@girs/accountsservice-1.0/@girs/gjs/@girs/cairo-1.0": ["@girs/cairo-1.0@1.0.0-4.0.0-beta.38", "", { "dependencies": { "@girs/gjs": "4.0.0-beta.38", "@girs/glib-2.0": "2.86.0-4.0.0-beta.38", "@girs/gobject-2.0": "2.86.0-4.0.0-beta.38" } }, "sha512-VJa0vw9teZjCydDzWIcbNBwT37MSej52rqwBuQ/ir7+72+7dpzeudkNOOif1nDIulGu+RLAy4cgWbguQhsUH/Q=="],
+
+    "@girs/atk-1.0/@girs/gjs/@girs/cairo-1.0": ["@girs/cairo-1.0@1.0.0-4.0.0-beta.43", "", { "dependencies": { "@girs/gjs": "4.0.0-beta.43", "@girs/glib-2.0": "2.88.0-4.0.0-beta.43", "@girs/gobject-2.0": "2.88.0-4.0.0-beta.43" } }, "sha512-22hGstMdn+xnD6Ass0hJBB4P7GUdVDNyKzYOmFq5GoSdr8AwDoAopT8wyhAhTH1/ugsKQ4/XrMovnIxxTa8YZQ=="],
+
+    "@girs/atk-1.0/@girs/gjs/@girs/gio-2.0": ["@girs/gio-2.0@2.88.0-4.0.0-beta.43", "", { "dependencies": { "@girs/gjs": "4.0.0-beta.43", "@girs/glib-2.0": "2.88.0-4.0.0-beta.43", "@girs/gmodule-2.0": "2.0.0-4.0.0-beta.43", "@girs/gobject-2.0": "2.88.0-4.0.0-beta.43" } }, "sha512-e8jZ15EBoOEdWGsxbd9OEoL0cYlL28lssuaEs8yq6UwUreOZjmmlrG+8l2VEuuf5R36q3BAxZEwCmShY+DMXXw=="],
+
+    "@girs/cogl-14/@girs/gjs/@girs/cairo-1.0": ["@girs/cairo-1.0@1.0.0-4.0.0-beta.43", "", { "dependencies": { "@girs/gjs": "4.0.0-beta.43", "@girs/glib-2.0": "2.88.0-4.0.0-beta.43", "@girs/gobject-2.0": "2.88.0-4.0.0-beta.43" } }, "sha512-22hGstMdn+xnD6Ass0hJBB4P7GUdVDNyKzYOmFq5GoSdr8AwDoAopT8wyhAhTH1/ugsKQ4/XrMovnIxxTa8YZQ=="],
+
+    "@girs/cogl-14/@girs/gjs/@girs/gio-2.0": ["@girs/gio-2.0@2.88.0-4.0.0-beta.43", "", { "dependencies": { "@girs/gjs": "4.0.0-beta.43", "@girs/glib-2.0": "2.88.0-4.0.0-beta.43", "@girs/gmodule-2.0": "2.0.0-4.0.0-beta.43", "@girs/gobject-2.0": "2.88.0-4.0.0-beta.43" } }, "sha512-e8jZ15EBoOEdWGsxbd9OEoL0cYlL28lssuaEs8yq6UwUreOZjmmlrG+8l2VEuuf5R36q3BAxZEwCmShY+DMXXw=="],
+
+    "@girs/gdesktopenums-3.0/@girs/gjs/@girs/cairo-1.0": ["@girs/cairo-1.0@1.0.0-4.0.0-beta.43", "", { "dependencies": { "@girs/gjs": "4.0.0-beta.43", "@girs/glib-2.0": "2.88.0-4.0.0-beta.43", "@girs/gobject-2.0": "2.88.0-4.0.0-beta.43" } }, "sha512-22hGstMdn+xnD6Ass0hJBB4P7GUdVDNyKzYOmFq5GoSdr8AwDoAopT8wyhAhTH1/ugsKQ4/XrMovnIxxTa8YZQ=="],
+
+    "@girs/gdesktopenums-3.0/@girs/gjs/@girs/gio-2.0": ["@girs/gio-2.0@2.88.0-4.0.0-beta.43", "", { "dependencies": { "@girs/gjs": "4.0.0-beta.43", "@girs/glib-2.0": "2.88.0-4.0.0-beta.43", "@girs/gmodule-2.0": "2.0.0-4.0.0-beta.43", "@girs/gobject-2.0": "2.88.0-4.0.0-beta.43" } }, "sha512-e8jZ15EBoOEdWGsxbd9OEoL0cYlL28lssuaEs8yq6UwUreOZjmmlrG+8l2VEuuf5R36q3BAxZEwCmShY+DMXXw=="],
+
+    "@girs/gdesktopenums-3.0/@girs/gjs/@girs/glib-2.0": ["@girs/glib-2.0@2.88.0-4.0.0-beta.43", "", { "dependencies": { "@girs/gjs": "4.0.0-beta.43", "@girs/gobject-2.0": "2.88.0-4.0.0-beta.43" } }, "sha512-xxmwc6XhsX70m2A0Kf6+90fM09sjxhBHjZi61oWlJCKzjNndb4d2u23+Y0N/icniAaegR+t6EZg3gn+Qu7YIhQ=="],
+
+    "@girs/gdesktopenums-3.0/@girs/gobject-2.0/@girs/glib-2.0": ["@girs/glib-2.0@2.88.0-4.0.0-beta.43", "", { "dependencies": { "@girs/gjs": "4.0.0-beta.43", "@girs/gobject-2.0": "2.88.0-4.0.0-beta.43" } }, "sha512-xxmwc6XhsX70m2A0Kf6+90fM09sjxhBHjZi61oWlJCKzjNndb4d2u23+Y0N/icniAaegR+t6EZg3gn+Qu7YIhQ=="],
+
+    "@girs/gl-1.0/@girs/gjs/@girs/cairo-1.0": ["@girs/cairo-1.0@1.0.0-4.0.0-beta.43", "", { "dependencies": { "@girs/gjs": "4.0.0-beta.43", "@girs/glib-2.0": "2.88.0-4.0.0-beta.43", "@girs/gobject-2.0": "2.88.0-4.0.0-beta.43" } }, "sha512-22hGstMdn+xnD6Ass0hJBB4P7GUdVDNyKzYOmFq5GoSdr8AwDoAopT8wyhAhTH1/ugsKQ4/XrMovnIxxTa8YZQ=="],
+
+    "@girs/gl-1.0/@girs/gjs/@girs/gio-2.0": ["@girs/gio-2.0@2.88.0-4.0.0-beta.43", "", { "dependencies": { "@girs/gjs": "4.0.0-beta.43", "@girs/glib-2.0": "2.88.0-4.0.0-beta.43", "@girs/gmodule-2.0": "2.0.0-4.0.0-beta.43", "@girs/gobject-2.0": "2.88.0-4.0.0-beta.43" } }, "sha512-e8jZ15EBoOEdWGsxbd9OEoL0cYlL28lssuaEs8yq6UwUreOZjmmlrG+8l2VEuuf5R36q3BAxZEwCmShY+DMXXw=="],
+
+    "@girs/gl-1.0/@girs/gjs/@girs/glib-2.0": ["@girs/glib-2.0@2.88.0-4.0.0-beta.43", "", { "dependencies": { "@girs/gjs": "4.0.0-beta.43", "@girs/gobject-2.0": "2.88.0-4.0.0-beta.43" } }, "sha512-xxmwc6XhsX70m2A0Kf6+90fM09sjxhBHjZi61oWlJCKzjNndb4d2u23+Y0N/icniAaegR+t6EZg3gn+Qu7YIhQ=="],
+
+    "@girs/gl-1.0/@girs/gobject-2.0/@girs/glib-2.0": ["@girs/glib-2.0@2.88.0-4.0.0-beta.43", "", { "dependencies": { "@girs/gjs": "4.0.0-beta.43", "@girs/gobject-2.0": "2.88.0-4.0.0-beta.43" } }, "sha512-xxmwc6XhsX70m2A0Kf6+90fM09sjxhBHjZi61oWlJCKzjNndb4d2u23+Y0N/icniAaegR+t6EZg3gn+Qu7YIhQ=="],
+
+    "@girs/gnome-shell/@girs/adw-1/@girs/cairo-1.0": ["@girs/cairo-1.0@1.0.0-4.0.0-beta.40", "", { "dependencies": { "@girs/gjs": "4.0.0-beta.40", "@girs/glib-2.0": "2.86.4-4.0.0-beta.40", "@girs/gobject-2.0": "2.86.4-4.0.0-beta.40" } }, "sha512-luqUsMf2cPphDc4lb8IHcw0bX8eGa4g0aQypZJypAeIs9eyHfEDHWKhLgp4I0HaQvaevbd3QBosaH7UhkArL1A=="],
+
+    "@girs/gnome-shell/@girs/adw-1/@girs/freetype2-2.0": ["@girs/freetype2-2.0@2.0.0-4.0.0-beta.40", "", { "dependencies": { "@girs/gjs": "4.0.0-beta.40", "@girs/gobject-2.0": "2.86.4-4.0.0-beta.40" } }, "sha512-vS+etsSesMQZNH8Sei81fmkWcgYzjLDbddSPIZaCw2nJ1TIu8eC/CTW46bBk0JGgOaQwL3DxuE0V+BdyhQwIyQ=="],
+
+    "@girs/gnome-shell/@girs/adw-1/@girs/gdk-4.0": ["@girs/gdk-4.0@4.0.0-4.0.0-beta.40", "", { "dependencies": { "@girs/cairo-1.0": "1.0.0-4.0.0-beta.40", "@girs/freetype2-2.0": "2.0.0-4.0.0-beta.40", "@girs/gdkpixbuf-2.0": "2.0.0-4.0.0-beta.40", "@girs/gio-2.0": "2.86.4-4.0.0-beta.40", "@girs/gjs": "4.0.0-beta.40", "@girs/glib-2.0": "2.86.4-4.0.0-beta.40", "@girs/gmodule-2.0": "2.0.0-4.0.0-beta.40", "@girs/gobject-2.0": "2.86.4-4.0.0-beta.40", "@girs/harfbuzz-0.0": "11.5.1-4.0.0-beta.40", "@girs/pango-1.0": "1.57.0-4.0.0-beta.40", "@girs/pangocairo-1.0": "1.0.0-4.0.0-beta.40" } }, "sha512-4O5Yqk1QSKUqaRn7402XtkGFwg/7SMoGof0Xe/JiqnjF7oDav2giRUoDKx4uXKnfQm+6NA69b0meGEXr8yJJYA=="],
+
+    "@girs/gnome-shell/@girs/adw-1/@girs/gdkpixbuf-2.0": ["@girs/gdkpixbuf-2.0@2.0.0-4.0.0-beta.40", "", { "dependencies": { "@girs/gio-2.0": "2.86.4-4.0.0-beta.40", "@girs/gjs": "4.0.0-beta.40", "@girs/glib-2.0": "2.86.4-4.0.0-beta.40", "@girs/gmodule-2.0": "2.0.0-4.0.0-beta.40", "@girs/gobject-2.0": "2.86.4-4.0.0-beta.40" } }, "sha512-ImVsfgs4OdJnWqZm1ugB+WcpySf2wNtY99nUBm+/YpCLeIyrl+NRbft+ymom6CTim83f3XzwaOCDEwE5azj42w=="],
+
+    "@girs/gnome-shell/@girs/adw-1/@girs/gio-2.0": ["@girs/gio-2.0@2.86.4-4.0.0-beta.40", "", { "dependencies": { "@girs/gjs": "4.0.0-beta.40", "@girs/glib-2.0": "2.86.4-4.0.0-beta.40", "@girs/gmodule-2.0": "2.0.0-4.0.0-beta.40", "@girs/gobject-2.0": "2.86.4-4.0.0-beta.40" } }, "sha512-TTAEE/2nCAkx01hID4n8f0ByiFJ0QwGJcY8QYmom19QXmlIWCLF/GWLeXi/7ZyKJOtChSFk8IJglS0O6zC1spw=="],
+
+    "@girs/gnome-shell/@girs/adw-1/@girs/gjs": ["@girs/gjs@4.0.0-beta.40", "", { "dependencies": { "@girs/cairo-1.0": "1.0.0-4.0.0-beta.40", "@girs/gio-2.0": "2.86.4-4.0.0-beta.40", "@girs/glib-2.0": "2.86.4-4.0.0-beta.40", "@girs/gobject-2.0": "2.86.4-4.0.0-beta.40" } }, "sha512-+gHGA5PJvEExpiPkpc3+DSjhWGmxHDb482h52FO64eo2EmHuLoeOKCoUJIY0PS80xOJWFRSO2dNFxZdD1bV6XA=="],
+
+    "@girs/gnome-shell/@girs/adw-1/@girs/glib-2.0": ["@girs/glib-2.0@2.86.4-4.0.0-beta.40", "", { "dependencies": { "@girs/gjs": "4.0.0-beta.40", "@girs/gobject-2.0": "2.86.4-4.0.0-beta.40" } }, "sha512-DTvRmZlTVpYW+JI0zMN/dybhzoqJ/I3bx3txftSQgcxXl3mKnrSI6Qzv15VTyxQSpcnD3CBxpnfYT/+QrzU9QQ=="],
+
+    "@girs/gnome-shell/@girs/adw-1/@girs/gmodule-2.0": ["@girs/gmodule-2.0@2.0.0-4.0.0-beta.40", "", { "dependencies": { "@girs/gjs": "4.0.0-beta.40", "@girs/glib-2.0": "2.86.4-4.0.0-beta.40", "@girs/gobject-2.0": "2.86.4-4.0.0-beta.40" } }, "sha512-srPSbc/uespMNHR2o2Gg6OYeCprW42gADIXCujpMMWl5OfJzKU0mA+R8Z/D713tDq0xp1Lz2P7hprVznf1uF3A=="],
+
+    "@girs/gnome-shell/@girs/adw-1/@girs/gobject-2.0": ["@girs/gobject-2.0@2.86.4-4.0.0-beta.40", "", { "dependencies": { "@girs/gjs": "4.0.0-beta.40", "@girs/glib-2.0": "2.86.4-4.0.0-beta.40" } }, "sha512-coS5607duUekhRfl2GDC9Gt3WcgAtTNEDL0efrRBBOuORjvBrIGiGJJXB9cX4jYQ7c9FITUMVLTd+a0MMRAaXA=="],
+
+    "@girs/gnome-shell/@girs/adw-1/@girs/graphene-1.0": ["@girs/graphene-1.0@1.0.0-4.0.0-beta.40", "", { "dependencies": { "@girs/gjs": "4.0.0-beta.40", "@girs/glib-2.0": "2.86.4-4.0.0-beta.40", "@girs/gobject-2.0": "2.86.4-4.0.0-beta.40" } }, "sha512-0ReJbd31inyIE7Q96I4ED1uj6ssmfl1iB4xc6eakac95FZK/uZSC6uBtBLfA/tmnkgRb7ChQgK/ZGbb8sx4tHQ=="],
+
+    "@girs/gnome-shell/@girs/adw-1/@girs/gsk-4.0": ["@girs/gsk-4.0@4.0.0-4.0.0-beta.40", "", { "dependencies": { "@girs/cairo-1.0": "1.0.0-4.0.0-beta.40", "@girs/freetype2-2.0": "2.0.0-4.0.0-beta.40", "@girs/gdk-4.0": "4.0.0-4.0.0-beta.40", "@girs/gdkpixbuf-2.0": "2.0.0-4.0.0-beta.40", "@girs/gio-2.0": "2.86.4-4.0.0-beta.40", "@girs/gjs": "4.0.0-beta.40", "@girs/glib-2.0": "2.86.4-4.0.0-beta.40", "@girs/gmodule-2.0": "2.0.0-4.0.0-beta.40", "@girs/gobject-2.0": "2.86.4-4.0.0-beta.40", "@girs/graphene-1.0": "1.0.0-4.0.0-beta.40", "@girs/harfbuzz-0.0": "11.5.1-4.0.0-beta.40", "@girs/pango-1.0": "1.57.0-4.0.0-beta.40", "@girs/pangocairo-1.0": "1.0.0-4.0.0-beta.40" } }, "sha512-hSNHG+E6O736vLgGtMcG50iiSoK/tRIVdsJ55H/AqyRCL2HzCzUIAQ7VTqsCgDGGs0N2P8i6Oq0FAZ7+4j/3IQ=="],
+
+    "@girs/gnome-shell/@girs/adw-1/@girs/gtk-4.0": ["@girs/gtk-4.0@4.20.3-4.0.0-beta.40", "", { "dependencies": { "@girs/cairo-1.0": "1.0.0-4.0.0-beta.40", "@girs/freetype2-2.0": "2.0.0-4.0.0-beta.40", "@girs/gdk-4.0": "4.0.0-4.0.0-beta.40", "@girs/gdkpixbuf-2.0": "2.0.0-4.0.0-beta.40", "@girs/gio-2.0": "2.86.4-4.0.0-beta.40", "@girs/gjs": "4.0.0-beta.40", "@girs/glib-2.0": "2.86.4-4.0.0-beta.40", "@girs/gmodule-2.0": "2.0.0-4.0.0-beta.40", "@girs/gobject-2.0": "2.86.4-4.0.0-beta.40", "@girs/graphene-1.0": "1.0.0-4.0.0-beta.40", "@girs/gsk-4.0": "4.0.0-4.0.0-beta.40", "@girs/harfbuzz-0.0": "11.5.1-4.0.0-beta.40", "@girs/pango-1.0": "1.57.0-4.0.0-beta.40", "@girs/pangocairo-1.0": "1.0.0-4.0.0-beta.40" } }, "sha512-rdAkZpt6IvyF8dvNsvC1cU8beQl1LesH0ZzpYArF0kg5KnKGDOqVGAAFjcz4QOHQ3LRiWJ47S5VT4n/TkCG76w=="],
+
+    "@girs/gnome-shell/@girs/adw-1/@girs/harfbuzz-0.0": ["@girs/harfbuzz-0.0@11.5.1-4.0.0-beta.40", "", { "dependencies": { "@girs/freetype2-2.0": "2.0.0-4.0.0-beta.40", "@girs/gjs": "4.0.0-beta.40", "@girs/glib-2.0": "2.86.4-4.0.0-beta.40", "@girs/gobject-2.0": "2.86.4-4.0.0-beta.40" } }, "sha512-cwR4WHJ9LtnvvXFUnkiFtWdInKvhlQUr3bQHmHiJxCjloQHHMNVA7CsrMDL/tRD9WoU77rQF6dB+uqSlRKT1zQ=="],
+
+    "@girs/gnome-shell/@girs/adw-1/@girs/pango-1.0": ["@girs/pango-1.0@1.57.0-4.0.0-beta.40", "", { "dependencies": { "@girs/cairo-1.0": "1.0.0-4.0.0-beta.40", "@girs/freetype2-2.0": "2.0.0-4.0.0-beta.40", "@girs/gio-2.0": "2.86.4-4.0.0-beta.40", "@girs/gjs": "4.0.0-beta.40", "@girs/glib-2.0": "2.86.4-4.0.0-beta.40", "@girs/gmodule-2.0": "2.0.0-4.0.0-beta.40", "@girs/gobject-2.0": "2.86.4-4.0.0-beta.40", "@girs/harfbuzz-0.0": "11.5.1-4.0.0-beta.40" } }, "sha512-H8COoSffShFRilpCh9JQ6Lafd/WG+hPRKNkruvfmLAEcnIDnPDIS79BO3OOJz6E+QWqY9mwQIjqjjPwFcasuzA=="],
+
+    "@girs/gnome-shell/@girs/adw-1/@girs/pangocairo-1.0": ["@girs/pangocairo-1.0@1.0.0-4.0.0-beta.40", "", { "dependencies": { "@girs/cairo-1.0": "1.0.0-4.0.0-beta.40", "@girs/freetype2-2.0": "2.0.0-4.0.0-beta.40", "@girs/gio-2.0": "2.86.4-4.0.0-beta.40", "@girs/gjs": "4.0.0-beta.40", "@girs/glib-2.0": "2.86.4-4.0.0-beta.40", "@girs/gmodule-2.0": "2.0.0-4.0.0-beta.40", "@girs/gobject-2.0": "2.86.4-4.0.0-beta.40", "@girs/harfbuzz-0.0": "11.5.1-4.0.0-beta.40", "@girs/pango-1.0": "1.57.0-4.0.0-beta.40" } }, "sha512-CFvAGWXWN/Ui469met+Q39Tmyn910Y6g+pBxWC60q5T1F9jck7qjehn1/Jo6D7R/n2Bh1FVyjYK3JhIwIMGOyw=="],
+
+    "@girs/gnome-shell/@girs/atk-1.0/@girs/gjs": ["@girs/gjs@4.0.0-beta.38", "", { "dependencies": { "@girs/cairo-1.0": "1.0.0-4.0.0-beta.38", "@girs/gio-2.0": "2.86.0-4.0.0-beta.38", "@girs/glib-2.0": "2.86.0-4.0.0-beta.38", "@girs/gobject-2.0": "2.86.0-4.0.0-beta.38" } }, "sha512-eI/9lfI1mQpXN8RsKiNRFWJso6LgQe9Eb+YxLAdKarD5fccvIRx3chsyIyhw5tYH7VvgaZkqm1c4GX7pDDokBQ=="],
+
+    "@girs/gnome-shell/@girs/gio-2.0/@girs/gjs": ["@girs/gjs@4.0.0-beta.38", "", { "dependencies": { "@girs/cairo-1.0": "1.0.0-4.0.0-beta.38", "@girs/gio-2.0": "2.86.0-4.0.0-beta.38", "@girs/glib-2.0": "2.86.0-4.0.0-beta.38", "@girs/gobject-2.0": "2.86.0-4.0.0-beta.38" } }, "sha512-eI/9lfI1mQpXN8RsKiNRFWJso6LgQe9Eb+YxLAdKarD5fccvIRx3chsyIyhw5tYH7VvgaZkqm1c4GX7pDDokBQ=="],
+
+    "@girs/gnome-shell/@girs/gio-2.0/@girs/gmodule-2.0": ["@girs/gmodule-2.0@2.0.0-4.0.0-beta.38", "", { "dependencies": { "@girs/gjs": "4.0.0-beta.38", "@girs/glib-2.0": "2.86.0-4.0.0-beta.38", "@girs/gobject-2.0": "2.86.0-4.0.0-beta.38" } }, "sha512-BmspJtwdBSfCJRZQMxn3gx6H9FNcoqCebFXK2UKknq18DIo8U2q4iN/jQBWPoLh2siK9LhCdL2egoyXteTy1NA=="],
+
+    "@girs/gnome-shell/@girs/glib-2.0/@girs/gjs": ["@girs/gjs@4.0.0-beta.38", "", { "dependencies": { "@girs/cairo-1.0": "1.0.0-4.0.0-beta.38", "@girs/gio-2.0": "2.86.0-4.0.0-beta.38", "@girs/glib-2.0": "2.86.0-4.0.0-beta.38", "@girs/gobject-2.0": "2.86.0-4.0.0-beta.38" } }, "sha512-eI/9lfI1mQpXN8RsKiNRFWJso6LgQe9Eb+YxLAdKarD5fccvIRx3chsyIyhw5tYH7VvgaZkqm1c4GX7pDDokBQ=="],
+
+    "@girs/gnome-shell/@girs/gobject-2.0/@girs/gjs": ["@girs/gjs@4.0.0-beta.38", "", { "dependencies": { "@girs/cairo-1.0": "1.0.0-4.0.0-beta.38", "@girs/gio-2.0": "2.86.0-4.0.0-beta.38", "@girs/glib-2.0": "2.86.0-4.0.0-beta.38", "@girs/gobject-2.0": "2.86.0-4.0.0-beta.38" } }, "sha512-eI/9lfI1mQpXN8RsKiNRFWJso6LgQe9Eb+YxLAdKarD5fccvIRx3chsyIyhw5tYH7VvgaZkqm1c4GX7pDDokBQ=="],
+
+    "@girs/gnome-shell/@girs/gtk-4.0/@girs/cairo-1.0": ["@girs/cairo-1.0@1.0.0-4.0.0-beta.38", "", { "dependencies": { "@girs/gjs": "4.0.0-beta.38", "@girs/glib-2.0": "2.86.0-4.0.0-beta.38", "@girs/gobject-2.0": "2.86.0-4.0.0-beta.38" } }, "sha512-VJa0vw9teZjCydDzWIcbNBwT37MSej52rqwBuQ/ir7+72+7dpzeudkNOOif1nDIulGu+RLAy4cgWbguQhsUH/Q=="],
+
+    "@girs/gnome-shell/@girs/gtk-4.0/@girs/freetype2-2.0": ["@girs/freetype2-2.0@2.0.0-4.0.0-beta.38", "", { "dependencies": { "@girs/gjs": "4.0.0-beta.38", "@girs/gobject-2.0": "2.86.0-4.0.0-beta.38" } }, "sha512-543dlQheKHSVWIatqHNBiLceIWYzIJDXvofR3PfgarKMMi0IRkn1TndzxUxsLC4Eu24KgOKGZYjU1YPUMVGbgg=="],
+
+    "@girs/gnome-shell/@girs/gtk-4.0/@girs/gdk-4.0": ["@girs/gdk-4.0@4.0.0-4.0.0-beta.38", "", { "dependencies": { "@girs/cairo-1.0": "1.0.0-4.0.0-beta.38", "@girs/freetype2-2.0": "2.0.0-4.0.0-beta.38", "@girs/gdkpixbuf-2.0": "2.0.0-4.0.0-beta.38", "@girs/gio-2.0": "2.86.0-4.0.0-beta.38", "@girs/gjs": "4.0.0-beta.38", "@girs/glib-2.0": "2.86.0-4.0.0-beta.38", "@girs/gmodule-2.0": "2.0.0-4.0.0-beta.38", "@girs/gobject-2.0": "2.86.0-4.0.0-beta.38", "@girs/harfbuzz-0.0": "11.5.0-4.0.0-beta.38", "@girs/pango-1.0": "1.57.0-4.0.0-beta.38", "@girs/pangocairo-1.0": "1.0.0-4.0.0-beta.38" } }, "sha512-hk6SG4pCcezKp2VNxJc0TC1gkZe3C8shD8sRQ3bUGyWl/9581WM2/8UU+W6fOf3SwXA1hquN6d3SjKbqkFNRKg=="],
+
+    "@girs/gnome-shell/@girs/gtk-4.0/@girs/gdkpixbuf-2.0": ["@girs/gdkpixbuf-2.0@2.0.0-4.0.0-beta.38", "", { "dependencies": { "@girs/gio-2.0": "2.86.0-4.0.0-beta.38", "@girs/gjs": "4.0.0-beta.38", "@girs/glib-2.0": "2.86.0-4.0.0-beta.38", "@girs/gmodule-2.0": "2.0.0-4.0.0-beta.38", "@girs/gobject-2.0": "2.86.0-4.0.0-beta.38" } }, "sha512-L8NE18rhj100lRGMnf7lNUdr6pHw2co1UtExxDnglba5lNee4NoyF/u8g4Mk3toPU0fAu+ug91HJ4o2mIJd7MQ=="],
+
+    "@girs/gnome-shell/@girs/gtk-4.0/@girs/gjs": ["@girs/gjs@4.0.0-beta.38", "", { "dependencies": { "@girs/cairo-1.0": "1.0.0-4.0.0-beta.38", "@girs/gio-2.0": "2.86.0-4.0.0-beta.38", "@girs/glib-2.0": "2.86.0-4.0.0-beta.38", "@girs/gobject-2.0": "2.86.0-4.0.0-beta.38" } }, "sha512-eI/9lfI1mQpXN8RsKiNRFWJso6LgQe9Eb+YxLAdKarD5fccvIRx3chsyIyhw5tYH7VvgaZkqm1c4GX7pDDokBQ=="],
+
+    "@girs/gnome-shell/@girs/gtk-4.0/@girs/gmodule-2.0": ["@girs/gmodule-2.0@2.0.0-4.0.0-beta.38", "", { "dependencies": { "@girs/gjs": "4.0.0-beta.38", "@girs/glib-2.0": "2.86.0-4.0.0-beta.38", "@girs/gobject-2.0": "2.86.0-4.0.0-beta.38" } }, "sha512-BmspJtwdBSfCJRZQMxn3gx6H9FNcoqCebFXK2UKknq18DIo8U2q4iN/jQBWPoLh2siK9LhCdL2egoyXteTy1NA=="],
+
+    "@girs/gnome-shell/@girs/gtk-4.0/@girs/graphene-1.0": ["@girs/graphene-1.0@1.0.0-4.0.0-beta.38", "", { "dependencies": { "@girs/gjs": "4.0.0-beta.38", "@girs/glib-2.0": "2.86.0-4.0.0-beta.38", "@girs/gobject-2.0": "2.86.0-4.0.0-beta.38" } }, "sha512-zqCyLXFqsOJtCnwUR6lI6HBVdaJ6aKsA25y+6xK2dFO/NChOjH0hmBuVyTQiyLe+4jGW700o+uYIYlrpEXT/7Q=="],
+
+    "@girs/gnome-shell/@girs/gtk-4.0/@girs/gsk-4.0": ["@girs/gsk-4.0@4.0.0-4.0.0-beta.38", "", { "dependencies": { "@girs/cairo-1.0": "1.0.0-4.0.0-beta.38", "@girs/freetype2-2.0": "2.0.0-4.0.0-beta.38", "@girs/gdk-4.0": "4.0.0-4.0.0-beta.38", "@girs/gdkpixbuf-2.0": "2.0.0-4.0.0-beta.38", "@girs/gio-2.0": "2.86.0-4.0.0-beta.38", "@girs/gjs": "4.0.0-beta.38", "@girs/glib-2.0": "2.86.0-4.0.0-beta.38", "@girs/gmodule-2.0": "2.0.0-4.0.0-beta.38", "@girs/gobject-2.0": "2.86.0-4.0.0-beta.38", "@girs/graphene-1.0": "1.0.0-4.0.0-beta.38", "@girs/harfbuzz-0.0": "11.5.0-4.0.0-beta.38", "@girs/pango-1.0": "1.57.0-4.0.0-beta.38", "@girs/pangocairo-1.0": "1.0.0-4.0.0-beta.38" } }, "sha512-BfYpVfmKjD7Tq58W5p9fcU6Mvg3QcNRjJ1oQn05d/Xk1rjQmsk6tkcTkK3i/KIOhA9eVadQsMlFFWuN0KBE5Dw=="],
+
+    "@girs/gnome-shell/@girs/gtk-4.0/@girs/harfbuzz-0.0": ["@girs/harfbuzz-0.0@11.5.0-4.0.0-beta.38", "", { "dependencies": { "@girs/freetype2-2.0": "2.0.0-4.0.0-beta.38", "@girs/gjs": "4.0.0-beta.38", "@girs/glib-2.0": "2.86.0-4.0.0-beta.38", "@girs/gobject-2.0": "2.86.0-4.0.0-beta.38" } }, "sha512-XRf/neZYpEkinNZ8SCRKIao3RNVJzMeYcjuO1b1tbqVCrN7uVZ+MIaDW5NjWKi0K6IQSyZWdDgkzrtOrIN4CWQ=="],
+
+    "@girs/gnome-shell/@girs/gtk-4.0/@girs/pango-1.0": ["@girs/pango-1.0@1.57.0-4.0.0-beta.38", "", { "dependencies": { "@girs/cairo-1.0": "1.0.0-4.0.0-beta.38", "@girs/freetype2-2.0": "2.0.0-4.0.0-beta.38", "@girs/gio-2.0": "2.86.0-4.0.0-beta.38", "@girs/gjs": "4.0.0-beta.38", "@girs/glib-2.0": "2.86.0-4.0.0-beta.38", "@girs/gmodule-2.0": "2.0.0-4.0.0-beta.38", "@girs/gobject-2.0": "2.86.0-4.0.0-beta.38", "@girs/harfbuzz-0.0": "11.5.0-4.0.0-beta.38" } }, "sha512-fnTzVVhKb4XjGrnuqk9X++KDe2bk84Hg5472O2UrtIT1A6dzMS6gWhSvaw0ULZH/Ypj9WN12B0oceWynR6unLw=="],
+
+    "@girs/gnome-shell/@girs/gtk-4.0/@girs/pangocairo-1.0": ["@girs/pangocairo-1.0@1.0.0-4.0.0-beta.38", "", { "dependencies": { "@girs/cairo-1.0": "1.0.0-4.0.0-beta.38", "@girs/freetype2-2.0": "2.0.0-4.0.0-beta.38", "@girs/gio-2.0": "2.86.0-4.0.0-beta.38", "@girs/gjs": "4.0.0-beta.38", "@girs/glib-2.0": "2.86.0-4.0.0-beta.38", "@girs/gmodule-2.0": "2.0.0-4.0.0-beta.38", "@girs/gobject-2.0": "2.86.0-4.0.0-beta.38", "@girs/harfbuzz-0.0": "11.5.0-4.0.0-beta.38", "@girs/pango-1.0": "1.57.0-4.0.0-beta.38" } }, "sha512-BY4rEgQW0H1c/24v+FGBjSZgZ6rk2Y4+ka9/WldUs74N1ZOh6nS4lHKUyy0antylQ7x0Fnw5UHgN0PbpdjkGuQ=="],
+
+    "@girs/mtk-14/@girs/gjs/@girs/cairo-1.0": ["@girs/cairo-1.0@1.0.0-4.0.0-beta.43", "", { "dependencies": { "@girs/gjs": "4.0.0-beta.43", "@girs/glib-2.0": "2.88.0-4.0.0-beta.43", "@girs/gobject-2.0": "2.88.0-4.0.0-beta.43" } }, "sha512-22hGstMdn+xnD6Ass0hJBB4P7GUdVDNyKzYOmFq5GoSdr8AwDoAopT8wyhAhTH1/ugsKQ4/XrMovnIxxTa8YZQ=="],
+
+    "@girs/mtk-14/@girs/gjs/@girs/gio-2.0": ["@girs/gio-2.0@2.88.0-4.0.0-beta.43", "", { "dependencies": { "@girs/gjs": "4.0.0-beta.43", "@girs/glib-2.0": "2.88.0-4.0.0-beta.43", "@girs/gmodule-2.0": "2.0.0-4.0.0-beta.43", "@girs/gobject-2.0": "2.88.0-4.0.0-beta.43" } }, "sha512-e8jZ15EBoOEdWGsxbd9OEoL0cYlL28lssuaEs8yq6UwUreOZjmmlrG+8l2VEuuf5R36q3BAxZEwCmShY+DMXXw=="],
+
+    "@girs/upowerglib-1.0/@girs/gjs/@girs/cairo-1.0": ["@girs/cairo-1.0@1.0.0-4.0.0-beta.40", "", { "dependencies": { "@girs/gjs": "4.0.0-beta.40", "@girs/glib-2.0": "2.86.4-4.0.0-beta.40", "@girs/gobject-2.0": "2.86.4-4.0.0-beta.40" } }, "sha512-luqUsMf2cPphDc4lb8IHcw0bX8eGa4g0aQypZJypAeIs9eyHfEDHWKhLgp4I0HaQvaevbd3QBosaH7UhkArL1A=="],
+
+    "@girs/xfixes-4.0/@girs/gjs/@girs/cairo-1.0": ["@girs/cairo-1.0@1.0.0-4.0.0-beta.43", "", { "dependencies": { "@girs/gjs": "4.0.0-beta.43", "@girs/glib-2.0": "2.88.0-4.0.0-beta.43", "@girs/gobject-2.0": "2.88.0-4.0.0-beta.43" } }, "sha512-22hGstMdn+xnD6Ass0hJBB4P7GUdVDNyKzYOmFq5GoSdr8AwDoAopT8wyhAhTH1/ugsKQ4/XrMovnIxxTa8YZQ=="],
+
+    "@girs/xfixes-4.0/@girs/gjs/@girs/gio-2.0": ["@girs/gio-2.0@2.88.0-4.0.0-beta.43", "", { "dependencies": { "@girs/gjs": "4.0.0-beta.43", "@girs/glib-2.0": "2.88.0-4.0.0-beta.43", "@girs/gmodule-2.0": "2.0.0-4.0.0-beta.43", "@girs/gobject-2.0": "2.88.0-4.0.0-beta.43" } }, "sha512-e8jZ15EBoOEdWGsxbd9OEoL0cYlL28lssuaEs8yq6UwUreOZjmmlrG+8l2VEuuf5R36q3BAxZEwCmShY+DMXXw=="],
+
+    "@girs/xfixes-4.0/@girs/gjs/@girs/glib-2.0": ["@girs/glib-2.0@2.88.0-4.0.0-beta.43", "", { "dependencies": { "@girs/gjs": "4.0.0-beta.43", "@girs/gobject-2.0": "2.88.0-4.0.0-beta.43" } }, "sha512-xxmwc6XhsX70m2A0Kf6+90fM09sjxhBHjZi61oWlJCKzjNndb4d2u23+Y0N/icniAaegR+t6EZg3gn+Qu7YIhQ=="],
+
+    "@girs/xfixes-4.0/@girs/gobject-2.0/@girs/glib-2.0": ["@girs/glib-2.0@2.88.0-4.0.0-beta.43", "", { "dependencies": { "@girs/gjs": "4.0.0-beta.43", "@girs/gobject-2.0": "2.88.0-4.0.0-beta.43" } }, "sha512-xxmwc6XhsX70m2A0Kf6+90fM09sjxhBHjZi61oWlJCKzjNndb4d2u23+Y0N/icniAaegR+t6EZg3gn+Qu7YIhQ=="],
+
+    "@girs/xlib-2.0/@girs/gjs/@girs/cairo-1.0": ["@girs/cairo-1.0@1.0.0-4.0.0-beta.43", "", { "dependencies": { "@girs/gjs": "4.0.0-beta.43", "@girs/glib-2.0": "2.88.0-4.0.0-beta.43", "@girs/gobject-2.0": "2.88.0-4.0.0-beta.43" } }, "sha512-22hGstMdn+xnD6Ass0hJBB4P7GUdVDNyKzYOmFq5GoSdr8AwDoAopT8wyhAhTH1/ugsKQ4/XrMovnIxxTa8YZQ=="],
+
+    "@girs/xlib-2.0/@girs/gjs/@girs/gio-2.0": ["@girs/gio-2.0@2.88.0-4.0.0-beta.43", "", { "dependencies": { "@girs/gjs": "4.0.0-beta.43", "@girs/glib-2.0": "2.88.0-4.0.0-beta.43", "@girs/gmodule-2.0": "2.0.0-4.0.0-beta.43", "@girs/gobject-2.0": "2.88.0-4.0.0-beta.43" } }, "sha512-e8jZ15EBoOEdWGsxbd9OEoL0cYlL28lssuaEs8yq6UwUreOZjmmlrG+8l2VEuuf5R36q3BAxZEwCmShY+DMXXw=="],
+
+    "@girs/xlib-2.0/@girs/gjs/@girs/glib-2.0": ["@girs/glib-2.0@2.88.0-4.0.0-beta.43", "", { "dependencies": { "@girs/gjs": "4.0.0-beta.43", "@girs/gobject-2.0": "2.88.0-4.0.0-beta.43" } }, "sha512-xxmwc6XhsX70m2A0Kf6+90fM09sjxhBHjZi61oWlJCKzjNndb4d2u23+Y0N/icniAaegR+t6EZg3gn+Qu7YIhQ=="],
+
+    "@girs/xlib-2.0/@girs/gobject-2.0/@girs/glib-2.0": ["@girs/glib-2.0@2.88.0-4.0.0-beta.43", "", { "dependencies": { "@girs/gjs": "4.0.0-beta.43", "@girs/gobject-2.0": "2.88.0-4.0.0-beta.43" } }, "sha512-xxmwc6XhsX70m2A0Kf6+90fM09sjxhBHjZi61oWlJCKzjNndb4d2u23+Y0N/icniAaegR+t6EZg3gn+Qu7YIhQ=="],
+
+    "@girs/atk-1.0/@girs/gjs/@girs/gio-2.0/@girs/gmodule-2.0": ["@girs/gmodule-2.0@2.0.0-4.0.0-beta.43", "", { "dependencies": { "@girs/gjs": "4.0.0-beta.43", "@girs/glib-2.0": "2.88.0-4.0.0-beta.43", "@girs/gobject-2.0": "2.88.0-4.0.0-beta.43" } }, "sha512-j6txGltFeIiFWbK9LwceIsKoYj0cNsrvEGBf3C5rTb+1N27wHz4anRzd6yjiKfzwfTtQIoP6l0KnlFZ2QxMe7g=="],
+
+    "@girs/cogl-14/@girs/gjs/@girs/gio-2.0/@girs/gmodule-2.0": ["@girs/gmodule-2.0@2.0.0-4.0.0-beta.43", "", { "dependencies": { "@girs/gjs": "4.0.0-beta.43", "@girs/glib-2.0": "2.88.0-4.0.0-beta.43", "@girs/gobject-2.0": "2.88.0-4.0.0-beta.43" } }, "sha512-j6txGltFeIiFWbK9LwceIsKoYj0cNsrvEGBf3C5rTb+1N27wHz4anRzd6yjiKfzwfTtQIoP6l0KnlFZ2QxMe7g=="],
+
+    "@girs/gdesktopenums-3.0/@girs/gjs/@girs/gio-2.0/@girs/gmodule-2.0": ["@girs/gmodule-2.0@2.0.0-4.0.0-beta.43", "", { "dependencies": { "@girs/gjs": "4.0.0-beta.43", "@girs/glib-2.0": "2.88.0-4.0.0-beta.43", "@girs/gobject-2.0": "2.88.0-4.0.0-beta.43" } }, "sha512-j6txGltFeIiFWbK9LwceIsKoYj0cNsrvEGBf3C5rTb+1N27wHz4anRzd6yjiKfzwfTtQIoP6l0KnlFZ2QxMe7g=="],
+
+    "@girs/gl-1.0/@girs/gjs/@girs/gio-2.0/@girs/gmodule-2.0": ["@girs/gmodule-2.0@2.0.0-4.0.0-beta.43", "", { "dependencies": { "@girs/gjs": "4.0.0-beta.43", "@girs/glib-2.0": "2.88.0-4.0.0-beta.43", "@girs/gobject-2.0": "2.88.0-4.0.0-beta.43" } }, "sha512-j6txGltFeIiFWbK9LwceIsKoYj0cNsrvEGBf3C5rTb+1N27wHz4anRzd6yjiKfzwfTtQIoP6l0KnlFZ2QxMe7g=="],
+
+    "@girs/gnome-shell/@girs/atk-1.0/@girs/gjs/@girs/cairo-1.0": ["@girs/cairo-1.0@1.0.0-4.0.0-beta.38", "", { "dependencies": { "@girs/gjs": "4.0.0-beta.38", "@girs/glib-2.0": "2.86.0-4.0.0-beta.38", "@girs/gobject-2.0": "2.86.0-4.0.0-beta.38" } }, "sha512-VJa0vw9teZjCydDzWIcbNBwT37MSej52rqwBuQ/ir7+72+7dpzeudkNOOif1nDIulGu+RLAy4cgWbguQhsUH/Q=="],
+
+    "@girs/gnome-shell/@girs/gio-2.0/@girs/gjs/@girs/cairo-1.0": ["@girs/cairo-1.0@1.0.0-4.0.0-beta.38", "", { "dependencies": { "@girs/gjs": "4.0.0-beta.38", "@girs/glib-2.0": "2.86.0-4.0.0-beta.38", "@girs/gobject-2.0": "2.86.0-4.0.0-beta.38" } }, "sha512-VJa0vw9teZjCydDzWIcbNBwT37MSej52rqwBuQ/ir7+72+7dpzeudkNOOif1nDIulGu+RLAy4cgWbguQhsUH/Q=="],
+
+    "@girs/gnome-shell/@girs/glib-2.0/@girs/gjs/@girs/cairo-1.0": ["@girs/cairo-1.0@1.0.0-4.0.0-beta.38", "", { "dependencies": { "@girs/gjs": "4.0.0-beta.38", "@girs/glib-2.0": "2.86.0-4.0.0-beta.38", "@girs/gobject-2.0": "2.86.0-4.0.0-beta.38" } }, "sha512-VJa0vw9teZjCydDzWIcbNBwT37MSej52rqwBuQ/ir7+72+7dpzeudkNOOif1nDIulGu+RLAy4cgWbguQhsUH/Q=="],
+
+    "@girs/gnome-shell/@girs/gobject-2.0/@girs/gjs/@girs/cairo-1.0": ["@girs/cairo-1.0@1.0.0-4.0.0-beta.38", "", { "dependencies": { "@girs/gjs": "4.0.0-beta.38", "@girs/glib-2.0": "2.86.0-4.0.0-beta.38", "@girs/gobject-2.0": "2.86.0-4.0.0-beta.38" } }, "sha512-VJa0vw9teZjCydDzWIcbNBwT37MSej52rqwBuQ/ir7+72+7dpzeudkNOOif1nDIulGu+RLAy4cgWbguQhsUH/Q=="],
+
+    "@girs/mtk-14/@girs/gjs/@girs/gio-2.0/@girs/gmodule-2.0": ["@girs/gmodule-2.0@2.0.0-4.0.0-beta.43", "", { "dependencies": { "@girs/gjs": "4.0.0-beta.43", "@girs/glib-2.0": "2.88.0-4.0.0-beta.43", "@girs/gobject-2.0": "2.88.0-4.0.0-beta.43" } }, "sha512-j6txGltFeIiFWbK9LwceIsKoYj0cNsrvEGBf3C5rTb+1N27wHz4anRzd6yjiKfzwfTtQIoP6l0KnlFZ2QxMe7g=="],
+
+    "@girs/xfixes-4.0/@girs/gjs/@girs/gio-2.0/@girs/gmodule-2.0": ["@girs/gmodule-2.0@2.0.0-4.0.0-beta.43", "", { "dependencies": { "@girs/gjs": "4.0.0-beta.43", "@girs/glib-2.0": "2.88.0-4.0.0-beta.43", "@girs/gobject-2.0": "2.88.0-4.0.0-beta.43" } }, "sha512-j6txGltFeIiFWbK9LwceIsKoYj0cNsrvEGBf3C5rTb+1N27wHz4anRzd6yjiKfzwfTtQIoP6l0KnlFZ2QxMe7g=="],
+
+    "@girs/xlib-2.0/@girs/gjs/@girs/gio-2.0/@girs/gmodule-2.0": ["@girs/gmodule-2.0@2.0.0-4.0.0-beta.43", "", { "dependencies": { "@girs/gjs": "4.0.0-beta.43", "@girs/glib-2.0": "2.88.0-4.0.0-beta.43", "@girs/gobject-2.0": "2.88.0-4.0.0-beta.43" } }, "sha512-j6txGltFeIiFWbK9LwceIsKoYj0cNsrvEGBf3C5rTb+1N27wHz4anRzd6yjiKfzwfTtQIoP6l0KnlFZ2QxMe7g=="],
+  }
+}

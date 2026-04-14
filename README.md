@@ -14,7 +14,7 @@ GNOME top-bar quota monitor for Codex, Claude, and GitHub Copilot on Rocky Linux
 ## Local development
 
 ```bash
-npm install
+bun install
 make check
 make install-legacy  # GNOME 40-44
 make install-esm     # GNOME 45+
@@ -24,13 +24,13 @@ Then restart GNOME Shell or log out/in before enabling the extension.
 
 ## Tooling
 
-- `npm run typecheck`: run per-file TypeScript checks
-- `npm run lint`: run `oxlint` on the source tree
-- `npm run format`: format the source tree with `oxfmt`
-- `npm run build`: build the GNOME 45+ ESM bundle in `dist/`
-- `npm run build:legacy`: build the GNOME 40-44 legacy bundle in `dist-pre45/`
-- `npm run build:all`: build both bundles
-- `npm run clean`: remove the generated build directory
+- `bun run typecheck`: run per-file TypeScript checks
+- `bun run lint`: run `oxlint` on the source tree
+- `bun run format`: format the source tree with `oxfmt`
+- `bun run build`: build the GNOME 45+ ESM bundle in `dist/`
+- `bun run build:legacy`: build the GNOME 40-44 legacy bundle in `dist-pre45/`
+- `bun run build:all`: build both bundles
+- `bun run clean`: remove the generated build directory
 - `make`: build both bundles
 - `make build-esm`: build only the GNOME 45+ ESM bundle
 - `make build-legacy`: build only the GNOME 40-44 legacy bundle

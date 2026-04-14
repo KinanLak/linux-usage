@@ -2,4 +2,6 @@
 /extension/schemas/gschemas.compiled
 /node_modules
 /dist
+/dist-pre45
 /linux-usage.zip
+/linux-usage-pre45.zip

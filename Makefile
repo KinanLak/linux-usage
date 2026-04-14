@@ -8,7 +8,7 @@ ZIP_PATH=$(NAME).zip
 LEGACY_ZIP_PATH=$(NAME)-pre45.zip
 TS_SOURCES=$(shell find src -type f -name '*.ts' | sort)
 STATIC_ASSETS=$(shell find $(EXTENSION_SRC_DIR) -type f ! -name '*.ts' ! -name '*.js' ! -name 'metadata.json' ! -name 'gschemas.compiled' | sort)
-BUILD_FILES=package.json package-lock.json tsconfig.json Makefile scripts/build-legacy-gjs.mjs scripts/write-metadata.mjs
+BUILD_FILES=package.json bun.lock tsconfig.json Makefile scripts/build-legacy-gjs.mjs scripts/write-metadata.mjs
 
 .PHONY: all build-esm build-legacy pack pack-esm pack-legacy install install-esm install-legacy clean clean-dist check
 
@@ -18,15 +18,16 @@ build-esm: $(DIST_DIR)/.bundle-stamp
 
 build-legacy: $(LEGACY_DIST_DIR)/.bundle-stamp
 
-node_modules/.package-lock.json: package.json package-lock.json
-	npm install
+node_modules/.install-stamp: package.json bun.lock
+	bun install --frozen-lockfile
+	@touch $@
 
 $(SCHEMAS_DIR)/gschemas.compiled: $(SCHEMA_FILE)
 	glib-compile-schemas $(SCHEMAS_DIR)
 
-$(DIST_DIR)/.bundle-stamp: node_modules/.package-lock.json $(TS_SOURCES) $(STATIC_ASSETS) $(BUILD_FILES) $(SCHEMAS_DIR)/gschemas.compiled
+$(DIST_DIR)/.bundle-stamp: node_modules/.install-stamp $(TS_SOURCES) $(STATIC_ASSETS) $(BUILD_FILES) $(SCHEMAS_DIR)/gschemas.compiled
 	rm -rf "$(DIST_DIR)"
-	./node_modules/.bin/tsc --project tsconfig.json --noEmit false --noCheck --rootDir src --outDir "$(DIST_DIR)"
+	bun x tsc --project tsconfig.json --noEmit false --noCheck --rootDir src --outDir "$(DIST_DIR)"
 	cp -r "$(DIST_DIR)/extension/." "$(DIST_DIR)/"
 	rm -rf "$(DIST_DIR)/extension"
 	for asset in $(STATIC_ASSETS); do \
@@ -76,8 +77,8 @@ install-legacy: $(LEGACY_ZIP_PATH)
 	gnome-extensions disable "linux-usage@KinanLak.github.io"
 	gnome-extensions enable "linux-usage@KinanLak.github.io"
 
-check: node_modules/.package-lock.json
-	npm run check
+check: node_modules/.install-stamp
+	bun run check
 
 clean-dist:
 	rm -rf $(DIST_DIR) $(LEGACY_DIST_DIR)

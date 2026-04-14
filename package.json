@@ -11,7 +11,7 @@
     "pack:all": "make pack",
     "clean": "make clean-dist",
     "typecheck": "tsc",
-    "check": "npm run typecheck && npm run lint && npm run build:all",
+    "check": "bun run typecheck && bun run lint && bun run build:all",
     "lint": "oxlint src --fix",
     "format": "oxfmt --write src"
   },
@@ -33,5 +33,11 @@
     "oxfmt": "^0.43.0",
     "oxlint": "^1.58.0",
     "typescript": "^6.0.2"
+  },
+  "overrides": {
+    "@girs/clutter-14": "14.0.0-4.0.0-beta.43",
+    "@girs/cogl-14": "14.0.0-4.0.0-beta.43",
+    "@girs/meta-14": "14.0.0-4.0.0-beta.43",
+    "@girs/mtk-14": "14.0.0-4.0.0-beta.43"
   }
 }
