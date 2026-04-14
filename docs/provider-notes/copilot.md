@@ -1,13 +1,7 @@
 # Copilot provider
 
-Current implementation:
+- Reads `GITHUB_TOKEN`, then `GH_TOKEN`, then `gh auth token`.
+- Calls `https://api.github.com/copilot_internal/user`.
+- Maps `premiumInteractions` and `chat` quota snapshots.
 
-- checks `GITHUB_TOKEN`, `GH_TOKEN`, then `gh auth token`
-- calls `https://api.github.com/copilot_internal/user`
-- maps `premiumInteractions` and `chat` quota snapshots
-
-Current limits:
-
-- no interactive device-flow UX in the extension yet
-- Linux editor session reuse is not implemented yet
-- if no GitHub token is available, Copilot reports `auth_required`
+Without a token the provider reports `auth_required`. No in-extension device-flow UX and no editor-session reuse yet.

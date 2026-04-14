@@ -1,35 +1,21 @@
 # Architecture
 
-Linux Usage is a self-contained GNOME Shell extension:
+- `src/extension/` — GNOME Shell extension (TypeScript ESM)
+- `src/helper/` — GJS helper, bundled in the zip
+- `dist/` (GNOME 45+) / `dist-pre45/` (GNOME 40–44) — generated bundles
+- `src/extension/providers.json` — shared provider catalog (IDs, titles, icons)
 
-- `src/extension/`: GNOME extension source (TypeScript + static assets).
-- `src/helper/`: GJS helper source (bundled in the extension zip).
-- `dist/`: generated extension bundle consumed by GJS at runtime.
+The legacy bundle is produced by rewriting `dist/` with `scripts/build-legacy-gjs.mjs`. See `AGENTS.md` for the transformer rules.
 
 ## Data flow
 
-1. The extension opens or auto-refreshes.
-2. `dist/src/services/helper_client.js` tries D-Bus first, then falls back to the bundled GJS helper CLI.
-3. The helper fetches every registered provider sequentially.
-4. The helper returns a normalized snapshot matching `contracts/snapshot.schema.json`.
-5. The extension renders either the Overview tab or a provider detail card.
+1. Extension opens or auto-refreshes.
+2. `services/helper_client` tries D-Bus, then falls back to spawning the bundled helper CLI.
+3. The helper queries each registered provider sequentially.
+4. It returns a snapshot matching `contracts/snapshot.schema.json`.
+5. The extension renders the Overview tab or a per-provider card.
 
-## Provider catalog
+## Auth
 
-- `src/extension/providers.json` is the shared provider metadata source.
-- The helper uses it for stable IDs, titles, and icons.
-- The preferences UI uses it to build provider toggles dynamically.
-
-## Current v1 choices
-
-- GNOME Shell target: `40`
-- Helper transport: D-Bus service plus CLI fallback
-- Auth strategy: local sessions first
-- Copilot fallback: GitHub token via env or `gh auth token`
-
-## Planned follow-ups
-
-- stronger Copilot login flow
-- richer Claude fallback paths
-- trend history and notifications
-- user service packaging for the helper
+- Codex and Claude: local session files on disk.
+- Copilot: `GITHUB_TOKEN` / `GH_TOKEN` / `gh auth token`.

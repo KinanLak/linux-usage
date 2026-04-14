@@ -1,15 +1,8 @@
 # Claude provider
 
-Current implementation:
+- Reads `~/.claude/.credentials.json` or `~/.config/claude/.credentials.json`.
+- Accepts legacy top-level tokens and current `claudeAiOauth.accessToken`.
+- Calls `https://api.anthropic.com/api/oauth/usage`.
+- Maps `five_hour`, `seven_day`, and optional `extra_usage`.
 
-- reads `~/.claude/.credentials.json` or `~/.config/claude/.credentials.json`
-- accepts both legacy top-level tokens and current `claudeAiOauth.accessToken`
-- calls `https://api.anthropic.com/api/oauth/usage`
-- maps `five_hour`, `seven_day`, and optional `extra_usage`
-
-Current limits:
-
-- requires a local Claude OAuth access token
-- if needed, refresh the local session with `claude auth login`
-- no browser-cookie fallback yet
-- no CLI PTY fallback yet
+Refresh the local session with `claude auth login` when the token is stale. No browser-cookie or CLI PTY fallback yet.

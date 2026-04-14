@@ -1,14 +1,8 @@
 # Codex provider
 
-Current implementation:
+- Reads `~/.codex/auth.json`.
+- Decodes JWT claims for email/plan hints.
+- Calls `https://chatgpt.com/backend-api/wham/usage`.
+- Normalizes primary/secondary windows when possible.
 
-- reads `~/.codex/auth.json`
-- decodes JWT claims for email/plan hints
-- calls `https://chatgpt.com/backend-api/wham/usage`
-- normalizes primary/secondary windows when possible
-
-Current limits:
-
-- parser is heuristic because the exact payload can vary
-- no CLI fallback yet
-- no browser-cookie extras yet
+The payload parser is heuristic (shape varies). No CLI or browser-cookie fallback yet.
