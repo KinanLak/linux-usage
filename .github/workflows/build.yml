@@ -1,0 +1,119 @@
+name: Build
+
+on:
+  push:
+    branches: [main]
+    tags: ["v*"]
+  workflow_dispatch:
+    inputs:
+      release:
+        description: "Create a GitHub release from this build"
+        type: boolean
+        default: false
+      tag:
+        description: "Release tag (required if release=true, e.g. v1.2.3)"
+        required: false
+        type: string
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    name: Build both packages
+    runs-on: ubuntu-latest
+    outputs:
+      esm-zip: ${{ steps.names.outputs.esm-zip }}
+      legacy-zip: ${{ steps.names.outputs.legacy-zip }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "24"
+          cache: "npm"
+
+      - name: Install system dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends libglib2.0-bin zip make
+
+      - name: Install npm dependencies
+        run: npm ci
+
+      - name: Typecheck and lint
+        run: |
+          npm run typecheck
+          npm run lint
+
+      - name: Build both packages
+        run: make pack
+
+      - name: Expose zip names
+        id: names
+        run: |
+          echo "esm-zip=linux-usage.zip" >> "$GITHUB_OUTPUT"
+          echo "legacy-zip=linux-usage-pre45.zip" >> "$GITHUB_OUTPUT"
+
+      - name: Upload GNOME 45+ artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: linux-usage-gnome45plus
+          path: linux-usage.zip
+          if-no-files-found: error
+          retention-days: 30
+
+      - name: Upload GNOME 40–44 artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: linux-usage-gnome40to44
+          path: linux-usage-pre45.zip
+          if-no-files-found: error
+          retention-days: 30
+
+  release:
+    name: Publish release
+    needs: build
+    runs-on: ubuntu-latest
+    if: startsWith(github.ref, 'refs/tags/v') || (github.event_name == 'workflow_dispatch' && inputs.release == true)
+    steps:
+      - name: Validate dispatch input
+        if: github.event_name == 'workflow_dispatch'
+        run: |
+          if [ -z "${{ inputs.tag }}" ]; then
+            echo "::error::release=true requires the 'tag' input"
+            exit 1
+          fi
+
+      - name: Download GNOME 45+ artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: linux-usage-gnome45plus
+          path: artifacts
+
+      - name: Download GNOME 40–44 artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: linux-usage-gnome40to44
+          path: artifacts
+
+      - name: Resolve release tag
+        id: tag
+        run: |
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            echo "value=${{ inputs.tag }}" >> "$GITHUB_OUTPUT"
+          else
+            echo "value=${GITHUB_REF#refs/tags/}" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Create GitHub release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ steps.tag.outputs.value }}
+          name: ${{ steps.tag.outputs.value }}
+          generate_release_notes: true
+          fail_on_unmatched_files: true
+          files: |
+            artifacts/linux-usage.zip
+            artifacts/linux-usage-pre45.zip

@@ -1,3 +1,3 @@
-- Ajouter une ligne dans les bar d'usage qui correspond à la progression selon le temps, pas l'usage
-- Fix certaines bar d'usage qui n'ont pas les bord arrondie d'un seul cote (coté gauche)
-- Dans les préférences on peur normalement enlever l'input du path du helper
+- Le cache de quota de session de claude en marche plus en cas de rate limit. On a aucune info qui est affiché
+- La session affiche toujorus 100% et le weekly aussi l'affiche parfois même si c'est pas le cas
+- Le backoff de rate limit semble un peu cassé, et ne change pas son temps restant dynamiquement
