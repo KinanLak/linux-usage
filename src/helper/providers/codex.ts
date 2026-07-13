@@ -25,6 +25,15 @@ function _formatDurationSeconds(seconds: number): string {
     return `Resets in ${minutes}m`;
 }
 
+function _windowLabelForSeconds(seconds: number | null, fallback: string): string {
+    if (seconds === null || seconds <= 0) return fallback;
+    if (seconds < 86400) return "Session";
+    const days = Math.round(seconds / 86400);
+    if (days === 7) return "Weekly";
+    if (days >= 28 && days <= 31) return "Monthly";
+    return `${days}-day`;
+}
+
 function _extractRateLimitWindow(payload: any, label: string, key: string): any | null {
     const rateLimit = payload.rate_limit;
     if (!rateLimit) return null;
@@ -32,6 +41,7 @@ function _extractRateLimitWindow(payload: any, label: string, key: string): any 
     if (!data) return null;
 
     const usedPercent = Utils.valueAsNumber(data.used_percent);
+    const windowSeconds = Utils.valueAsNumber(data.limit_window_seconds);
     let resetAt: string | null = null;
     const timestamp = Utils.valueAsNumber(data.reset_at);
     if (timestamp !== null) {
@@ -46,7 +56,7 @@ function _extractRateLimitWindow(payload: any, label: string, key: string): any 
     if (resetAfter !== null) resetText = _formatDurationSeconds(resetAfter);
 
     return {
-        label,
+        label: _windowLabelForSeconds(windowSeconds, label),
         usedPercent,
         remainingPercent: usedPercent !== null ? Math.max(0, Math.min(100, 100 - usedPercent)) : null,
         valueLabel: null,
@@ -54,6 +64,7 @@ function _extractRateLimitWindow(payload: any, label: string, key: string): any 
         remainingDisplay: usedPercent !== null ? `${Math.round(Math.max(0, 100 - usedPercent))}% left` : null,
         resetAt,
         resetText,
+        periodSeconds: windowSeconds,
     };
 }
 
@@ -178,6 +189,8 @@ function _refreshAccessToken(path: string, auth: any): { token: string; claims: 
 function _rpcWindow(label: string, data: any): any | null {
     if (!data) return null;
     const usedPercent = typeof data.usedPercent === "number" ? data.usedPercent : null;
+    const windowMinutes = Utils.valueAsNumber(data.windowDurationMins) ?? Utils.valueAsNumber(data.windowMinutes);
+    const windowSeconds = windowMinutes !== null ? windowMinutes * 60 : null;
     let resetAt: string | null = null;
     if (typeof data.resetsAt === "number") {
         try {
@@ -187,7 +200,7 @@ function _rpcWindow(label: string, data: any): any | null {
         }
     }
     return {
-        label,
+        label: _windowLabelForSeconds(windowSeconds, label),
         usedPercent,
         remainingPercent: usedPercent !== null ? Math.max(0, Math.min(100, 100 - usedPercent)) : null,
         valueLabel: null,
@@ -195,6 +208,7 @@ function _rpcWindow(label: string, data: any): any | null {
         remainingDisplay: usedPercent !== null ? `${Math.round(Math.max(0, 100 - usedPercent))}% left` : null,
         resetAt,
         resetText: null,
+        periodSeconds: windowSeconds,
     };
 }
 
@@ -246,9 +260,11 @@ function _fetchViaRpc(metadata: any): any | null {
 
         const limits = rateLimits.rateLimits || rateLimits;
         snapshot.primaryQuota = _rpcWindow("Session", limits.primary);
-        if (snapshot.primaryQuota) snapshot.primaryQuota.periodSeconds = 5 * 3600;
+        if (snapshot.primaryQuota && snapshot.primaryQuota.periodSeconds === null)
+            snapshot.primaryQuota.periodSeconds = 5 * 3600;
         snapshot.secondaryQuota = _rpcWindow("Weekly", limits.secondary);
-        if (snapshot.secondaryQuota) snapshot.secondaryQuota.periodSeconds = 7 * 86400;
+        if (snapshot.secondaryQuota && snapshot.secondaryQuota.periodSeconds === null)
+            snapshot.secondaryQuota.periodSeconds = 7 * 86400;
 
         const balance = limits.credits?.balance;
         if (balance) snapshot.detailLines.push(`Credits: ${balance}`);
@@ -417,12 +433,14 @@ function fetch(metadata: any): any {
         _extractRateLimitWindow(payload, "Session", "primary_window") ||
         _extractNamedWindow(payload, "Session", PRIMARY_KEYS) ||
         _extractArrayWindow(payload, "Session", 0);
-    if (snapshot.primaryQuota) snapshot.primaryQuota.periodSeconds = 5 * 3600;
+    if (snapshot.primaryQuota && typeof snapshot.primaryQuota.periodSeconds !== "number")
+        snapshot.primaryQuota.periodSeconds = 5 * 3600;
     snapshot.secondaryQuota =
         _extractRateLimitWindow(payload, "Weekly", "secondary_window") ||
         _extractNamedWindow(payload, "Weekly", SECONDARY_KEYS) ||
         _extractArrayWindow(payload, "Weekly", 1);
-    if (snapshot.secondaryQuota) snapshot.secondaryQuota.periodSeconds = 7 * 86400;
+    if (snapshot.secondaryQuota && typeof snapshot.secondaryQuota.periodSeconds !== "number")
+        snapshot.secondaryQuota.periodSeconds = 7 * 86400;
 
     snapshot.detailLines = _collectDetailLines(payload);
     snapshot.refreshedAt = new Date().toISOString();
