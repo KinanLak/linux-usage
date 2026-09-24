@@ -19,9 +19,12 @@ const Me = Extension.lookupByURL(import.meta.url);
 
 if (!Me) throw new Error("Extension context is unavailable");
 
-const OVERVIEW_ALERT_THRESHOLD = 80;
+const PACE_WARN_LEAD = 10;
+const PACE_DANGER_LEAD = 25;
 const TOOLTIP_OFFSET = 8;
 const TOOLTIP_ANIMATION_MS = 120;
+
+type OverviewWindow = "session" | "weekly";
 
 type Quota = {
     label: string;
@@ -198,12 +201,40 @@ function dotClass(status: string) {
     }
 }
 
+// Pace = quota used minus period elapsed, in percentage points. A small lead is
+// tolerated so early spikes in a fresh window don't immediately turn the bar red.
+function paceLevel(q: Quota | null | undefined): "ok" | "warn" | "danger" {
+    const used = quotaPercent(q);
+    if (used >= 100) return "danger";
+    const elapsed = timeProgressPercent(q);
+    if (elapsed === null) return "ok";
+    const ahead = used - elapsed;
+    if (ahead > PACE_DANGER_LEAD) return "danger";
+    if (ahead > PACE_WARN_LEAD) return "warn";
+    return "ok";
+}
+
 function barColorClass(w: Quota | null | undefined) {
     if (w && w.valueLabel === "Included") return "lu-fill-info";
-    const u = quotaPercent(w);
-    if (u >= 85) return "lu-fill-danger";
-    if (u >= 60) return "lu-fill-warn";
-    return "";
+    switch (paceLevel(w)) {
+        case "danger":
+            return "lu-fill-danger";
+        case "warn":
+            return "lu-fill-warn";
+        default:
+            return "";
+    }
+}
+
+function quotaWindow(q: Quota): OverviewWindow | null {
+    if (q.periodSeconds && q.periodSeconds > 0) {
+        if (q.periodSeconds < 86400) return "session";
+        if (q.periodSeconds <= 8 * 86400) return "weekly";
+        return null;
+    }
+    if (/session/i.test(q.label)) return "session";
+    if (/week/i.test(q.label)) return "weekly";
+    return null;
 }
 
 function quotaPercent(quota: Quota | null | undefined) {
@@ -282,7 +313,13 @@ export const LinuxUsageIndicator = GObject.registerClass(
                 if (open && !this._destroyed) this._rebuildMenu();
             });
 
-            ["show-source-label", "show-extra-credits", "show-time-progress-marker", "enabled-providers"].forEach(
+            [
+                "show-source-label",
+                "show-extra-credits",
+                "show-time-progress-marker",
+                "enabled-providers",
+                "overview-quota-window",
+            ].forEach(
                 (key) =>
                     this._settingsSignals.push(this._settings.connect(`changed::${key}`, () => this._rebuildMenu())),
             );
@@ -662,18 +699,17 @@ export const LinuxUsageIndicator = GObject.registerClass(
             const quotas = [provider.primaryQuota, provider.secondaryQuota].filter(Boolean) as Quota[];
             if (!quotas.length) return null;
 
-            const highestQuota = quotas.reduce((best, quota) =>
-                quotaPercent(quota) > quotaPercent(best) ? quota : best,
-            );
+            const current = this._overviewWindow();
+            return quotas.find((q) => quotaWindow(q) === current) || provider.primaryQuota || quotas[0];
+        }
 
-            if (quotaPercent(highestQuota) >= OVERVIEW_ALERT_THRESHOLD) return highestQuota;
-
-            return provider.primaryQuota || highestQuota;
+        _overviewWindow(): OverviewWindow {
+            return this._settings.get_string("overview-quota-window") === "weekly" ? "weekly" : "session";
         }
 
         _buildOverviewMeta(q: Quota) {
             const meta = new St.BoxLayout({ style_class: "lu-row-meta-box" });
-            const labelClass = quotaPercent(q) >= OVERVIEW_ALERT_THRESHOLD ? "lu-row-meta-alert" : "lu-row-meta";
+            const labelClass = paceLevel(q) === "danger" ? "lu-row-meta-alert" : "lu-row-meta";
 
             meta.add_child(
                 new St.Label({
@@ -828,6 +864,23 @@ export const LinuxUsageIndicator = GObject.registerClass(
             box.add_child(left);
 
             const actions = new St.BoxLayout({ style_class: "lu-footer-actions" });
+
+            if (!this._selectedProvider) {
+                const current = this._overviewWindow();
+                const next: OverviewWindow = current === "session" ? "weekly" : "session";
+                const windowBtn = new St.Button({
+                    style_class: "lu-pill-btn lu-clickable",
+                    can_focus: true,
+                    track_hover: true,
+                    reactive: true,
+                    y_align: Clutter.ActorAlign.CENTER,
+                    label: current === "session" ? "Session" : "Weekly",
+                });
+                this._attachActionHint(windowBtn, next === "session" ? "Show session usage" : "Show weekly usage");
+                windowBtn.connect("clicked", () => this._settings.set_string("overview-quota-window", next));
+                actions.add_child(windowBtn);
+            }
+
             const refreshBtn = new St.Button({
                 style_class: "lu-icon-btn lu-clickable",
                 can_focus: true,

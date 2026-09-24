@@ -36,5 +36,14 @@
       <summary>Show time progress marker</summary>
       <description>Whether to display the current-time marker inside quota bars.</description>
     </key>
+    <key name="overview-quota-window" type="s">
+      <choices>
+        <choice value='session'/>
+        <choice value='weekly'/>
+      </choices>
+      <default>'session'</default>
+      <summary>Overview quota window</summary>
+      <description>Which quota window (session or weekly) the popup overview displays for each provider.</description>
+    </key>
   </schema>
 </schemalist>
