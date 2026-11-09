@@ -1,5 +1,6 @@
 import GLib from "gi://GLib";
 
+import { Credentials, type CredentialSource, type ProviderOptions } from "../credentials.js";
 import { Http } from "../http.js";
 import { Utils } from "../utils.js";
 
@@ -12,6 +13,62 @@ function _discoverCredentialsPath(): string | null {
         GLib.build_filenamev([home, ".claude", ".credentials.json"]),
         GLib.build_filenamev([config, "claude", ".credentials.json"]),
     ]);
+}
+
+type LocatedCredentials = {
+    path: string;
+    creds: any;
+    readError: string | null;
+    viaCliProxy: boolean;
+};
+
+function _locateCredentials(source: CredentialSource): LocatedCredentials | null {
+    if (source !== "cli-proxy") {
+        const path = _discoverCredentialsPath();
+        if (path) {
+            const { data, error } = Utils.tryReadJsonFile(path);
+            const local = { path, creds: data, readError: error, viaCliProxy: false };
+            // Claude Code keeps this file for MCP OAuth tokens even when signed out of claude.ai,
+            // so in auto mode a file without an access token falls through to CLIProxyAPI.
+            if (source === "local" || (data && _extractToken(data))) return local;
+        }
+    }
+    if (source !== "local") {
+        const account = Credentials.findCliProxyAccount("claude");
+        if (account) return { path: account.path, creds: account.data, readError: null, viaCliProxy: true };
+    }
+    return null;
+}
+
+function _missingCredentialsSnapshot(metadata: any, source: CredentialSource): any {
+    if (source === "cli-proxy") {
+        return Utils.statusSnapshot(
+            metadata,
+            "unconfigured",
+            "No Claude account found in CLIProxyAPI",
+            "Add one with `cli-proxy-api --claude-login`, or switch the credential source in preferences.",
+        );
+    }
+    if (source === "local") {
+        return Utils.statusSnapshot(
+            metadata,
+            "unconfigured",
+            "No local Claude credentials found",
+            "Sign in with Claude Code, or switch the credential source in preferences.",
+        );
+    }
+    return Utils.statusSnapshot(
+        metadata,
+        "unconfigured",
+        "No Claude credentials found (Claude Code or CLIProxyAPI)",
+        "Sign in with Claude Code, or add an account with `cli-proxy-api --claude-login`.",
+    );
+}
+
+function _authRemediation(viaCliProxy: boolean): string {
+    return viaCliProxy
+        ? "Make sure CLIProxyAPI is running so it refreshes the token, or log in again with `cli-proxy-api --claude-login`."
+        : "Refresh Claude Code with `claude auth login`.";
 }
 
 function _extractToken(creds: any): string | null {
@@ -126,28 +183,13 @@ function _fetchAccountLabel(token: string, userAgent: string): string | null {
     }
 }
 
-function fetch(metadata: any): any {
-    const credsPath = _discoverCredentialsPath();
-    if (!credsPath) {
-        return Utils.statusSnapshot(
-            metadata,
-            "unconfigured",
-            "No local Claude credentials found",
-            "Sign in with Claude Code to enable quota monitoring.",
-        );
+function fetch(metadata: any, options: ProviderOptions): any {
+    const located = _locateCredentials(options.credentialSource);
+    if (!located) return _missingCredentialsSnapshot(metadata, options.credentialSource);
+    if (located.readError) {
+        return Utils.statusSnapshot(metadata, "error", located.readError, `Inspect ${located.path}.`);
     }
-
-    let creds: any;
-    try {
-        creds = Utils.readJsonFile(credsPath);
-    } catch (error: any) {
-        return Utils.statusSnapshot(
-            metadata,
-            "error",
-            error.message || String(error),
-            "Inspect the Claude credentials file on disk.",
-        );
-    }
+    const creds = located.creds;
 
     const token = _extractToken(creds);
     if (!token) {
@@ -155,7 +197,7 @@ function fetch(metadata: any): any {
             metadata,
             "auth_required",
             "Claude credentials exist but no access token is present",
-            "Run `claude auth login` again to refresh the token.",
+            _authRemediation(located.viaCliProxy),
         );
     }
 
@@ -181,7 +223,7 @@ function fetch(metadata: any): any {
             metadata,
             Utils.providerStatusFromHttpStatus(response.status),
             Utils.errorFromStatus(response.status, "Claude usage endpoint returned an unexpected status"),
-            "Refresh Claude Code with `claude auth login`.",
+            _authRemediation(located.viaCliProxy),
         );
     }
 
@@ -200,7 +242,7 @@ function fetch(metadata: any): any {
     const claims = Utils.parseJwtClaims(token);
     const snapshot = Utils.baseSnapshot(metadata);
     snapshot.status = "ok";
-    snapshot.sourceLabel = "Local session + Claude OAuth API";
+    snapshot.sourceLabel = located.viaCliProxy ? "CLIProxyAPI + Claude OAuth API" : "Local session + Claude OAuth API";
     snapshot.accountLabel = creds.email || (claims && claims.email) || null;
     if (!snapshot.accountLabel) {
         snapshot.accountLabel = _fetchAccountLabel(token, userAgent);

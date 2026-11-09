@@ -1,5 +1,6 @@
 import GLib from "gi://GLib";
 
+import { Credentials, type CredentialSource, type ProviderOptions } from "../credentials.js";
 import { Http } from "../http.js";
 import { Utils } from "../utils.js";
 
@@ -9,6 +10,78 @@ const SECONDARY_KEYS = ["seven_day", "weekly", "secondary", "week"];
 function _discoverAuthPath(): string | null {
     const home = Utils.homeDir();
     return Utils.firstExisting([GLib.build_filenamev([home, ".codex", "auth.json"])]);
+}
+
+type LocatedAuth = {
+    path: string;
+    auth: any;
+    readError: string | null;
+    viaCliProxy: boolean;
+};
+
+function _locateAuth(source: CredentialSource): LocatedAuth | null {
+    if (source !== "cli-proxy") {
+        const path = _discoverAuthPath();
+        if (path) {
+            const { data, error } = Utils.tryReadJsonFile(path);
+            const local = { path, auth: data, readError: error, viaCliProxy: false };
+            // In auto mode, an auth.json without a ChatGPT token (API-key login) falls through to CLIProxyAPI.
+            if (source === "local" || (data && data.tokens && data.tokens.access_token)) return local;
+        }
+    }
+    if (source !== "local") {
+        const account = Credentials.findCliProxyAccount("codex");
+        if (account) {
+            return { path: account.path, auth: _normalizeCliProxyAuth(account.data), readError: null, viaCliProxy: true };
+        }
+    }
+    return null;
+}
+
+// CLIProxyAPI keeps the tokens at the top level; ~/.codex/auth.json nests them under `tokens`.
+function _normalizeCliProxyAuth(raw: any): any {
+    if (raw.tokens) return raw;
+    return {
+        tokens: {
+            access_token: raw.access_token,
+            id_token: raw.id_token,
+            refresh_token: raw.refresh_token,
+            account_id: raw.account_id,
+        },
+        last_refresh: raw.last_refresh,
+        email: raw.email,
+    };
+}
+
+function _missingAuthSnapshot(metadata: any, source: CredentialSource): any {
+    if (source === "cli-proxy") {
+        return Utils.statusSnapshot(
+            metadata,
+            "unconfigured",
+            "No Codex account found in CLIProxyAPI",
+            "Add one with `cli-proxy-api --codex-login`, or switch the credential source in preferences.",
+        );
+    }
+    if (source === "local") {
+        return Utils.statusSnapshot(
+            metadata,
+            "unconfigured",
+            "No local Codex session found",
+            "Sign in with the Codex CLI, or switch the credential source in preferences.",
+        );
+    }
+    return Utils.statusSnapshot(
+        metadata,
+        "unconfigured",
+        "No Codex credentials found (Codex CLI or CLIProxyAPI)",
+        "Sign in with the Codex CLI, or add an account with `cli-proxy-api --codex-login`.",
+    );
+}
+
+function _usageHeaders(token: string, accountId: string | null): Record<string, string> {
+    const headers: Record<string, string> = { Authorization: `Bearer ${token}` };
+    if (accountId) headers["ChatGPT-Account-Id"] = accountId;
+    return headers;
 }
 
 function _formatNumber(value: number): string {
@@ -305,7 +378,10 @@ function _parseErrorResponse(body: string): string | null {
     }
 }
 
-function _remediationForError(message: string | null): string {
+function _remediationForError(message: string | null, viaCliProxy: boolean = false): string {
+    if (viaCliProxy) {
+        return "Make sure CLIProxyAPI is running so it refreshes the token, or log in again with `cli-proxy-api --codex-login`.";
+    }
     const msg = message || "";
     if (
         msg.includes("refresh token has already been used") ||
@@ -320,28 +396,20 @@ function _remediationForError(message: string | null): string {
     return "Refresh your Codex login or try again later.";
 }
 
-function fetch(metadata: any): any {
-    const authPath = _discoverAuthPath();
-    if (!authPath) {
-        return Utils.statusSnapshot(
-            metadata,
-            "unconfigured",
-            "No local Codex session found",
-            "Sign in with the Codex CLI to enable quota monitoring.",
-        );
-    }
-
-    let auth: any;
-    try {
-        auth = Utils.readJsonFile(authPath);
-    } catch (error: any) {
+function fetch(metadata: any, options: ProviderOptions): any {
+    const located = _locateAuth(options.credentialSource);
+    if (!located) return _missingAuthSnapshot(metadata, options.credentialSource);
+    const authPath = located.path;
+    const viaCliProxy = located.viaCliProxy;
+    if (located.readError) {
         return Utils.statusSnapshot(
             metadata,
             "error",
-            error.message || String(error),
-            "Inspect ~/.codex/auth.json permissions and content.",
+            located.readError,
+            `Inspect ${authPath} permissions and content.`,
         );
     }
+    const auth = located.auth;
 
     let tokenValue = auth.tokens && auth.tokens.access_token;
     if (!tokenValue) {
@@ -349,9 +417,12 @@ function fetch(metadata: any): any {
             metadata,
             "auth_required",
             "Codex auth file exists but has no access token",
-            "Run `codex login` again to refresh the local session.",
+            viaCliProxy
+                ? _remediationForError(null, true)
+                : "Run `codex login` again to refresh the local session.",
         );
     }
+    const accountId: string | null = (auth.tokens && auth.tokens.account_id) || null;
 
     let claims =
         (auth.tokens && auth.tokens.id_token ? Utils.parseJwtClaims(auth.tokens.id_token) : null) ||
@@ -359,9 +430,7 @@ function fetch(metadata: any): any {
 
     let response: any;
     try {
-        response = Http.httpGet("https://chatgpt.com/backend-api/wham/usage", {
-            Authorization: `Bearer ${tokenValue}`,
-        });
+        response = Http.httpGet("https://chatgpt.com/backend-api/wham/usage", _usageHeaders(tokenValue, accountId));
     } catch (error: any) {
         return Utils.statusSnapshot(
             metadata,
@@ -371,15 +440,17 @@ function fetch(metadata: any): any {
         );
     }
 
-    if (response.status === 401) {
+    // CLIProxyAPI owns the refresh token: refreshing here would rotate it and lock the proxy out.
+    if (response.status === 401 && !viaCliProxy) {
         const refreshed = _refreshAccessToken(authPath, auth);
         if (refreshed) {
             tokenValue = refreshed.token;
             if (refreshed.claims) claims = refreshed.claims;
             try {
-                response = Http.httpGet("https://chatgpt.com/backend-api/wham/usage", {
-                    Authorization: `Bearer ${tokenValue}`,
-                });
+                response = Http.httpGet(
+                    "https://chatgpt.com/backend-api/wham/usage",
+                    _usageHeaders(tokenValue, accountId),
+                );
             } catch (error: any) {
                 return Utils.statusSnapshot(
                     metadata,
@@ -392,7 +463,7 @@ function fetch(metadata: any): any {
     }
 
     if (response.status < 200 || response.status >= 300) {
-        const rpcResult = _fetchViaRpc(metadata);
+        const rpcResult = viaCliProxy ? null : _fetchViaRpc(metadata);
         if (rpcResult) return rpcResult;
 
         const parsedError = _parseErrorResponse(response.body);
@@ -402,7 +473,7 @@ function fetch(metadata: any): any {
             metadata,
             Utils.providerStatusFromHttpStatus(response.status),
             message,
-            _remediationForError(message),
+            _remediationForError(message, viaCliProxy),
         );
     }
 
@@ -420,9 +491,12 @@ function fetch(metadata: any): any {
 
     const snapshot = Utils.baseSnapshot(metadata);
     snapshot.status = "ok";
-    snapshot.sourceLabel = "Local session + OpenAI usage API";
+    snapshot.sourceLabel = viaCliProxy ? "CLIProxyAPI + OpenAI usage API" : "Local session + OpenAI usage API";
     snapshot.accountLabel =
-        Utils.valueAtPath(claims, ["https://api.openai.com/profile", "email"]) || (claims && claims.email) || null;
+        Utils.valueAtPath(claims, ["https://api.openai.com/profile", "email"]) ||
+        (claims && claims.email) ||
+        auth.email ||
+        null;
     const planType =
         Utils.valueAtPath(claims, ["https://api.openai.com/auth", "chatgpt_plan_type"]) ||
         (claims && claims.plan) ||

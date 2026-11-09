@@ -45,5 +45,15 @@
       <summary>Overview quota window</summary>
       <description>Which quota window (session or weekly) the popup overview displays for each provider.</description>
     </key>
+    <key name="credential-source" type="s">
+      <choices>
+        <choice value='auto'/>
+        <choice value='local'/>
+        <choice value='cli-proxy'/>
+      </choices>
+      <default>'auto'</default>
+      <summary>Credential source</summary>
+      <description>Where the helper reads Codex and Claude credentials: 'local' uses the CLI login files (~/.codex/auth.json, ~/.claude/.credentials.json), 'cli-proxy' uses the CLIProxyAPI auth directory (~/.cli-proxy-api), 'auto' prefers the CLI login files and falls back to CLIProxyAPI.</description>
+    </key>
   </schema>
 </schemalist>

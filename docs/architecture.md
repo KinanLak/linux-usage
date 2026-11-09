@@ -17,5 +17,12 @@ The legacy bundle is produced by rewriting `dist/` with `scripts/build-legacy-gj
 
 ## Auth
 
-- Codex and Claude: local session files on disk.
-- Copilot: `GITHUB_TOKEN` / `GH_TOKEN` / `gh auth token`.
+Codex and Claude read OAuth tokens from files on disk. The `credential-source` setting (Preferences → Credentials) picks where:
+
+| Value | Reads |
+| --- | --- |
+| `auto` (default) | CLI login files, then the CLIProxyAPI auth directory |
+| `local` | `~/.codex/auth.json`, `~/.claude/.credentials.json` |
+| `cli-proxy` | `~/.cli-proxy-api/*.json` (one file per account, matched on its `type`; most recently written wins) |
+
+With CLIProxyAPI the helper is read-only: the proxy owns the refresh token, so the helper never refreshes it (OpenAI rotates refresh tokens, a refresh from the helper would lock the proxy out) and skips the `codex app-server` fallback.

@@ -326,6 +326,9 @@ export const LinuxUsageIndicator = GObject.registerClass(
             this._settingsSignals.push(
                 this._settings.connect("changed::refresh-interval-seconds", () => this._scheduleRefresh()),
             );
+            this._settingsSignals.push(
+                this._settings.connect("changed::credential-source", () => void this._refresh(true)),
+            );
 
             this._scheduleRefresh();
             void this._refresh(false);
@@ -686,16 +689,6 @@ export const LinuxUsageIndicator = GObject.registerClass(
         }
 
         _selectOverviewQuota(provider: ProviderSnapshot) {
-            if (
-                provider.providerId === "copilot" &&
-                provider.primaryQuota &&
-                provider.secondaryQuota &&
-                provider.secondaryQuota.label === "Chat" &&
-                provider.secondaryQuota.valueLabel === "Included"
-            ) {
-                return provider.primaryQuota;
-            }
-
             const quotas = [provider.primaryQuota, provider.secondaryQuota].filter(Boolean) as Quota[];
             if (!quotas.length) return null;
 
