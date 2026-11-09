@@ -34,6 +34,14 @@ function readJsonFile(path: string): any {
     return JSON.parse(bytesToString(contents));
 }
 
+function tryReadJsonFile(path: string): { data: any; error: string | null } {
+    try {
+        return { data: readJsonFile(path), error: null };
+    } catch (error: any) {
+        return { data: null, error: error.message || String(error) };
+    }
+}
+
 function writeJsonFile(path: string, data: any): void {
     const dir = GLib.path_get_dirname(path);
     GLib.mkdir_with_parents(dir, 0o755);
@@ -149,13 +157,6 @@ function providerStatusFromHttpStatus(status: number): string {
     return "error";
 }
 
-function ghCliToken(): string | null {
-    const result = runCommand(["gh", "auth", "token"]);
-    if (!result.success) return null;
-    const trimmed = result.stdout.trim();
-    return trimmed || null;
-}
-
 function stripAnsi(input: string): string {
     // oxlint-disable-next-line no-control-regex -- intentional: strips ANSI escape sequences from CLI stderr
     return input.replace(/\u001b\[[0-9;]*[a-zA-Z]/g, "");
@@ -193,6 +194,7 @@ export const Utils = {
     cacheDir,
     configDir,
     readJsonFile,
+    tryReadJsonFile,
     writeJsonFile,
     fileExists,
     firstExisting,
@@ -206,7 +208,6 @@ export const Utils = {
     valueAsString,
     errorFromStatus,
     providerStatusFromHttpStatus,
-    ghCliToken,
     stripAnsi,
     baseSnapshot,
     statusSnapshot,

@@ -1,9 +1,9 @@
 import GLib from "gi://GLib";
 
 import { Cache } from "./cache.js";
+import { Credentials, type ProviderOptions } from "./credentials.js";
 import { ClaudeProvider } from "./providers/claude.js";
 import { CodexProvider } from "./providers/codex.js";
-import { CopilotProvider } from "./providers/copilot.js";
 import { Utils } from "./utils.js";
 
 function _loadCatalog(extensionDir: string): any[] {
@@ -11,10 +11,11 @@ function _loadCatalog(extensionDir: string): any[] {
     return Utils.readJsonFile(path);
 }
 
-function _providerFetchers(): Record<string, (metadata: any) => any> {
+type ProviderFetcher = (metadata: any, options: ProviderOptions) => any;
+
+function _providerFetchers(): Record<string, ProviderFetcher> {
     return {
         claude: ClaudeProvider.fetch,
-        copilot: CopilotProvider.fetch,
         codex: CodexProvider.fetch,
     };
 }
@@ -95,7 +96,16 @@ function _snapshotFromBackoff(metadata: any, cached: any | null, backoff: any): 
     );
 }
 
-function _fetchProviderSnapshot(metadata: any, fetcher: (meta: any) => any, cached: any | null): any {
+function _providerOptions(extensionDir: string): ProviderOptions {
+    return { credentialSource: Credentials.credentialSource(extensionDir) };
+}
+
+function _fetchProviderSnapshot(
+    metadata: any,
+    fetcher: ProviderFetcher,
+    options: ProviderOptions,
+    cached: any | null,
+): any {
     const backoff = Cache.activeBackoff(metadata.id);
     if (backoff) {
         const cachedProv = _cachedProvider(cached, metadata.id);
@@ -104,7 +114,7 @@ function _fetchProviderSnapshot(metadata: any, fetcher: (meta: any) => any, cach
 
     let snapshot: any;
     try {
-        snapshot = fetcher(metadata);
+        snapshot = fetcher(metadata, options);
     } catch (error: any) {
         snapshot = Utils.statusSnapshot(
             metadata,
@@ -127,13 +137,14 @@ function fetchAll(extensionDir: string): any {
     const catalog = _loadCatalog(extensionDir);
     const fetchers = _providerFetchers();
     const cached = Cache.loadSnapshot();
+    const options = _providerOptions(extensionDir);
 
     const providers = catalog.map((metadata: any) => {
         const fetcher = fetchers[metadata.id];
         if (!fetcher) {
             return Utils.statusSnapshot(metadata, "error", `No implementation for provider '${metadata.id}'`);
         }
-        return _fetchProviderSnapshot(metadata, fetcher, cached);
+        return _fetchProviderSnapshot(metadata, fetcher, options, cached);
     });
 
     const hasError = providers.some((p: any) => p.status === "error" || p.status === "auth_required");
@@ -166,7 +177,7 @@ function fetchOne(extensionDir: string, providerId: string): any | null {
     }
 
     const cached = Cache.loadSnapshot();
-    return _fetchProviderSnapshot(metadata, fetcher, cached);
+    return _fetchProviderSnapshot(metadata, fetcher, _providerOptions(extensionDir), cached);
 }
 
 export const Registry = { fetchAll, fetchCachedOrLive, fetchOne };

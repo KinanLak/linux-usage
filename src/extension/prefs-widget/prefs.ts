@@ -17,6 +17,11 @@ const REFRESH_INTERVAL_OPTIONS = [
     { value: 900, label: "15 minutes" },
 ];
 const SHORT_REFRESH_WARNING_MAX_SECONDS = 120;
+const CREDENTIAL_SOURCE_OPTIONS = [
+    { value: "auto", label: "Automatic" },
+    { value: "local", label: "CLI login" },
+    { value: "cli-proxy", label: "CLIProxyAPI" },
+];
 
 function setWidgetCursor(widget: any, cursorName: string) {
     try {
@@ -122,6 +127,7 @@ function buildPreferencesContent(settings: any, options: { standalone: boolean; 
 
     page.append(buildGeneralSection(settings));
     page.append(buildProvidersSection(settings, providers));
+    page.append(buildCredentialsSection(settings));
 
     return root;
 }
@@ -145,7 +151,7 @@ function buildGeneralSection(settings: any) {
     section.card.append(
         createRow(
             "Show provider source",
-            "Display labels like local session or GitHub token in the popup.",
+            "Display where each provider's data comes from in the popup.",
             sourceSwitch,
         ),
     );
@@ -216,8 +222,8 @@ function buildRefreshIntervalControl(settings: any) {
         css_classes: ["linux-usage-prefs-input", "linux-usage-prefs-dropdown"],
     });
     setWidgetCursor(dropdown, "pointer");
-    dropdown.set_factory(createRefreshDropdownFactory());
-    dropdown.set_list_factory(createRefreshDropdownFactory());
+    dropdown.set_factory(createDropdownFactory());
+    dropdown.set_list_factory(createDropdownFactory());
 
     const syncWarning = (seconds: number) => {
         warning.set_visible(seconds <= SHORT_REFRESH_WARNING_MAX_SECONDS);
@@ -238,7 +244,7 @@ function buildRefreshIntervalControl(settings: any) {
     return box;
 }
 
-function createRefreshDropdownFactory() {
+function createDropdownFactory() {
     const factory = new Gtk.SignalListItemFactory();
     factory.connect("setup", (_factory: any, listItem: any) => {
         const label = new Gtk.Label({
@@ -283,6 +289,39 @@ function buildProvidersSection(settings: any, providers: any[]) {
         });
         section.card.append(createRow(provider.title, provider.description, toggle));
     });
+
+    return section.box;
+}
+
+function buildCredentialsSection(settings: any) {
+    const section = createSection("Credentials", "Where Codex and Claude tokens are read from.");
+
+    const current = settings.get_string("credential-source");
+    const selectedIndex = Math.max(
+        0,
+        CREDENTIAL_SOURCE_OPTIONS.findIndex((option) => option.value === current),
+    );
+    const dropdown = new Gtk.DropDown({
+        model: Gtk.StringList.new(CREDENTIAL_SOURCE_OPTIONS.map((option) => option.label)),
+        selected: selectedIndex,
+        valign: Gtk.Align.CENTER,
+        css_classes: ["linux-usage-prefs-input", "linux-usage-prefs-dropdown"],
+    });
+    setWidgetCursor(dropdown, "pointer");
+    dropdown.set_factory(createDropdownFactory());
+    dropdown.set_list_factory(createDropdownFactory());
+    dropdown.connect("notify::selected", (widget: any) => {
+        const option = CREDENTIAL_SOURCE_OPTIONS[widget.get_selected()];
+        if (option) settings.set_string("credential-source", option.value);
+    });
+
+    section.card.append(
+        createRow(
+            "Credential source",
+            "Automatic: ~/.codex and ~/.claude, then ~/.cli-proxy-api. CLI login: ~/.codex and ~/.claude only. CLIProxyAPI: ~/.cli-proxy-api only.",
+            dropdown,
+        ),
+    );
 
     return section.box;
 }

@@ -1,6 +1,6 @@
 # Linux Usage
 
-GNOME top-bar quota monitor for Codex, Claude, and GitHub Copilot.
+GNOME top-bar quota monitor for Codex and Claude.
 
 ## Build & install
 

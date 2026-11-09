@@ -21,13 +21,6 @@ const PROVIDER_CATALOG: ProviderCatalogEntry[] = [
         iconName: "weather-overcast-symbolic",
         defaultEnabled: true,
     },
-    {
-        id: "copilot",
-        title: "Copilot",
-        description: "GitHub Copilot premium interactions and included chat",
-        iconName: "system-users-symbolic",
-        defaultEnabled: true,
-    },
 ];
 
 function loadProviderCatalog(_extensionDir?: string): ProviderCatalogEntry[] {

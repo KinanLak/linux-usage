@@ -1,6 +1,6 @@
 # Claude provider
 
-- Reads `~/.claude/.credentials.json` or `~/.config/claude/.credentials.json`.
+- Reads `~/.claude/.credentials.json` or `~/.config/claude/.credentials.json`, or a `type: "claude"` file in `~/.cli-proxy-api/` (see `credential-source` in `docs/architecture.md`).
 - Accepts legacy top-level tokens and current `claudeAiOauth.accessToken`.
 - Calls `https://api.anthropic.com/api/oauth/usage`.
 - Maps `five_hour`, `seven_day`, and optional `extra_usage`.
