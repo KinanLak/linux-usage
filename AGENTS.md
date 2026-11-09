@@ -53,6 +53,12 @@ gnome-extensions reset "linux-usage@KinanLak.github.io"
 gnome-extensions enable "linux-usage@KinanLak.github.io"
 ```
 
+On GNOME 40 (the owner's machine, ordi-86: Rocky 9, shell 40.10 on X11), only `make install-legacy` works: the ESM build fails at load with `SyntaxError: import declarations may only appear at top level of a module`. After a failed load, disable/enable and `reset` are not enough, GNOME caches the failure: restart the shell. It refuses `systemctl restart`, but systemd relaunches it after a kill, and X11 apps survive:
+
+```bash
+kill "$(systemctl --user show org.gnome.Shell@x11.service -p MainPID --value)"
+```
+
 Open the standalone preferences window directly:
 
 ```bash
