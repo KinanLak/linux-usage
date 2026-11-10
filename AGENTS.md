@@ -70,3 +70,11 @@ gjs ~/.local/share/gnome-shell/extensions/linux-usage@KinanLak.github.io/prefere
 ```bash
 bun run check   # typecheck + lint + build:all
 ```
+
+## macOS port (`macos/`)
+
+A separate SwiftUI menu bar app (Swift package + Makefile, macOS 14+), isolated from the GNOME build: nothing in `src/`, the root `Makefile` or `bun run check` touches it. See `macos/README.md`.
+
+- It doesn't reuse the TypeScript: `macos/Sources/LinuxUsage/Providers/` is a Swift port of `src/helper/`, and `UI/` mirrors `ui/popup.ts` and `prefs-widget/prefs.ts`. When provider parsing, statuses, messages or popup behavior change in `src/`, port the change to `macos/` (and the other way around).
+- Build and check: `cd macos && make app` (universal, ad-hoc signed) and `make snapshot` for the provider JSON.
+- UI without credentials: `make dev ARGS="--sample --open-popup"` (debug-only flags).

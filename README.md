@@ -1,6 +1,6 @@
 # Linux Usage
 
-GNOME top-bar quota monitor for Codex and Claude.
+GNOME top-bar quota monitor for Codex and Claude, with a native macOS menu bar port in [`macos/`](macos/README.md).
 
 ## Build & install
 
@@ -15,6 +15,7 @@ make install-legacy  # GNOME 40-44
 
 - `src/extension/` — extension source (TypeScript)
 - `src/helper/` — GJS helper, bundled in the zip
+- `macos/` — SwiftUI menu bar app (`cd macos && make app`)
 - `dist/`, `dist-pre45/` — generated bundles (ESM and legacy GJS)
 - `contracts/snapshot.schema.json` — normalized snapshot schema
 
@@ -23,5 +24,6 @@ make install-legacy  # GNOME 40-44
 1. Add metadata to `src/extension/providers.json`
 2. Implement the module in `src/helper/src/providers/`
 3. Register it in `src/helper/src/registry.ts`
+4. Port it to `macos/Sources/LinuxUsage/Providers/` and add it to `ProviderCatalog.swift` and `Registry.swift`
 
 See `AGENTS.md` for the dual-package build pipeline and `docs/` for architecture and provider notes.
