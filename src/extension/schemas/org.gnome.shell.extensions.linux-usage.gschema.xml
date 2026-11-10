@@ -45,6 +45,16 @@
       <summary>Overview quota window</summary>
       <description>Which quota window (session or weekly) the popup overview displays for each provider.</description>
     </key>
+    <key name="panel-show-usage" type="b">
+      <default>true</default>
+      <summary>Show usage in the top bar</summary>
+      <description>Whether to show a usage percentage next to the top bar icon.</description>
+    </key>
+    <key name="panel-provider" type="s">
+      <default>'auto'</default>
+      <summary>Top bar provider</summary>
+      <description>Provider whose usage the top bar shows: 'auto' for the most used enabled provider, or a provider id. The quota window follows overview-quota-window.</description>
+    </key>
     <key name="credential-source" type="s">
       <choices>
         <choice value='auto'/>

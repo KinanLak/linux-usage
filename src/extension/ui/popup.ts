@@ -7,6 +7,7 @@ import Pango from "gi://Pango";
 import St from "gi://St";
 
 import { Extension } from "resource:///org/gnome/shell/extensions/extension.js";
+import * as Animation from "resource:///org/gnome/shell/ui/animation.js";
 import * as Main from "resource:///org/gnome/shell/ui/main.js";
 import * as PanelMenu from "resource:///org/gnome/shell/ui/panelMenu.js";
 import * as PopupMenu from "resource:///org/gnome/shell/ui/popupMenu.js";
@@ -272,6 +273,26 @@ function shouldShowTimeProgressMarker(settings: any, q: Quota | null | undefined
     return settings.get_boolean("show-time-progress-marker") && q?.valueLabel !== "Included";
 }
 
+// Percentage next to the panel icon: the selected provider, or the most used one ("auto"), in the
+// window picked by the popup's Session/Weekly toggle.
+function panelUsage(providers: ProviderSnapshot[], window: OverviewWindow, providerId: string) {
+    const candidates = providerId === "auto" ? providers : providers.filter((p) => p.providerId === providerId);
+    let best: { providerId: string; quota: Quota } | null = null;
+    for (const provider of candidates) {
+        const quota = selectOverviewQuota(provider, window);
+        const hasValue = typeof quota?.usedPercent === "number" || quota?.valueLabel === "Included";
+        if (!quota || !hasValue) continue;
+        if (!best || quotaPercent(quota) > quotaPercent(best.quota)) best = { providerId: provider.providerId, quota };
+    }
+    return best;
+}
+
+function selectOverviewQuota(provider: ProviderSnapshot, window: OverviewWindow) {
+    const quotas = [provider.primaryQuota, provider.secondaryQuota].filter(Boolean) as Quota[];
+    if (!quotas.length) return null;
+    return quotas.find((q) => quotaWindow(q) === window) || provider.primaryQuota || quotas[0];
+}
+
 export const LinuxUsageIndicator = GObject.registerClass(
     class LinuxUsageIndicator extends PanelMenu.Button {
         declare menu: PopupMenu.PopupMenu;
@@ -285,6 +306,7 @@ export const LinuxUsageIndicator = GObject.registerClass(
         _refreshGeneration = 0;
         _destroyed = false;
         _icon!: St.Icon;
+        _panelLabel!: St.Label;
 
         override _init() {
             super._init(0.0, "Linux Usage");
@@ -300,11 +322,20 @@ export const LinuxUsageIndicator = GObject.registerClass(
             this._destroyed = false;
 
             this.add_style_class_name("lu-popup");
+            const panelBox = new St.BoxLayout({ style_class: "panel-status-menu-box lu-panel-box" });
             this._icon = new St.Icon({
                 icon_name: "network-cellular-signal-excellent-symbolic",
                 style_class: "system-status-icon",
             });
-            this.add_child(this._icon);
+            this._panelLabel = new St.Label({
+                text: "",
+                style_class: "lu-panel-label",
+                y_align: Clutter.ActorAlign.CENTER,
+                visible: false,
+            });
+            panelBox.add_child(this._icon);
+            panelBox.add_child(this._panelLabel);
+            this.add_child(panelBox);
             this._attachPointerCursor(this);
 
             this.menu.box.add_style_class_name("lu-menu");
@@ -319,6 +350,8 @@ export const LinuxUsageIndicator = GObject.registerClass(
                 "show-time-progress-marker",
                 "enabled-providers",
                 "overview-quota-window",
+                "panel-show-usage",
+                "panel-provider",
             ].forEach(
                 (key) =>
                     this._settingsSignals.push(this._settings.connect(`changed::${key}`, () => this._rebuildMenu())),
@@ -412,9 +445,32 @@ export const LinuxUsageIndicator = GObject.registerClass(
             }
         }
 
+        // Percentage and logo of the provider it belongs to; returns whether it is shown.
+        _updatePanelLabel() {
+            const usage = this._settings.get_boolean("panel-show-usage")
+                ? panelUsage(
+                      this._visibleProviders(),
+                      this._overviewWindow(),
+                      this._settings.get_string("panel-provider"),
+                  )
+                : null;
+            this._panelLabel.visible = usage !== null;
+            if (!usage) return false;
+            const { providerId, quota } = usage;
+            this._panelLabel.text = fmtPct(quotaPercent(quota));
+            const pace = quota.valueLabel === "Included" ? "ok" : paceLevel(quota);
+            this._panelLabel.style_class = `lu-panel-label${pace === "ok" ? "" : ` lu-panel-${pace}`}`;
+
+            const iconFile = Gio.File.new_for_path(`${Me.path}/icons/${providerId}-symbolic.svg`);
+            if (!iconFile.query_exists(null)) return false;
+            this._icon.set_gicon(new Gio.FileIcon({ file: iconFile }));
+            return true;
+        }
+
         _updateIcon() {
             if (this._state.loading && !this._state.snapshot) {
                 this._icon.set_icon_name("view-refresh-symbolic");
+                this._updatePanelLabel();
                 return;
             }
 
@@ -435,6 +491,7 @@ export const LinuxUsageIndicator = GObject.registerClass(
                       ? "view-refresh-symbolic"
                       : "network-cellular-signal-excellent-symbolic",
             );
+            this._updatePanelLabel();
         }
 
         _visibleProviders(): ProviderSnapshot[] {
@@ -468,6 +525,7 @@ export const LinuxUsageIndicator = GObject.registerClass(
 
         _rebuildMenu() {
             if (this._destroyed) return;
+            this._updateIcon();
 
             const providers = this._visibleProviders();
             if (this._selectedProvider && !providers.find((p) => p.providerId === this._selectedProvider))
@@ -689,11 +747,7 @@ export const LinuxUsageIndicator = GObject.registerClass(
         }
 
         _selectOverviewQuota(provider: ProviderSnapshot) {
-            const quotas = [provider.primaryQuota, provider.secondaryQuota].filter(Boolean) as Quota[];
-            if (!quotas.length) return null;
-
-            const current = this._overviewWindow();
-            return quotas.find((q) => quotaWindow(q) === current) || provider.primaryQuota || quotas[0];
+            return selectOverviewQuota(provider, this._overviewWindow());
         }
 
         _overviewWindow(): OverviewWindow {
@@ -874,14 +928,19 @@ export const LinuxUsageIndicator = GObject.registerClass(
                 actions.add_child(windowBtn);
             }
 
+            // While a refresh runs, the button shows a spinner of the icon's size and ignores clicks.
+            const loading = this._state.loading;
+            const refreshIcon = loading
+                ? this._buildSpinner()
+                : new St.Icon({ icon_name: "view-refresh-symbolic", style_class: "lu-icon-btn-img" });
             const refreshBtn = new St.Button({
-                style_class: "lu-icon-btn lu-clickable",
-                can_focus: true,
-                track_hover: true,
-                reactive: true,
-                child: new St.Icon({ icon_name: "view-refresh-symbolic", style_class: "lu-icon-btn-img" }),
+                style_class: loading ? "lu-icon-btn lu-icon-btn-busy" : "lu-icon-btn lu-clickable",
+                can_focus: !loading,
+                track_hover: !loading,
+                reactive: !loading,
+                child: refreshIcon,
             });
-            this._attachActionHint(refreshBtn, "Refresh");
+            if (!loading) this._attachActionHint(refreshBtn, "Refresh");
             refreshBtn.connect("clicked", () => void this._refresh(true));
 
             const prefsBtn = new St.Button({
@@ -894,23 +953,19 @@ export const LinuxUsageIndicator = GObject.registerClass(
             this._attachActionHint(prefsBtn, "Preferences");
             prefsBtn.connect("clicked", () => this._openPreferences());
 
-            const closeBtn = new St.Button({
-                style_class: "lu-icon-btn lu-clickable",
-                can_focus: true,
-                track_hover: true,
-                reactive: true,
-                child: new St.Icon({ icon_name: "window-close-symbolic", style_class: "lu-icon-btn-img" }),
-            });
-            this._attachActionHint(closeBtn, "Close");
-            closeBtn.connect("clicked", () => this.menu.close());
-
             actions.add_child(refreshBtn);
             actions.add_child(prefsBtn);
-            actions.add_child(closeBtn);
             box.add_child(actions);
 
             item.add_child(box);
             return item;
+        }
+
+        _buildSpinner() {
+            const spinner = new Animation.Spinner(16, { animate: true, hideOnStop: false });
+            spinner.add_style_class_name("lu-icon-btn-img");
+            spinner.play();
+            return spinner;
         }
 
         _openPreferences() {

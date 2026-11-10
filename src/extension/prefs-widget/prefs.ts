@@ -126,6 +126,7 @@ function buildPreferencesContent(settings: any, options: { standalone: boolean; 
     clamp.set_child(page);
 
     page.append(buildGeneralSection(settings));
+    page.append(buildTopBarSection(settings, providers));
     page.append(buildProvidersSection(settings, providers));
     page.append(buildCredentialsSection(settings));
 
@@ -187,6 +188,46 @@ function buildGeneralSection(settings: any) {
             timeMarkerSwitch,
         ),
     );
+
+    return section.box;
+}
+
+function buildTopBarSection(settings: any, providers: any[]) {
+    const section = createSection("Top bar", "Usage percentage next to the panel icon.");
+
+    const usageSwitch = new Gtk.Switch({
+        active: settings.get_boolean("panel-show-usage"),
+        valign: Gtk.Align.CENTER,
+    });
+    setWidgetCursor(usageSwitch, "pointer");
+    usageSwitch.connect("notify::active", (widget: any) => {
+        settings.set_boolean("panel-show-usage", widget.active);
+    });
+    section.card.append(createRow("Show usage percentage", "", usageSwitch));
+
+    const options = [{ value: "auto", label: "Most used provider" }].concat(
+        providers.map((provider) => ({ value: provider.id, label: provider.title })),
+    );
+    const current = settings.get_string("panel-provider");
+    const dropdown = new Gtk.DropDown({
+        model: Gtk.StringList.new(options.map((option) => option.label)),
+        selected: Math.max(
+            0,
+            options.findIndex((option) => option.value === current),
+        ),
+        valign: Gtk.Align.CENTER,
+        sensitive: usageSwitch.active,
+        css_classes: ["linux-usage-prefs-input", "linux-usage-prefs-dropdown"],
+    });
+    setWidgetCursor(dropdown, "pointer");
+    dropdown.set_factory(createDropdownFactory());
+    dropdown.set_list_factory(createDropdownFactory());
+    dropdown.connect("notify::selected", (widget: any) => {
+        const option = options[widget.get_selected()];
+        if (option) settings.set_string("panel-provider", option.value);
+    });
+    usageSwitch.connect("notify::active", (widget: any) => dropdown.set_sensitive(widget.active));
+    section.card.append(createRow("Percentage of", "", dropdown));
 
     return section.box;
 }
@@ -427,14 +468,17 @@ function createRow(title: string, description: string, suffixWidget: any) {
             css_classes: ["linux-usage-prefs-row-title"],
         }),
     );
-    textBox.append(
-        new Gtk.Label({
-            label: description,
-            xalign: 0,
-            wrap: true,
-            css_classes: ["linux-usage-prefs-row-description"],
-        }),
-    );
+    if (description) {
+        textBox.append(
+            new Gtk.Label({
+                label: description,
+                xalign: 0,
+                wrap: true,
+                css_classes: ["linux-usage-prefs-row-description"],
+            }),
+        );
+    }
+    textBox.set_valign(Gtk.Align.CENTER);
     row.append(textBox);
 
     const suffixBox = new Gtk.Box({
