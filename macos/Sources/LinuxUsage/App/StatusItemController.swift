@@ -6,7 +6,7 @@ import SwiftUI
 /// popup gets a real Liquid Glass panel (rounded, system shadow), opens and closes on demand, and
 /// the item can show a provider logo next to the percentage.
 @MainActor
-final class StatusItemController: NSObject {
+final class StatusItemController: NSObject, NSMenuDelegate {
     static private(set) var shared: StatusItemController?
 
     private let store: UsageStore
@@ -45,8 +45,20 @@ final class StatusItemController: NSObject {
 
     var isOpen: Bool { panel.isVisible }
 
+    /// Left click toggles the popup, right click (or Control-click) shows the app menu.
     @objc func toggle() {
-        isOpen ? close() : open()
+        let event = NSApp.currentEvent
+        if event?.type == .rightMouseDown || event?.modifierFlags.contains(.control) == true {
+            // The button is still tracking this press: a menu run from here would leave that
+            // tracking pending and swallow the next click. The default run loop mode only comes
+            // back once the press ends.
+            close()
+            RunLoop.main.perform(inModes: [.default]) { [weak self] in
+                MainActor.assumeIsolated { self?.showMenu() }
+            }
+        } else {
+            isOpen ? close() : open()
+        }
     }
 
     func open() {
@@ -59,7 +71,7 @@ final class StatusItemController: NSObject {
         // Click anywhere else, Escape, or another app taking focus closes it, like a menu.
         let mouse: NSEvent.EventTypeMask = [.leftMouseDown, .rightMouseDown, .otherMouseDown]
         if let global = NSEvent.addGlobalMonitorForEvents(matching: mouse, handler: { [weak self] _ in
-            MainActor.assumeIsolated { self?.close() }
+            MainActor.assumeIsolated { self?.closeUnlessPressingItem() }
         }) {
             monitors.append(global)
         }
@@ -83,7 +95,7 @@ final class StatusItemController: NSObject {
         resignObserver = NotificationCenter.default.addObserver(
             forName: NSWindow.didResignKeyNotification, object: panel, queue: .main
         ) { [weak self] _ in
-            MainActor.assumeIsolated { self?.close() }
+            MainActor.assumeIsolated { self?.closeUnlessPressingItem() }
         }
     }
 
@@ -95,6 +107,18 @@ final class StatusItemController: NSObject {
         monitors.removeAll()
         if let resignObserver { NotificationCenter.default.removeObserver(resignObserver) }
         resignObserver = nil
+    }
+
+    /// A press on the menu bar item reaches the global monitor and takes focus from the panel before
+    /// the item's action runs. Closing there would let `toggle()` reopen the popup right away, so
+    /// that press is left to `toggle()`.
+    private func closeUnlessPressingItem() {
+        if NSEvent.pressedMouseButtons != 0, let item = statusItem.button?.window?.frame,
+            item.contains(NSEvent.mouseLocation)
+        {
+            return
+        }
+        close()
     }
 
     /// Keeps the panel's top edge under the menu bar item while its content grows or shrinks.
@@ -114,6 +138,44 @@ final class StatusItemController: NSObject {
         x = max(x, visible.minX + Self.screenMargin)
         let top = (onScreen ? anchor.minY : visible.maxY) - Self.gap
         panel.place(surface: NSRect(x: x, y: top - size.height, width: size.width, height: size.height))
+    }
+
+    // MARK: - Right-click menu
+
+    private func showMenu() {
+        let menu = NSMenu()
+        menu.addItem(withTitle: "About \(AppInfo.name)", action: #selector(showAbout), keyEquivalent: "").target = self
+        menu.addItem(withTitle: "Preferences…", action: #selector(showPreferences), keyEquivalent: ",").target = self
+        menu.addItem(.separator())
+        menu.addItem(withTitle: "Quit \(AppInfo.name)", action: #selector(NSApplication.terminate(_:)), keyEquivalent: "q")
+        // Attached for this click only, so a left click still opens the popup. The system shows
+        // it like any menu bar menu; `menuDidClose` detaches it.
+        menu.delegate = self
+        statusItem.menu = menu
+        statusItem.button?.performClick(nil)
+    }
+
+    func menuDidClose(_: NSMenu) {
+        statusItem.menu = nil
+    }
+
+    @objc private func showAbout() {
+        NSApp.activate(ignoringOtherApps: true)
+        let credits = NSMutableAttributedString(
+            string: "Claude and Codex logos from CodexBar (MIT).",
+            attributes: [.font: NSFont.systemFont(ofSize: NSFont.smallSystemFontSize), .foregroundColor: NSColor.secondaryLabelColor]
+        )
+        if let range = credits.string.range(of: "CodexBar") {
+            credits.addAttribute(.link, value: "https://github.com/steipete/CodexBar", range: NSRange(range, in: credits.string))
+        }
+        let centered = NSMutableParagraphStyle()
+        centered.alignment = .center
+        credits.addAttribute(.paragraphStyle, value: centered, range: NSRange(location: 0, length: credits.length))
+        NSApp.orderFrontStandardAboutPanel(options: [.credits: credits])
+    }
+
+    @objc private func showPreferences() {
+        PreferencesWindow.shared.show(store: store)
     }
 
     // MARK: - Menu bar item

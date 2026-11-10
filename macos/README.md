@@ -50,8 +50,8 @@ The dev build is a separate bundle (`….dev` bundle id and defaults domain). `-
 - **Settings** use the gschema key names in `UserDefaults` (`defaults read io.github.kinanlak.linux-usage`).
 - **Menu bar percentage** (Preferences → Menu bar, also on GNOME as Preferences → Top bar, with the same logos in `src/extension/icons/`): the most used provider's usage, or one provider's, in the window picked by the popup's Session/Weekly toggle.
 - **Popup:** an `NSStatusItem` with an AppKit panel rather than a SwiftUI `MenuBarExtra` (which rendered as a square, untinted window on macOS 26+). The panel is an `NSGlassEffectView` on macOS 26+ (menu material before), keeps its top edge under the item, and closes on a click elsewhere or Escape. Buttons and quota cards use Liquid Glass on macOS 26+; clickable elements get a pointing-hand cursor.
-- **Menu bar item:** the logo of the provider whose percentage is shown (Claude and Codex marks from [CodexBar](https://github.com/steipete/CodexBar), MIT), the status symbol otherwise.
-- **Additions macOS needs:** Open at login (Preferences → General), Quit (Preferences, or ⌘Q in the popup), ⌘R to refresh and ⌘, for preferences in the popup, and a refresh after the Mac wakes.
+- **Menu bar item:** the logo of the provider whose percentage is shown (Claude and Codex marks from [CodexBar](https://github.com/steipete/CodexBar), MIT), the status symbol otherwise. Left click toggles the popup; right click (or Control-click) opens a menu with About, Preferences and Quit.
+- **Additions macOS needs:** Open at login (Preferences → General), Quit and About (right-click menu; Quit also in Preferences and ⌘Q in the popup), ⌘R to refresh and ⌘, for preferences in the popup, and a refresh after the Mac wakes.
 
 The provider logic is a line-by-line port of `src/helper/`. When it changes there, mirror the change in `Sources/LinuxUsage/Providers/`.
 
